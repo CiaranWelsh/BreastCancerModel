@@ -16,6 +16,33 @@ SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 COPASI_FILE = os.path.join(MODELS_DIRECTORY, 'simple_akt_model.cps')
 COPASI_FORMATTED_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data.csv')
 
+
+
+
+
+
+
+"""
+How to model the initial concentrations?
+
+There are three entities, total, phospho and non-phospho
+
+    total = phospho + non-phospho
+
+we can't mearure the non-phospho but can estimate from the other two:
+
+    non-phospho = total - phospho
+
+This means we should separate observables from model species. We need a global variable per total protein.
+
+
+"""
+
+
+
+
+
+
 model_string = """
 model SimpleAktModel()
     compartment Cell = 1;
@@ -27,39 +54,49 @@ model SimpleAktModel()
     var TSC2pT1462   in Cell;
     var PRAS40  in Cell;
     var PRAS40pS183 in Cell;
-    
+    var S6K in Cell;
+    var S6KpT389 in Cell;
     var FourEBP1    in Cell;
     var FourE_BP1pT37_46   in Cell;    
     const Insulin in Cell;
     
     // global variables
     Insulin = 0.005;
-    // IRS1_obs                    := IRS1      + IRS1pS636_639   
-    IRS1pS636_639_obs           := IRS1pS636_639          
-    // Akt_obs                     := Akt       + AktpT308     
-    AktpT308_obs                := AktpT308           
-    // TSC2_obs                    := TSC2      + TSC2pT1462               
-    TSC2pT1462_obs              := TSC2pT1462              
-    // PRAS40_obs                  := PRAS40    + PRAS40pS183
-    PRAS40pS183_obs             := PRAS40pS183        
-    // FourEBP1_obs                 := FourEBP1   + FourE_BP1pT37_46
-    // FourE_BP1pT37_46_obs        := FourE_BP1pT37_46          
-    // S6K_obs                     := S6K       + S6KpT389
-    S6KpT389_obs                := S6KpT389    
+    
+    IRS1_tot                    := IRS1 + IRS1pS636_639;
+    Akt_tot                     := Akt + AktpT308;
+    TSC2_tot                    := TSC2 + TSC2pT1462;
+    PRAS40_tot                  := PRAS40 + PRAS40pS183;
+    FourEBP1_tot                := FourEBP1 + FourE_BP1pT37_46;
+    S6K_tot                     := S6K + S6KpT389;    
+    
+    IRS1_obs                    := IRS1_tot;       
+    Akt_obs                     := Akt_tot;   
+    TSC2_obs                    := TSC2_tot;       
+    PRAS40_obs                  := PRAS40_tot;       
+    FourEBP1_obs                := FourEBP1_tot;           
+    S6K_obs                     := S6K_tot ;       
+    
+    IRS1pS636_639_obs           := IRS1pS636_639;          
+    AktpT308_obs                := AktpT308;           
+    TSC2pT1462_obs              := TSC2pT1462;              
+    PRAS40pS183_obs             := PRAS40pS183;        
+    S6KpT389_obs                := S6KpT389;
+       
     
     //initial conditions
     // may need to do the 'total math'
-    IRS1                = 1.700789 - IRS1pS636_639;
+    IRS1                = 1.700789 ;
     IRS1pS636_639       = 0.861333;
-    Akt                 = 1.241997 - AktpT308;
+    Akt                 = 1.241997 ;
     AktpT308            = 0.486243;
-    TSC2                = 1.136033 - TSC2pT1462;
+    TSC2                = 1.136033 ;
     TSC2pT1462          = 0.644957;
-    PRAS40              = 0.981968 - PRAS40pS183;
+    PRAS40              = 0.981968 ;
     PRAS40pS183         = 0.516932;
-    // FourEBP1            = 0.458272 - FourE_BP1pT37_46;
-    // FourE_BP1pT37_46    = 0.488169;
-    S6K                 = 1.330735 - S6KpT389;
+    FourEBP1            = 0.458272 ;
+    FourE_BP1pT37_46    = 0.488169;
+    S6K                 = 1.330735;
     S6KpT389            = 0.395656;
     
     // kinetic parameters
@@ -87,8 +124,8 @@ model SimpleAktModel()
     R7 : PRAS40 => PRAS40pS183 ;    Cell*   _kPras40PhosByAkt*AktpT308*PRAS40;
     R8 : PRAS40 => PRAS40pS183 ;    Cell*   _kPras40PhosByTSC*TSC2pT1462*PRAS40;
     R9 : PRAS40pS183 => PRAS40 ;    Cell*   _kPras40Dephos*TSC2pT1462;
-    // R10: FourEBP1 => FourE_BP1pT37_46 ;        Cell*   _kFourEBP1Phos*TSC2*FourEBP1;
-    // R11: FourE_BP1pT37_46 => FourEBP1 ;        Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
+    R10: FourEBP1 => FourE_BP1pT37_46 ;        Cell*   _kFourEBP1Phos*TSC2*FourEBP1;
+    R11: FourE_BP1pT37_46 => FourEBP1 ;        Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
     R12: S6K => S6KpT389 ;          Cell*   _kS6KPhos*TSC2*S6K;
     R13: S6KpT389 => S6K ;          Cell*   _kS6KDephos*S6KpT389;
 
@@ -130,6 +167,10 @@ the correct value.
 
 '''
 
+
+# Theere are currently two problems with pycotools3:
+#     1) independent variables not correctly beting mapped when using indep keyord
+#     2) initial values are being assigned insteam of transient during parameter estimation setup
 
 
 

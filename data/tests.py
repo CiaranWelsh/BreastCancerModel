@@ -12,7 +12,7 @@ class ParseDataTests(unittest.TestCase):
     def setUp(self):
         self.data_dir = os.path.join(WORKING_DIRECTORY, 'data')
         self.data_file = os.path.join(self.data_dir, 'experimental_data.xlsx')
-        assert os.path.isfile(self.data_file)
+        assert os.path.isfile(self.data_file), self.data_file
         self.gd = GetData(self.data_file)
 
     def test_open_workbook(self):
@@ -51,6 +51,16 @@ class ParseDataTests(unittest.TestCase):
         self.assertAlmostEqual(df.loc[('MCF7', 0), ('GAPDH', 3)], top_right)
         self.assertAlmostEqual(df.loc[('T47D', 120), ('GAPDH', 3)], bottom_right)
 
+    def test_interpolate(self):
+        data = self.gd.interpolate_mcf7_data(num=12)
+        self.assertEqual(12, data.shape[0])
+
+    def test_interpolated_data_to_copasi(self):
+        fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
+        data = self.gd.interpolate_mcf7_data(num=30)
+        self.gd.to_copasi_format(fname=fname, data=data)
+
+
 
 class DataTests(unittest.TestCase):
 
@@ -70,9 +80,16 @@ class DataTests(unittest.TestCase):
         raw = self.gd.get_raw_data()
         av = self.gd.get_data_normed_to_average()
         coomassie = self.gd.get_data_normalised_to_coomassie_blue()
-        plot(raw, 'raw', True)
-        plot(av, 'average', True)
+        # plot(raw, 'raw', True)
+        # plot(av, 'average', True)
         plot(coomassie, 'coomassie', True)
+        # plt.show()
+
+    def test_plot_repeats(self):
+        raw = self.gd.get_raw_data()
+        av = self.gd.get_data_normed_to_average()
+        coomassie = self.gd.get_data_normalised_to_coomassie_blue()
+        plot_repeats(coomassie, 'coomassie', True)
         # plt.show()
 
     def test_pca(self):

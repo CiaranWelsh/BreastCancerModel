@@ -3,24 +3,19 @@ import pandas, numpy
 from collections import OrderedDict
 import tellurium as te
 import site
+
 site.addsitedir(r'D:\pycotools3')
 from pycotools3 import model, tasks, viz
 
 # WORKING_DIRECTORY = os.path.join(os.path.dirname(__file__))
-WORKING_DIRECTORY = r'D:\MesiSTRAT\BreastCancer'
+WORKING_DIRECTORY = r'D:\BreastCancerModel'
 MODELS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'models')
 DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 
-
 COPASI_FILE = os.path.join(MODELS_DIRECTORY, 'simple_akt_model.cps')
 COPASI_FORMATTED_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data.csv')
-
-
-
-
-
-
+COPASI_INTERP_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
 
 """
 How to model the initial concentrations?
@@ -38,12 +33,58 @@ This means we should separate observables from model species. We need a global v
 
 """
 
-
-
-
-
-
 model_string = """
+
+function MM(km, Vmax, S)
+    Vmax * S / (km + S)
+end
+
+function MMWithKcat(km, kcat, S, E)
+    kcat * E * S / (km + S)
+end
+
+
+function NonCompetitiveInhibition(km, ki, Vmax, n, I, S)
+    Vmax * S / ( (km + S) * (1 + (I / ki)^n ) )
+end
+
+function NonCompetitiveInhibitionWithKcat(km, ki, kcat, E, n, I, S)
+    kcat * E * S / ( (km + S) * (1 + (I / ki)^n ) )
+end
+
+function NonCompetitiveInhibitionWithKcatAndExtraActivator(km, ki, kcat, E1, E2, n, I, S)
+    kcat * E1 * E2 * S / ( (km + S) * (1 + (I / ki)^n ) )
+end
+
+
+function MA1(k, S)
+    k * S
+end
+
+function MA2(k, S1, S2)
+    k * S1 * S2
+end
+
+function MA1Mod(k, S, M)
+    k * S * M
+end
+
+function MA2Mod(k, S1, S2, M)
+    k * S1 * S2 * M
+end
+
+function CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
+    kcat * E * S / (km + S + ((km * I )/ ki)  )
+end    
+
+function CompetitiveInhibition(Vmax, km, ki, I, S)
+    Vmax * S / (km + S + ((km * I )/ ki)  )
+end
+
+function Hill(km, kcat, L, S, h)
+    kcat * L * (S / km)^h  /   1 + (S / km)^h 
+end
+
 model SimpleAktModel()
     compartment Cell = 1;
     var IRS1    in Cell;
@@ -70,12 +111,12 @@ model SimpleAktModel()
     FourEBP1_tot                := FourEBP1 + FourE_BP1pT37_46;
     S6K_tot                     := S6K + S6KpT389;    
     
-    IRS1_obs                    := IRS1_tot;       
-    Akt_obs                     := Akt_tot;   
-    TSC2_obs                    := TSC2_tot;       
-    PRAS40_obs                  := PRAS40_tot;       
-    FourEBP1_obs                := FourEBP1_tot;           
-    S6K_obs                     := S6K_tot ;       
+    // IRS1_obs                    := IRS1_tot;       
+    // Akt_obs                     := Akt_tot;   
+    // TSC2_obs                    := TSC2_tot;       
+    // PRAS40_obs                  := PRAS40_tot;       
+    // FourEBP1_obs                := FourEBP1_tot;           
+    // S6K_obs                     := S6K_tot ;       
     
     IRS1pS636_639_obs           := IRS1pS636_639;          
     AktpT308_obs                := AktpT308;           
@@ -100,45 +141,53 @@ model SimpleAktModel()
     S6KpT389            = 0.395656;
     
     // kinetic parameters
-    _kIRS1Phos           = 0.1;     
-    _kIRS1Dephos         = 0.1;         
-    _kAktPhos            = 0.1;     
-    _kAktDephos          = 0.1;     
-    _kTSC2Phos           = 0.1;     
-    _kTSC2Dephos         = 0.1;         
-    _kPras40PhosByAkt    = 0.1;             
-    _kPras40PhosByTSC    = 0.1;             
-    _kPras40Dephos       = 0.1;         
-    _kFourEBP1Phos           = 0.1;     
-    _kFourEBP1Dephos         = 0.1;         
-    _kS6KPhos            = 0.1;     
-    _kS6KDephos          = 0.1;     
+    _kIRS1Phos                 = 0.1; 
+    _kIRS1Dephos               = 0.1;     
+    _kAktPhos_km               = 0.1;     
+    _kAktPhos_kcat             = 0.1;     
+    _kAktDephos                = 0.1; 
+    _kTSC2Phos_km              = 0.1;     
+    _kTSC2Phos_kcat            = 0.1;     
+    _kTSC2Dephos               = 0.1;     
+    _kPras40PhosByAkt_km       = 0.1;             
+    _kPras40PhosByAkt_kcat     = 0.1;             
+    //_kPras40PhosByTSC          = 0.1;         
+    _kPras40Dephos             = 0.1;     
+    _kFourEBP1Phos_km          = 0.1;         
+    _kFourEBP1Phos_kcat        = 0.1;         
+    _kFourEBP1Dephos           = 0.1;         
+    _kS6KPhos_km               = 0.1;     
+    _kS6KPhos_kcat             = 0.1;     
+    _kS6KDephos                = 0.1; 
     
-    // reactions
-    R1 : IRS1 => IRS1pS636_639 ;        Cell*   _kIRS1Phos*Insulin*IRS1;
-    R2 : IRS1pS636_639 => IRS1 ;        Cell*   _kIRS1Dephos*S6KpT389*IRS1pS636_639;
-    R3 : Akt => AktpT308 ;          Cell*   _kAktPhos*IRS1pS636_639*Akt;
-    R4 : AktpT308 => Akt ;          Cell*   _kAktDephos*AktpT308;
-    R5 : TSC2 => TSC2pT1462 ;        Cell*   _kTSC2Phos*AktpT308*TSC2;
-    R6 : TSC2pT1462 => TSC2 ;        Cell*   _kTSC2Dephos*TSC2pT1462;
-    R7 : PRAS40 => PRAS40pS183 ;    Cell*   _kPras40PhosByAkt*AktpT308*PRAS40;
-    R8 : PRAS40 => PRAS40pS183 ;    Cell*   _kPras40PhosByTSC*TSC2pT1462*PRAS40;
-    R9 : PRAS40pS183 => PRAS40 ;    Cell*   _kPras40Dephos*TSC2pT1462;
-    R10: FourEBP1 => FourE_BP1pT37_46 ;        Cell*   _kFourEBP1Phos*TSC2*FourEBP1;
-    R11: FourE_BP1pT37_46 => FourEBP1 ;        Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
-    R12: S6K => S6KpT389 ;          Cell*   _kS6KPhos*TSC2*S6K;
-    R13: S6KpT389 => S6K ;          Cell*   _kS6KDephos*S6KpT389;
+    // reactions // MMWithKcat(km, kcat, S, E)
+    R1 : IRS1 => IRS1pS636_639 ;                Cell*   MMWithKcat(_kIRS1Phos_km, _kIRS1Phos_kcat, IRS1, Insulin);
+    R2 : IRS1pS636_639 => IRS1 ;                Cell*   _kIRS1Dephos*IRS1pS636_639*S6KpT389;
+    R3 : Akt => AktpT308 ;                      Cell*   MMWithKcat(_kAktPhos_km, _kAktPhos_kcat, Akt, IRS1pS636_639);
+    R4 : AktpT308 => Akt ;                      Cell*   _kAktDephos*AktpT308;
+    R5 : TSC2 => TSC2pT1462 ;                   Cell*   MMWithKcat(_kTSC2Phos_km, _kTSC2Phos_kcat, TSC2, AktpT308);
+    R6 : TSC2pT1462 => TSC2 ;                   Cell*   _kTSC2Dephos*TSC2pT1462;
+    R7 : PRAS40 => PRAS40pS183 ;                Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
+    //R8 : PRAS40 => PRAS40pS183 ;                Cell*   _kPras40PhosByTSC*TSC2pT1462*PRAS40;
+    R9 : PRAS40pS183 => PRAS40 ;                Cell*   _kPras40Dephos*TSC2pT1462;
+    R10: FourEBP1 => FourE_BP1pT37_46 ;         Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2);
+    R11: FourE_BP1pT37_46 => FourEBP1 ;         Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
+    R12: S6K => S6KpT389 ;                      Cell*   MMWithKcat(_kS6KPhos_km, _kS6KPhos_kcat, S6K, TSC2);
+    R13: S6KpT389 => S6K ;                      Cell*   _kS6KDephos*S6KpT389;
 
 end
 
 
 """
 
-# model = te.loada(model_string)
+BUILD_NEW = True
 
-mod = model.loada(model_string, copasi_file=COPASI_FILE)
+if BUILD_NEW:
+    mod = model.loada(model_string, copasi_file=COPASI_FILE)
+else:
+    mod = model.Model(COPASI_FILE)
 
-with tasks.ParameterEstimation.Context(mod, [COPASI_FORMATTED_DATA, SS_DATA_FILE ],
+with tasks.ParameterEstimation.Context(mod, [SS_DATA_FILE, COPASI_INTERP_DATA],
                                        parameters='g') as context:
     context.set('separator', '\t')
     context.set('run_mode', False)
@@ -154,8 +203,6 @@ with tasks.ParameterEstimation.Context(mod, [COPASI_FORMATTED_DATA, SS_DATA_FILE
 pe = tasks.ParameterEstimation(config)
 mod = pe.models['simple_akt_model'].model
 
-
-
 print(mod.open())
 
 '''
@@ -167,12 +214,9 @@ the correct value.
 
 '''
 
-
 # Theere are currently two problems with pycotools3:
 #     1) independent variables not correctly beting mapped when using indep keyord
 #     2) initial values are being assigned insteam of transient during parameter estimation setup
 
 
-
-
-
+# normalise activity to total protein

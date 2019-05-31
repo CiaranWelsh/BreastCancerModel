@@ -4,8 +4,12 @@ import os, glob
 import xlrd
 import matplotlib.pyplot as plt
 import seaborn
+from scipy.interpolate import interp1d
+import site
+site.addsitedir(r'D:\pytseries')
+from pytseries.core import TimeSeries, TimeSeriesGroup
 
-WORKING_DIRECTORY = r'D:\MesiSTRAT\BreastCancer'
+WORKING_DIRECTORY = r'D:\BreastCancerModel'
 DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
@@ -118,10 +122,14 @@ class GetData:
             df_dct[ab] = df / data['Coomassie staining']
         return pandas.concat(df_dct, axis=1)
 
-    def to_copasi_format(self, fname, delimiter='\t'):
-        data = self.get_data_normalised_to_coomassie_blue()
+    def to_copasi_format(self, fname, delimiter='\t', data=None):
+        if data is None:
+            data = self.get_data_normalised_to_coomassie_blue()
         data = data.stack()
-        data = data.loc['MCF7']
+        try:
+            data = data.loc['MCF7']
+        except KeyError:
+            pass
         data['Insulin_indep'] = 1
         data.index = data.index.swaplevel(0, 1)
         data = data.sort_index(level='repeats')
@@ -137,6 +145,8 @@ class GetData:
         repeats = list(set(data.index.get_level_values(0)))
         data = data.reset_index(level=1)
 
+        data = data[data['time'] < 45]
+        # print(data)
         s = ''
         for name in data.columns:
             s += name + delimiter
@@ -162,6 +172,29 @@ class GetData:
 
         return s
 
+    def interpolate_mcf7_data(self, num=12):
+        data = self.get_data_normalised_to_coomassie_blue()
+        data = data.transpose()
+        data.index.names = ['antibody', 'repeats']
+        data = data.transpose()
+        data = data.loc['MCF7']
+        data = data.stack().unstack(level=0).stack(level=0)
+        data.index = data.index.swaplevel(0, 1)
+        tsg_dct = {}
+        for label, df in data.groupby(level='repeats'):
+            df.index = df.index.droplevel('repeats')
+            tsg = TimeSeriesGroup(df).interpolate(kind='linear', num=num)
+            tsg = tsg.as_df()
+            tsg_dct[label] = tsg
+
+        data2 = pandas.concat(tsg_dct)
+        data2.index.names = ['repeats', 'antibody']
+        data2.columns.names = data.columns.names
+        data2 = data2.unstack(level=1).stack(level=0).unstack(level=0)
+        # data2.index = [(round(i, 3) for i in data2.index)]
+        # print(data2)
+        return data2
+
 
 def plot(data, prefix, savefig=False):
     data = data.stack().stack()
@@ -171,13 +204,30 @@ def plot(data, prefix, savefig=False):
 
         seaborn.lineplot(x='time', y=0, data=df.reset_index(),
                          hue='cell_line', style='cell_line',
-                         palette='bright', markers=True, ci=95)
+                         palette='bright', markers=True, ci=95, linestyle='-', estimator=None,
+                         units='repeats')
         seaborn.despine(fig, top=True, right=True)
         plt.ylabel('AU')
         plt.title(label)
         fname = os.path.join(PLOTS_DIR, '{}_{}'.format(prefix, label))
         if savefig:
             plt.savefig(fname, dpi=200, bbox_inches='tight')
+
+def plot_repeats(data, prefix, savefig=False):
+    data = data.stack().stack()
+    data = pandas.DataFrame(data)
+    for label, df in data.groupby(level=[3, 2]):
+        fig = plt.figure()
+        print(df)
+        # seaborn.scatterplot(x='time', y=0, data=df.reset_index(),
+        #                  hue='cell_line', style='cell_line',
+        #                  palette='bright', markers=True, ci=95)
+        # seaborn.despine(fig, top=True, right=True)
+        # plt.ylabel('AU')
+        # plt.title(label)
+        # fname = os.path.join(PLOTS_DIR, '{}_{}'.format(prefix, label))
+        # if savefig:
+        #     plt.savefig(fname, dpi=200, bbox_inches='tight')
 
 
 def principle_component_analysis(data, colourby='cell_line', savefig=False):
@@ -229,6 +279,8 @@ def ss_data_to_copasi_format():
 
 if __name__ == '__main__':
     gd = GetData(DATA_FILE)
+
+    print(gd.interpolate())
 
 
 

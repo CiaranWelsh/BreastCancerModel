@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import seaborn
 from scipy.interpolate import interp1d
 import site
+from pathlib import Path
 site.addsitedir(r'D:\pytseries')
 from pytseries.core import TimeSeries, TimeSeriesGroup
 
-WORKING_DIRECTORY = r'D:\BreastCancerModel'
+WORKING_DIRECTORY = Path(os.path.abspath(__file__)).parents[1]
 DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
@@ -171,6 +172,65 @@ class GetData:
         print('Written copasi formatted data to "{}"'.format(fname))
 
         return s
+
+    def to_copasi_format_multiple_files(self, fname, delimiter='\t', data=None):
+        if data is None:
+            data = self.get_data_normalised_to_coomassie_blue()
+        data = data.stack()
+        try:
+            data = data.loc['MCF7']
+        except KeyError:
+            pass
+        data['Insulin_indep'] = 1
+        data.index = data.index.swaplevel(0, 1)
+        data = data.sort_index(level='repeats')
+        old_names = ['4E_BP1', '4E_BP1pT37_46', 'Akt',
+                     'AktpS473', 'AktpT308',
+                     'Coomassie staining', 'ERK',
+                     'GAPDH', 'IRS1', 'IRS1pS636_639', 'PRAS40',
+                     'PRAS40pS183', 'PRAS40pT246', 'S6K',
+                     'S6KpT229', 'S6KpT389', 'TSC2',
+                     'TSC2pT1462', 'Insulin_indep']
+
+        data = data.rename(columns=replacement_names)
+        ic_dct = {}
+        exclude = ['Insulin_indep', 'FourE_BP1_obs', 'Akt_obs',
+                   'ERK_obs', 'GAPDH_obs','IRS1_obs','PRAS40_obs',
+                   'S6K_obs','TSC2_obs']
+        for label, df in data.groupby(level='repeats'):
+            ic_dct[label] = df.loc[label, 0]
+        ic_df = pandas.concat(ic_dct).unstack(level=0)
+        ic_df = ic_df.drop(exclude)
+        print(ic_df)
+        new_idx = [i[:-4]+'_indep' for i in ic_df.index]# if i[:-4] not in exclude]
+        ic_df.index = new_idx
+
+        repeats = list(set(data.index.get_level_values(0)))
+        data = data.reset_index(level=1)
+
+        data = data[data['time'] < 45]
+
+        # print('ic df', ic_df)
+
+        fnames = []
+        for r in range(len(repeats)):
+            fnames.append(os.path.splitext(fname)[0] + str(r) + '.csv')
+
+        for rep in repeats:
+            s = ''
+            for name in data.columns:
+                s += name + delimiter
+            s = s.strip()
+            s += '\n'
+            df = data.loc[rep]
+            for ic in ic_df.index:
+                ic_val = ic_df.loc[ic, rep]
+                ic_val = round(ic_val, 4)
+                df[ic] = ic_val
+            df.reset_index(drop=True, inplace=True)
+
+            df.to_csv(fnames[rep], sep='\t', index=False)
+            print('data written to {}'.format(fnames[rep]))
 
     def interpolate_mcf7_data(self, num=12):
         data = self.get_data_normalised_to_coomassie_blue()

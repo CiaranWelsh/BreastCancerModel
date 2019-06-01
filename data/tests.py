@@ -60,6 +60,12 @@ class ParseDataTests(unittest.TestCase):
         data = self.gd.interpolate_mcf7_data(num=30)
         self.gd.to_copasi_format(fname=fname, data=data)
 
+    def test_interpolated_data_to_copasi_format_multiple_files(self):
+        fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
+        data = self.gd.interpolate_mcf7_data(num=30)
+        self.gd.to_copasi_format_multiple_files(fname=fname, data=data)
+
+
 
 
 class DataTests(unittest.TestCase):
@@ -118,6 +124,25 @@ class DataTests(unittest.TestCase):
         expected = 20
         actual = len(columns)
         self.assertEqual(expected, actual)
+
+    def test_to_copasi_format_multiple_files2(self):
+        fname = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data.csv')
+        fname0 = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data0.csv')
+        fname1 = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data1.csv')
+        fname2 = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data2.csv')
+        fname3 = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data3.csv')
+        fnames = [fname0, fname1, fname2, fname3]
+        self.gd.to_copasi_format_multiple_files(fname, '\t')
+        for i in fnames:
+            self.assertTrue(os.path.isfile(i))
+
+        # with open(fname, 'r') as f:
+        #     data = f.read()
+        # data = data.split('\n')
+        # columns = data[0].split('\t')
+        # expected = 20
+        # actual = len(columns)
+        # self.assertEqual(expected, actual)
 
 
 

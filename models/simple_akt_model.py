@@ -1,14 +1,19 @@
+from pathlib import Path
 import os, glob
 import pandas, numpy
 from collections import OrderedDict
 import tellurium as te
 import site
+from sys import platform
 
-site.addsitedir(r'D:\pycotools3')
+site.addsitedir(r'D:\pycotools3')  # home computer
+site.addsitedir(r'/home/ncw135/Documents/pycotools3')  # linux
+site.addsitedir(r'/mnt/nfs/home/b3053674/pycotools3')  # cluster
 from pycotools3 import model, tasks, viz
 
-# WORKING_DIRECTORY = os.path.join(os.path.dirname(__file__))
-WORKING_DIRECTORY = r'D:\BreastCancerModel'
+WORKING_DIRECTORY = Path(os.path.abspath(__file__)).parents[1]
+
+# WORKING_DIRECTORY = r'D:\BreastCancerModel'
 MODELS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'models')
 DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
@@ -16,22 +21,8 @@ SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 COPASI_FILE = os.path.join(MODELS_DIRECTORY, 'simple_akt_model.cps')
 COPASI_FORMATTED_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data.csv')
 COPASI_INTERP_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
-
-"""
-How to model the initial concentrations?
-
-There are three entities, total, phospho and non-phospho
-
-    total = phospho + non-phospho
-
-we can't mearure the non-phospho but can estimate from the other two:
-
-    non-phospho = total - phospho
-
-This means we should separate observables from model species. We need a global variable per total protein.
-
-
-"""
+COPASI_INTERP_DATA_FILES = glob.glob(COPASI_INTERP_DATA[:-4]+'*')
+COPASI_INTERP_DATA_FILES = [i for i in COPASI_INTERP_DATA_FILES if i != COPASI_INTERP_DATA]
 
 model_string = """
 
@@ -115,7 +106,6 @@ model SimpleAktModel()
     // Akt_obs                     := Akt_tot;   
     // TSC2_obs                    := TSC2_tot;       
     // PRAS40_obs                  := PRAS40_tot;       
-    // FourEBP1_obs                := FourEBP1_tot;           
     // S6K_obs                     := S6K_tot ;       
     
     IRS1pS636_639_obs           := IRS1pS636_639;          
@@ -123,6 +113,7 @@ model SimpleAktModel()
     TSC2pT1462_obs              := TSC2pT1462;              
     PRAS40pS183_obs             := PRAS40pS183;        
     S6KpT389_obs                := S6KpT389;
+    FourE_BP1pT37_46_obs        := FourE_BP1pT37_46;           
        
     
     //initial conditions
@@ -180,43 +171,65 @@ end
 
 """
 
-BUILD_NEW = True
+if __name__ == '__main__':
 
-if BUILD_NEW:
-    mod = model.loada(model_string, copasi_file=COPASI_FILE)
-else:
-    mod = model.Model(COPASI_FILE)
+    BUILD_NEW = True
+    RUN_PARAMETER_ESTIMATION = True
+    RUN = 'slurm'
+    OPEN = True
+    COPY_NUMBER = 1
+    OPEN_WITH_BEST_PARAMETERS = False
+    RUN_PROFIE_LIKELIHOOD = False
 
-with tasks.ParameterEstimation.Context(mod, [SS_DATA_FILE, COPASI_INTERP_DATA],
-                                       parameters='g') as context:
-    context.set('separator', '\t')
-    context.set('run_mode', False)
-    context.set('randomize_start_values', True)
-    context.set('method', 'genetic_algorithm')
-    context.set('population_size', 100)
-    context.set('lower_bound', 1e-1)
-    context.set('upper_bound', 1e1)
-    context.set('weight_method', 'standard_deviation')
-    context.set('prefix', '_')
-    config = context.get_config()
+    if BUILD_NEW:
+        mod = model.loada(model_string, copasi_file=COPASI_FILE)
+    else:
+        mod = model.Model(COPASI_FILE)
 
-pe = tasks.ParameterEstimation(config)
-mod = pe.models['simple_akt_model'].model
+    if RUN == 'slurm':
+        COPY_NUMBER = 200
 
-print(mod.open())
+    if COPY_NUMBER == 0:
+        raise ValueError
+    if RUN_PARAMETER_ESTIMATION:
 
-'''
+        with tasks.ParameterEstimation.Context(mod, [SS_DATA_FILE]+COPASI_INTERP_DATA_FILES,
+                                               parameters='g') as context:
+            context.set('separator', '\t')
+            context.set('run_mode', RUN)
+            context.set('copy_number', COPY_NUMBER)
+            context.set('randomize_start_values', True)
+            context.set('method', 'particle_swarm')
+            context.set('population_size', 200)
+            context.set('iteration_limit', 3000)
+            context.set('lower_bound', 0.001)
+            context.set('upper_bound', 2500)
+            context.set('weight_method', 'standard_deviation')
+            context.set('prefix', '_')
+            config = context.get_config()
 
-Build a way to 'duplicate for each experiment' with pycotools. 
-Set the initial concentrations to actual values during the 
-parameter estimation by having lower and upper bounds equal to 
-the correct value. 
+        pe = tasks.ParameterEstimation(config)
+        mod = pe.models['simple_akt_model'].model
 
-'''
+    if RUN_PROFIE_LIKELIHOOD:
+        with tasks.ParameterEstimation.Context(mod, [SS_DATA_FILE]+COPASI_INTERP_DATA_FILES,
+                                         context='pl', parameters='gm'
+        ) as context:
+            context.set('method', 'hooke_jeeves')
+            context.set('pl_lower_bound', 1000)
+            context.set('pl_upper_bound', 1000)
+            context.set('number_of_steps', 25)
+            context.set('run_mode', True)
+            config = context.get_config()
 
-# Theere are currently two problems with pycotools3:
-#     1) independent variables not correctly beting mapped when using indep keyord
-#     2) initial values are being assigned insteam of transient during parameter estimation setup
+    if OPEN:
+        mod.open()
 
+    if OPEN_WITH_BEST_PARAMETERS:
 
-# normalise activity to total protein
+        data = viz.Parse(pe).data
+        print(data['simple_akt_model'].iloc[0])
+        mod.insert_parameters(df=data['simple_akt_model'], index=0, inplace=True)
+
+        print(mod.open())
+

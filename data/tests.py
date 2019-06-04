@@ -86,8 +86,8 @@ class DataTests(unittest.TestCase):
         raw = self.gd.get_raw_data()
         av = self.gd.get_data_normed_to_average()
         coomassie = self.gd.get_data_normalised_to_coomassie_blue()
-        # plot(raw, 'raw', True)
-        # plot(av, 'average', True)
+        # plot_best_fit(raw, 'raw', True)
+        # plot_best_fit(av, 'average', True)
         plot(coomassie, 'coomassie', True)
         # plt.show()
 

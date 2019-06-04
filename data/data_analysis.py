@@ -146,7 +146,7 @@ class GetData:
         repeats = list(set(data.index.get_level_values(0)))
         data = data.reset_index(level=1)
 
-        data = data[data['time'] < 45]
+        data = data[data['time'] < 60]
         # print(data)
         s = ''
         for name in data.columns:
@@ -332,7 +332,7 @@ def get_initial_conc():
 def ss_data_to_copasi_format():
     data = get_initial_conc()
     data = data.rename(columns=replacement_names)
-    data['Insulin_indep'] = 0.05
+    data['Insulin_indep'] = 0.005
     data.to_csv(SS_DATA_FILE, index=False, sep='\t')
     return data
 

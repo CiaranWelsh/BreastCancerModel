@@ -464,27 +464,27 @@
       <compartment id="Cell" spatialDimensions="3" size="1" constant="true"/>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="IRS1" compartment="Cell" initialConcentration="1.700789" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IRS1" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="IRS1pS636_639" compartment="Cell" initialConcentration="0.861333" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Akt" compartment="Cell" initialConcentration="1.241997" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Akt" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="AktpT308" compartment="Cell" initialConcentration="0.486243" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="TSC2" compartment="Cell" initialConcentration="1.136033" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="TSC2" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="TSC2pT1462" compartment="Cell" initialConcentration="0.644957" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="PRAS40" compartment="Cell" initialConcentration="0.981968" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PRAS40" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="PRAS40pS183" compartment="Cell" initialConcentration="0.516932" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="S6K" compartment="Cell" initialConcentration="1.330735" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="S6K" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="S6KpT389" compartment="Cell" initialConcentration="0.395656" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="FourEBP1" compartment="Cell" initialConcentration="0.458272" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="FourEBP1" compartment="Cell" initialConcentration="0.0001" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="FourE_BP1pT37_46" compartment="Cell" initialConcentration="0.488169" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
-      <parameter id="Insulin" value="0.005" constant="true"/>
-      <parameter id="IRS1_tot" constant="false"/>
-      <parameter id="Akt_tot" constant="false"/>
-      <parameter id="TSC2_tot" constant="false"/>
-      <parameter id="PRAS40_tot" constant="false"/>
-      <parameter id="FourEBP1_tot" constant="false"/>
-      <parameter id="S6K_tot" constant="false"/>
+      <parameter id="Insulin" value="1" constant="true"/>
+      <parameter id="IRS1_tot" value="1.700789" constant="true"/>
+      <parameter id="Akt_tot" value="1.241997" constant="true"/>
+      <parameter id="TSC2_tot" value="1.136033" constant="true"/>
+      <parameter id="PRAS40_tot" value="0.981968" constant="true"/>
+      <parameter id="FourEBP1_tot" value="0.458272" constant="true"/>
+      <parameter id="S6K_tot" value="1.330735" constant="true"/>
       <parameter id="IRS1pS636_639_obs" constant="false"/>
       <parameter id="AktpT308_obs" constant="false"/>
       <parameter id="TSC2pT1462_obs" constant="false"/>
@@ -512,58 +512,54 @@
       <parameter id="_kIRS1Phos_kcat" constant="true"/>
     </listOfParameters>
     <listOfRules>
-      <assignmentRule variable="IRS1_tot">
+      <assignmentRule variable="IRS1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <plus/>
-            <ci> IRS1 </ci>
+            <minus/>
+            <ci> IRS1_tot </ci>
             <ci> IRS1pS636_639 </ci>
           </apply>
         </math>
       </assignmentRule>
-      <assignmentRule variable="Akt_tot">
+      <assignmentRule variable="Akt">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <plus/>
-            <ci> Akt </ci>
+            <minus/>
+            <ci> Akt_tot </ci>
             <ci> AktpT308 </ci>
           </apply>
         </math>
       </assignmentRule>
-      <assignmentRule variable="TSC2_tot">
+      <assignmentRule variable="TSC2">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <plus/>
-            <ci> TSC2 </ci>
+            <minus/>
+            <ci> TSC2_tot </ci>
             <ci> TSC2pT1462 </ci>
           </apply>
         </math>
       </assignmentRule>
-      <assignmentRule variable="PRAS40_tot">
+      <assignmentRule variable="PRAS40">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <plus/>
-            <ci> PRAS40 </ci>
+            <minus/>
+            <ci> PRAS40_tot </ci>
             <ci> PRAS40pS183 </ci>
           </apply>
         </math>
       </assignmentRule>
-      <assignmentRule variable="FourEBP1_tot">
+      <assignmentRule variable="S6K">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <plus/>
-            <ci> FourEBP1 </ci>
-            <ci> FourE_BP1pT37_46 </ci>
+            <minus/>
+            <ci> S6K_tot </ci>
+            <ci> S6KpT389 </ci>
           </apply>
         </math>
       </assignmentRule>
-      <assignmentRule variable="S6K_tot">
+      <assignmentRule variable="FourEBP1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <plus/>
-            <ci> S6K </ci>
-            <ci> S6KpT389 </ci>
-          </apply>
+          <cn> 0.0001 </cn>
         </math>
       </assignmentRule>
       <assignmentRule variable="IRS1pS636_639_obs">

@@ -102,7 +102,7 @@ model SimpleAktModel()
     var TSC2    in Cell;
     var TSC2pT1462   in Cell;
     var PRAS40  in Cell;
-    var PRAS40pS183 in Cell;
+    var PRAS40pT246 in Cell;
     var S6K in Cell;
     var S6KpT389 in Cell;
     var FourEBP1    in Cell;
@@ -115,16 +115,16 @@ model SimpleAktModel()
     //IRS1_tot                    := IRS1 + IRS1pS636_639;
     //Akt_tot                     := Akt + AktpT308;
     //TSC2_tot                    := TSC2 + TSC2pT1462;
-    //PRAS40_tot                  := PRAS40 + PRAS40pS183;
+    //PRAS40_tot                  := PRAS40 + PRAS40pT246;
     //FourEBP1_tot                := FourEBP1 + FourE_BP1pT37_46;
     //S6K_tot                     := S6K + S6KpT389;    
     
-    IRS1_tot                = 1.700789 ;
-    Akt_tot                 = 1.241997 ;
-    TSC2_tot                = 1.136033 ;
-    PRAS40_tot              = 0.981968 ;
-    FourEBP1_tot            = 0.458272 ;
-    S6K_tot                 = 1.330735 ;
+    IRS1_tot                := 1.700789 + 1;
+    Akt_tot                 := 1.241997 + 1;
+    TSC2_tot                := 1.136033 + 1;
+    PRAS40_tot              := 0.981968 + 1;
+    FourEBP1_tot            := 0.458272 + 1;
+    S6K_tot                 := 1.330735 + 1;
 
     
     // IRS1_obs                    := IRS1_tot;       
@@ -136,7 +136,7 @@ model SimpleAktModel()
     IRS1pS636_639_obs           := IRS1pS636_639;          
     AktpT308_obs                := AktpT308;           
     TSC2pT1462_obs              := TSC2pT1462;              
-    PRAS40pS183_obs             := PRAS40pS183;        
+    PRAS40pT246_obs             := PRAS40pT246;        
     S6KpT389_obs                := S6KpT389;
     FourE_BP1pT37_46_obs        := FourE_BP1pT37_46;           
        
@@ -145,15 +145,15 @@ model SimpleAktModel()
     IRS1pS636_639       = 0.861333;
     AktpT308            = 0.486243;
     TSC2pT1462          = 0.644957;
-    PRAS40pS183         = 0.516932;
+    PRAS40pT246         = 0.387190  
     FourE_BP1pT37_46    = 0.488169;
     S6KpT389            = 0.395656;
     
     IRS1                := IRS1_tot - IRS1pS636_639              // 1.700789 ;
     Akt                 := Akt_tot  - AktpT308                  // 1.241997 ;
     TSC2                := TSC2_tot - TSC2pT1462                  // 1.136033 ;
-    PRAS40              := PRAS40_tot - PRAS40pS183                   // 0.981968 ;
-    FourEBP1            := 0.0001 ;                                 //FourEBP1_tot - FourE_BP1pT37_46                // 0.458272 ;
+    PRAS40              := PRAS40_tot - PRAS40pT246                   // 0.981968 ;
+    FourEBP1            := FourEBP1_tot - FourE_BP1pT37_46;                                 //FourEBP1_tot - FourE_BP1pT37_46                // 0.458272 ;
     S6K                 : = S6K_tot  - S6KpT389                   // 1.330735;
     
     // kinetic parameters
@@ -183,9 +183,9 @@ model SimpleAktModel()
     R4 : AktpT308 => Akt ;                      Cell*   _kAktDephos*AktpT308;
     R5 : TSC2 => TSC2pT1462 ;                   Cell*   MMWithKcat(_kTSC2Phos_km, _kTSC2Phos_kcat, TSC2, AktpT308);
     R6 : TSC2pT1462 => TSC2 ;                   Cell*   _kTSC2Dephos*TSC2pT1462;
-    R7 : PRAS40 => PRAS40pS183 ;                Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
-    //R8 : PRAS40 => PRAS40pS183 ;                Cell*   _kPras40PhosByTSC*TSC2pT1462*PRAS40;
-    R9 : PRAS40pS183 => PRAS40 ;                Cell*   _kPras40Dephos*TSC2pT1462;
+    R7 : PRAS40 => PRAS40pT246 ;                Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
+    //R8 : PRAS40 => PRAS40pT246 ;                Cell*   _kPras40PhosByTSC*TSC2pT1462*PRAS40;
+    R9 : PRAS40pT246 => PRAS40 ;                Cell*   _kPras40Dephos*TSC2pT1462;
     R10: FourEBP1 => FourE_BP1pT37_46 ;         Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2);
     R11: FourE_BP1pT37_46 => FourEBP1 ;         Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
     R12: S6K => S6KpT389 ;                      Cell*   MMWithKcat(_kS6KPhos_km, _kS6KPhos_kcat, S6K, TSC2);
@@ -220,7 +220,7 @@ def plot_best_fit(problem):
                               '4E_BP1pT37_46': 'FourE_BP1pT37_46'})
 
     phospho_species_that_were_fitted = ['AktpT308_obs', 'FourE_BP1pT37_46_obs',
-                                        'IRS1pS636_639_obs', 'PRAS40pS183_obs',
+                                        'IRS1pS636_639_obs', 'PRAS40pT246_obs',
                                         'S6KpT389_obs', 'TSC2pT1462_obs']
 
     ss_sim = ss_data[sorted(['IRS1_tot', 'Akt_tot', 'TSC2_tot',
@@ -285,7 +285,7 @@ def plot_best_fit(problem):
         ax.plot(ts_sim_plt.index, ts_sim_plt.values, label='pProtein, sim',
                 linestyle='-', color=phos_color)
 
-        ax.axvline(45, linestyle=':', alpha=0.4, color='red', label='data stopped')
+        ax.axvline(75, linestyle=':', alpha=0.4, color='red', label='data stopped')
 
         plt.title(ss_exp_var)
         seaborn.despine(fig=fig, top=True, right=True)
@@ -305,12 +305,18 @@ if __name__ == '__main__':
     # Build a new sbml model from scratch. When False, the existing model is worked on
     BUILD_NEW = True
     # indicates which problem we are on. Increment when you try something new
-    PROBLEM = '3_60min_interp' # Using 60 minutes of interpolated data instead
     #PROBLEM = 2 #45 minute interpolation
+    PROBLEM = '3_60min_interp' # Using 60 minutes of interpolated data instead
+    PROBLEM = '4_interp' # Using no truncation with interpolated data instead
+    PROBLEM = '5_75min_interp' # Using no truncation with interpolated data instead
+    PROBLEM = '5_75min_interp_wider_boundary' # Using no truncation with interpolated data instead
+
     # passed on to the run_mode in ParameterEstimation. Can be False, True, or 'slurm'
+    FIT = '1'
+    # FIT = 3 #current
     RUN = False
     # Open the sbml model in copasi
-    OPEN = False
+    OPEN = True
     # Parameter estimation copy number argument. Is automatically changed when RUN='slurm'
     COPY_NUMBER = 1
     # Open with copasi with best parameter set from PROBLEM
@@ -318,7 +324,7 @@ if __name__ == '__main__':
     # Run profile likelihoods
     RUN_PROFIE_LIKELIHOOD = False
     # plot the best fits in presentable format
-    PLOT_BEST_FIT = True
+    PLOT_BEST_FIT = False
 
     if BUILD_NEW:
         mod = model.loada(model_string, copasi_file=COPASI_FILE)
@@ -326,7 +332,7 @@ if __name__ == '__main__':
         mod = model.Model(COPASI_FILE)
 
     if RUN == 'slurm':
-        COPY_NUMBER = 200
+        COPY_NUMBER = 500
 
     if COPY_NUMBER == 0:
         raise ValueError
@@ -336,14 +342,15 @@ if __name__ == '__main__':
         context.set('separator', '\t')
         context.set('run_mode', RUN)
         context.set('problem', 'Problem{}'.format(PROBLEM))
+        context.set('fit', '{}'.format(FIT))
         context.set('copy_number', COPY_NUMBER)
         context.set('randomize_start_values', True)
         context.set('method', 'particle_swarm')
         context.set('population_size', 200)
         context.set('swarm_size', 200)
         context.set('iteration_limit', 3000)
-        context.set('lower_bound', 0.0001)
-        context.set('upper_bound', 2500)
+        context.set('lower_bound', 0.00001)
+        context.set('upper_bound', 10000)
         context.set('weight_method', 'standard_deviation')
         context.set('prefix', '_')
         config = context.get_config()

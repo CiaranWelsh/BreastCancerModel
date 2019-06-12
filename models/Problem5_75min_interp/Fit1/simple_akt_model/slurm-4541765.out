@@ -1,0 +1,7 @@
+slurmstepd: error: xcgroup_instantiate: unable to create cgroup '/sys/fs/cgroup/memory/slurm/uid_242822' : No space left on device
+slurmstepd: error: jobacct_gather/cgroup: unable to instanciate user 242822 memory cgroup
+slurmstepd: error: task/cgroup: unable to add task[pid=40773] to memory cg '(null)'
+COPASI 4.25 (Build 207)
+The use of this software indicates the acceptance of the attached license.
+To view the license please use the option: --license
+

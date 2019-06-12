@@ -471,24 +471,24 @@
       <species id="TSC2" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="TSC2pT1462" compartment="Cell" initialConcentration="0.644957" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="PRAS40" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
-      <species id="PRAS40pS183" compartment="Cell" initialConcentration="0.516932" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PRAS40pT246" compartment="Cell" initialConcentration="0.38719" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="S6K" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="S6KpT389" compartment="Cell" initialConcentration="0.395656" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="FourEBP1" compartment="Cell" initialConcentration="0.0001" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
+      <species id="FourEBP1" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="FourE_BP1pT37_46" compartment="Cell" initialConcentration="0.488169" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
       <parameter id="Insulin" value="1" constant="true"/>
-      <parameter id="IRS1_tot" value="1.700789" constant="true"/>
-      <parameter id="Akt_tot" value="1.241997" constant="true"/>
-      <parameter id="TSC2_tot" value="1.136033" constant="true"/>
-      <parameter id="PRAS40_tot" value="0.981968" constant="true"/>
-      <parameter id="FourEBP1_tot" value="0.458272" constant="true"/>
-      <parameter id="S6K_tot" value="1.330735" constant="true"/>
+      <parameter id="IRS1_tot" constant="false"/>
+      <parameter id="Akt_tot" constant="false"/>
+      <parameter id="TSC2_tot" constant="false"/>
+      <parameter id="PRAS40_tot" constant="false"/>
+      <parameter id="FourEBP1_tot" constant="false"/>
+      <parameter id="S6K_tot" constant="false"/>
       <parameter id="IRS1pS636_639_obs" constant="false"/>
       <parameter id="AktpT308_obs" constant="false"/>
       <parameter id="TSC2pT1462_obs" constant="false"/>
-      <parameter id="PRAS40pS183_obs" constant="false"/>
+      <parameter id="PRAS40pT246_obs" constant="false"/>
       <parameter id="S6KpT389_obs" constant="false"/>
       <parameter id="FourE_BP1pT37_46_obs" constant="false"/>
       <parameter id="_kIRS1Phos" value="0.1" constant="true"/>
@@ -544,7 +544,7 @@
           <apply>
             <minus/>
             <ci> PRAS40_tot </ci>
-            <ci> PRAS40pS183 </ci>
+            <ci> PRAS40pT246 </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -559,7 +559,65 @@
       </assignmentRule>
       <assignmentRule variable="FourEBP1">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <cn> 0.0001 </cn>
+          <apply>
+            <minus/>
+            <ci> FourEBP1_tot </ci>
+            <ci> FourE_BP1pT37_46 </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="IRS1_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.700789 </cn>
+            <cn type="integer"> 1 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Akt_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.241997 </cn>
+            <cn type="integer"> 1 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="TSC2_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.136033 </cn>
+            <cn type="integer"> 1 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="PRAS40_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 0.981968 </cn>
+            <cn type="integer"> 1 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="FourEBP1_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 0.458272 </cn>
+            <cn type="integer"> 1 </cn>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="S6K_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.330735 </cn>
+            <cn type="integer"> 1 </cn>
+          </apply>
         </math>
       </assignmentRule>
       <assignmentRule variable="IRS1pS636_639_obs">
@@ -577,9 +635,9 @@
           <ci> TSC2pT1462 </ci>
         </math>
       </assignmentRule>
-      <assignmentRule variable="PRAS40pS183_obs">
+      <assignmentRule variable="PRAS40pT246_obs">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <ci> PRAS40pS183 </ci>
+          <ci> PRAS40pT246 </ci>
         </math>
       </assignmentRule>
       <assignmentRule variable="S6KpT389_obs">
@@ -732,7 +790,7 @@
           <speciesReference species="PRAS40" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="PRAS40pS183" stoichiometry="1" constant="true"/>
+          <speciesReference species="PRAS40pT246" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <listOfModifiers>
           <modifierSpeciesReference species="AktpT308"/>
@@ -755,7 +813,7 @@
       </reaction>
       <reaction id="R9" reversible="false" fast="false">
         <listOfReactants>
-          <speciesReference species="PRAS40pS183" stoichiometry="1" constant="true"/>
+          <speciesReference species="PRAS40pT246" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference species="PRAS40" stoichiometry="1" constant="true"/>

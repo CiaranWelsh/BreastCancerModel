@@ -95,7 +95,7 @@ class DataTests(unittest.TestCase):
         raw = self.gd.get_raw_data()
         av = self.gd.get_data_normed_to_average()
         coomassie = self.gd.get_data_normalised_to_coomassie_blue()
-        plot_repeats(coomassie, 'coomassie', True)
+        # plot_repeats(coomassie, 'coomassie', True)
         # plt.show()
 
     def test_pca(self):

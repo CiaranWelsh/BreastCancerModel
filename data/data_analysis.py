@@ -114,13 +114,28 @@ class GetData:
         df = data / data.mean()
         return df
 
-    def get_data_normalised_to_coomassie_blue(self):
+    def get_data_normalised_to_coomassie_blue(self, offset_for_total_proetins=1):
+        """
+        normalise data to coomassie blue
+        :param offset_for_total_proetins: (numeric). This number is added to total protein levels so that the amount
+                                            of total protein is always larger than the amount of phospho proteins.
+        :return:
+        """
         # first normalise to average
+        total_proteins = ['4E_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
+                          'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
+        total_proteins = [i.replace('_obs', '') for i in total_proteins]
+        print('Warning. We have added 1 to the total protein data sets ({}). Always remember this. '.format(total_proteins))
+
         data = self.get_data_normed_to_average()
         df_dct = {}
         for ab in self.antibodies:
             df = data[ab]
             df_dct[ab] = df / data['Coomassie staining']
+
+        for tprotein in total_proteins:
+            df_dct[tprotein] = df_dct[tprotein] + offset_for_total_proetins
+
         return pandas.concat(df_dct, axis=1)
 
     def to_copasi_format(self, fname, delimiter='\t', data=None):
@@ -146,7 +161,7 @@ class GetData:
         repeats = list(set(data.index.get_level_values(0)))
         data = data.reset_index(level=1)
 
-        data = data[data['time'] < 60]
+        # data = data[data['time'] < 60]
         # print(data)
         s = ''
         for name in data.columns:
@@ -193,6 +208,7 @@ class GetData:
                      'TSC2pT1462', 'Insulin_indep']
 
         data = data.rename(columns=replacement_names)
+
         ic_dct = {}
         exclude = ['Insulin_indep', 'FourE_BP1_obs', 'Akt_obs',
                    'ERK_obs', 'GAPDH_obs','IRS1_obs','PRAS40_obs',
@@ -208,7 +224,7 @@ class GetData:
         repeats = list(set(data.index.get_level_values(0)))
         data = data.reset_index(level=1)
 
-        data = data[data['time'] < 45]
+        data = data[data['time'] < 75]
 
         # print('ic df', ic_df)
 
@@ -273,22 +289,6 @@ def plot(data, prefix, savefig=False):
         if savefig:
             plt.savefig(fname, dpi=200, bbox_inches='tight')
 
-def plot_repeats(data, prefix, savefig=False):
-    data = data.stack().stack()
-    data = pandas.DataFrame(data)
-    for label, df in data.groupby(level=[3, 2]):
-        fig = plt.figure()
-        print(df)
-        # seaborn.scatterplot(x='time', y=0, data=df.reset_index(),
-        #                  hue='cell_line', style='cell_line',
-        #                  palette='bright', markers=True, ci=95)
-        # seaborn.despine(fig, top=True, right=True)
-        # plt.ylabel('AU')
-        # plt.title(label)
-        # fname = os.path.join(PLOTS_DIR, '{}_{}'.format(prefix, label))
-        # if savefig:
-        #     plt.savefig(fname, dpi=200, bbox_inches='tight')
-
 
 def principle_component_analysis(data, colourby='cell_line', savefig=False):
     data = data.stack()
@@ -330,9 +330,13 @@ def get_initial_conc():
 
 
 def ss_data_to_copasi_format():
+    total_proteins = ['FourE_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
+     'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
     data = get_initial_conc()
     data = data.rename(columns=replacement_names)
     data['Insulin_indep'] = 0.005
+    # for i in total_proteins:
+    #     data[i] = data[i] + 1
     data.to_csv(SS_DATA_FILE, index=False, sep='\t')
     return data
 

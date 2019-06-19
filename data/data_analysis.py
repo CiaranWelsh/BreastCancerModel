@@ -35,6 +35,10 @@ replacement_names = {
     'S6KpT389': 'S6KpT389_obs',
     'TSC2': 'TSC2_obs',
     'TSC2pT1462': 'TSC2pT1462_obs',
+    'ERK_pT202_Y204': 'Erk_pT202_Y204_obs',
+    'p38': 'p38_obs',
+    'p38_pT180_Y182': 'p38_pT180_Y182_obs',
+    'ER alpha': 'ER_alpha'
 }
 
 
@@ -46,10 +50,13 @@ class GetData:
                        'T47D 60 minutes ins + aa', 'T47D 90 minutes ins + aa', 'T47D 120 minutes ins + aa']
     condition_codes = [f'MCF{i}' for i in time] + [f'T47D{i}' for i in time]
     assert len(condition_names) == len(condition_codes)
+    antibodies = ['Akt', 'AktpT308', 'AktpS473', 'PRAS40', 'PRAS40pT246',
+                  'PRAS40pS183', 'S6K', 'S6KpT389', 'S6KpT229',
+                  'TSC2', 'TSC2pT1462', 'IRS1', 'IRS1pS636/639', '4E-BP1',
+                  '4E-BP1pT37/46', 'GAPDH',
+                  'ERK', 'Coomassie staining', 'ERK-pT202/Y204', 'p38',
+                  'p38-pT180/Y182', 'ER alpha']
 
-    antibodies = ['Akt', 'AktpT308', 'AktpS473', 'PRAS40', 'PRAS40pT246', 'PRAS40pS183', 'S6K', 'S6KpT389', 'S6KpT229',
-                  'TSC2', 'TSC2pT1462', 'IRS1', 'IRS1pS636/639', '4E-BP1', '4E-BP1pT37/46', 'GAPDH', 'ERK',
-                  'Coomassie staining']
     antibodies = [i.replace('/', '_') for i in antibodies]
     antibodies = [i.replace('-', '_') for i in antibodies]
 
@@ -71,7 +78,7 @@ class GetData:
         sheet = 'Sheet2'
         sheet = self.workbook.sheet_by_name(sheet)
 
-        data = [sheet.col_slice(i, 2, 14) for i in range(1, 73)]
+        data = [sheet.col_slice(i, 2, 14) for i in range(1, 89)]
         new_data = []
         for i in data:
             new_data.append([j.value for j in i])
@@ -81,15 +88,17 @@ class GetData:
         # sanity checks
         top_left = 2599775
         bottom_left = 1503056
-        top_right = 5775.57
-        bottom_right = 5833.17
+        top_right = 76100
+        bottom_right = 20282
 
         assert top_left == df.loc[0, 0]
         assert bottom_left == df.loc[df.shape[0] - 1, 0], f'{bottom_left} is not {df.loc[df.shape[0] - 1, 0]}'
         assert top_right == df.loc[0, df.shape[1] - 1], f'{top_right} != {df.loc[0, df.shape[1] - 1]}'
         assert bottom_right == df.loc[df.shape[0] - 1,
                                       df.shape[1] - 1], f'{top_right} != {df.loc[df.shape[0] - 1, df.shape[1] - 1]}'
-
+        # print(df.columns)
+        # print(len(self.antibodies))
+        # print(df.shape)
         assert df.shape[1] / 4 == len(self.antibodies)
 
         df['cell_line'] = ['MCF7'] * 6 + ['T47D'] * 6
@@ -114,7 +123,7 @@ class GetData:
         df = data / data.mean()
         return df
 
-    def get_data_normalised_to_coomassie_blue(self, offset_for_total_proetins=1):
+    def get_data_normalised_to_coomassie_blue(self, offset_for_total_proetins=0):
         """
         normalise data to coomassie blue
         :param offset_for_total_proetins: (numeric). This number is added to total protein levels so that the amount
@@ -126,7 +135,7 @@ class GetData:
                           'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
         total_proteins = [i.replace('_obs', '') for i in total_proteins]
         print('Warning. We have added 1 to the total protein data sets ({}). Always remember this. '.format(total_proteins))
-
+        # we have added the offset parameter!
         data = self.get_data_normed_to_average()
         df_dct = {}
         for ab in self.antibodies:
@@ -248,8 +257,8 @@ class GetData:
             df.to_csv(fnames[rep], sep='\t', index=False)
             print('data written to {}'.format(fnames[rep]))
 
-    def interpolate_mcf7_data(self, num=12):
-        data = self.get_data_normalised_to_coomassie_blue()
+    def interpolate_mcf7_data(self, num=12, offset_for_total_proetins=0):
+        data = self.get_data_normalised_to_coomassie_blue(offset_for_total_proetins=offset_for_total_proetins)
         data = data.transpose()
         data.index.names = ['antibody', 'repeats']
         data = data.transpose()
@@ -341,10 +350,11 @@ def ss_data_to_copasi_format():
     return data
 
 
+
+
 if __name__ == '__main__':
     gd = GetData(DATA_FILE)
 
-    print(gd.interpolate())
 
 
 

@@ -461,6 +461,7 @@
       </functionDefinition>
     </listOfFunctionDefinitions>
     <listOfCompartments>
+      <compartment sboTerm="SBO:0000410" id="default_compartment" spatialDimensions="3" size="1" constant="true"/>
       <compartment id="Cell" spatialDimensions="3" size="1" constant="true"/>
     </listOfCompartments>
     <listOfSpecies>
@@ -476,21 +477,27 @@
       <species id="S6KpT389" compartment="Cell" initialConcentration="0.395656" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="FourEBP1" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="FourE_BP1pT37_46" compartment="Cell" initialConcentration="0.488169" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Erk" compartment="Cell" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
+      <species id="Erk_pT202_Y204" compartment="Cell" initialConcentration="0.115661" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Feedback" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
       <parameter id="Insulin" value="1" constant="true"/>
-      <parameter id="IRS1_tot" constant="false"/>
+      <parameter id="offset_amount" value="1" constant="true"/>
+      <parameter id="FourEBP1_tot" constant="false"/>
       <parameter id="Akt_tot" constant="false"/>
+      <parameter id="IRS1_tot" constant="false"/>
       <parameter id="TSC2_tot" constant="false"/>
       <parameter id="PRAS40_tot" constant="false"/>
-      <parameter id="FourEBP1_tot" constant="false"/>
       <parameter id="S6K_tot" constant="false"/>
+      <parameter id="Erk_tot" constant="false"/>
       <parameter id="IRS1pS636_639_obs" constant="false"/>
       <parameter id="AktpT308_obs" constant="false"/>
       <parameter id="TSC2pT1462_obs" constant="false"/>
       <parameter id="PRAS40pT246_obs" constant="false"/>
       <parameter id="S6KpT389_obs" constant="false"/>
       <parameter id="FourE_BP1pT37_46_obs" constant="false"/>
+      <parameter id="Erk_pT202_Y204_obs" constant="false"/>
       <parameter id="_kIRS1Phos" value="0.1" constant="true"/>
       <parameter id="_kIRS1Dephos" value="0.1" constant="true"/>
       <parameter id="_kAktPhos_km" value="0.1" constant="true"/>
@@ -508,6 +515,11 @@
       <parameter id="_kS6KPhos_km" value="0.1" constant="true"/>
       <parameter id="_kS6KPhos_kcat" value="0.1" constant="true"/>
       <parameter id="_kS6KDephos" value="0.1" constant="true"/>
+      <parameter id="_kErkPhos_km" value="0.1" constant="true"/>
+      <parameter id="_kErkPhos_kcat" value="0.1" constant="true"/>
+      <parameter id="_kErkDephos" value="0.1" constant="true"/>
+      <parameter id="_kFeedbackIn" value="0.1" constant="true"/>
+      <parameter id="kFeedbackOut" value="0.1" constant="true"/>
       <parameter id="_kIRS1Phos_km" constant="true"/>
       <parameter id="_kIRS1Phos_kcat" constant="true"/>
     </listOfParameters>
@@ -566,39 +578,12 @@
           </apply>
         </math>
       </assignmentRule>
-      <assignmentRule variable="IRS1_tot">
+      <assignmentRule variable="Erk">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <apply>
-            <plus/>
-            <cn> 1.700789 </cn>
-            <cn type="integer"> 1 </cn>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="Akt_tot">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <plus/>
-            <cn> 1.241997 </cn>
-            <cn type="integer"> 1 </cn>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="TSC2_tot">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <plus/>
-            <cn> 1.136033 </cn>
-            <cn type="integer"> 1 </cn>
-          </apply>
-        </math>
-      </assignmentRule>
-      <assignmentRule variable="PRAS40_tot">
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-          <apply>
-            <plus/>
-            <cn> 0.981968 </cn>
-            <cn type="integer"> 1 </cn>
+            <minus/>
+            <ci> Erk_tot </ci>
+            <ci> Erk_pT202_Y204_obs </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -607,7 +592,43 @@
           <apply>
             <plus/>
             <cn> 0.458272 </cn>
-            <cn type="integer"> 1 </cn>
+            <ci> offset_amount </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Akt_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.241997 </cn>
+            <ci> offset_amount </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="IRS1_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.925974 </cn>
+            <ci> offset_amount </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="TSC2_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.136033 </cn>
+            <ci> offset_amount </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="PRAS40_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 0.981968 </cn>
+            <ci> offset_amount </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -616,7 +637,16 @@
           <apply>
             <plus/>
             <cn> 1.330735 </cn>
-            <cn type="integer"> 1 </cn>
+            <ci> offset_amount </ci>
+          </apply>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Erk_tot">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <plus/>
+            <cn> 1.305048 </cn>
+            <ci> offset_amount </ci>
           </apply>
         </math>
       </assignmentRule>
@@ -648,6 +678,11 @@
       <assignmentRule variable="FourE_BP1pT37_46_obs">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <ci> FourE_BP1pT37_46 </ci>
+        </math>
+      </assignmentRule>
+      <assignmentRule variable="Erk_pT202_Y204_obs">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <ci> Erk_pT202_Y204 </ci>
         </math>
       </assignmentRule>
     </listOfRules>
@@ -916,6 +951,84 @@
               <ci> Cell </ci>
               <ci> _kS6KDephos </ci>
               <ci> S6KpT389 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R14" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Erk" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Erk_pT202_Y204" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <apply>
+                <ci> MMWithKcat </ci>
+                <ci> _kErkPhos_km </ci>
+                <ci> _kErkPhos_kcat </ci>
+                <ci> Erk </ci>
+                <ci> Insulin </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R15" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Erk_pT202_Y204" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Erk" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Feedback"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> _kErkDephos </ci>
+              <ci> Erk_pT202_Y204 </ci>
+              <ci> Feedback </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R16" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="Feedback" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Erk_pT202_Y204"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> _kFeedbackIn </ci>
+              <ci> Erk_pT202_Y204 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Feedback" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kFeedbackOut </ci>
+              <ci> Feedback </ci>
             </apply>
           </math>
         </kineticLaw>

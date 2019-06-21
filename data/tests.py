@@ -24,10 +24,11 @@ class ParseDataTests(unittest.TestCase):
 
     def test_raw_data_is_accurate(self):
         data = self.gd.get_raw_data()
-        self.assertEqual(2599775, data.loc[('MCF7', 0, 0), 'Akt'])
-        self.assertEqual(1156087, data.loc[('MCF7', 0, 0), 'AktpT308'])
-        self.assertEqual(8351448, data.loc[('MCF7', 90, 0), 'PRAS40pT246'])
-        self.assertEqual(5833.17, data.loc[('T47D', 120, 3), 'Coomassie staining'])
+        print(data)
+        self.assertEqual(2599775, data.loc[('MCF7', 0), ('Akt', 0)])
+        self.assertEqual(1156087, data.loc[('MCF7', 0), ('AktpT308', 0)])
+        self.assertEqual(8351448, data.loc[('MCF7', 90), ('PRAS40pT246', 0)])
+        self.assertEqual(5833.17, data.loc[('T47D', 120), ('Coomassie staining', 3)])
 
     def test_get_data_normed_to_average(self):
         top_left = 1.422331386
@@ -41,6 +42,7 @@ class ParseDataTests(unittest.TestCase):
         self.assertAlmostEqual(df.loc[('T47D', 120), ('Coomassie staining', 3)], bottom_right)
 
     def test_get_data_normed_for_coomassie_blue(self):
+        # this test fails at the moment because we have added 1 onto some of the total data sets
         top_left = 1.471104582
         bottom_left = 0.770400628
         top_right = 1.650671097
@@ -62,10 +64,8 @@ class ParseDataTests(unittest.TestCase):
 
     def test_interpolated_data_to_copasi_format_multiple_files(self):
         fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
-        data = self.gd.interpolate_mcf7_data(num=30)
+        data = self.gd.interpolate_mcf7_data(num=30, offset_for_total_proetins=1)
         self.gd.to_copasi_format_multiple_files(fname=fname, data=data)
-
-
 
 
 class DataTests(unittest.TestCase):
@@ -121,7 +121,7 @@ class DataTests(unittest.TestCase):
             data = f.read()
         data = data.split('\n')
         columns = data[0].split('\t')
-        expected = 20
+        expected = 24
         actual = len(columns)
         self.assertEqual(expected, actual)
 
@@ -143,7 +143,6 @@ class DataTests(unittest.TestCase):
         # expected = 20
         # actual = len(columns)
         # self.assertEqual(expected, actual)
-
 
 
 if __name__ == '__main__':

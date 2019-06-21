@@ -94,67 +94,70 @@ function Hill(km, kcat, L, S, h)
 end
 
 model SimpleAktModel()
-    compartment Cell = 1;
-    var IRS1    in Cell;
-    var IRS1pS636_639   in Cell;
-    var Akt     in Cell;
-    var AktpT308    in Cell;
-    var TSC2    in Cell;
-    var TSC2pT1462   in Cell;
-    var PRAS40  in Cell;
-    var PRAS40pT246 in Cell;
-    var S6K in Cell;
-    var S6KpT389 in Cell;
-    var FourEBP1    in Cell;
-    var FourE_BP1pT37_46   in Cell;    
-    const Insulin in Cell;
+    compartment             Cell = 1;
+    var IRS1                in Cell;
+    var IRS1pS636_639       in Cell;
+    var Akt                 in Cell;
+    var AktpT308            in Cell;
+    var TSC2                in Cell;
+    var TSC2pT1462          in Cell;
+    var PRAS40              in Cell;
+    var PRAS40pT246         in Cell;
+    var S6K                 in Cell;
+    var S6KpT389            in Cell;
+    var FourEBP1            in Cell;
+    var FourE_BP1pT37_46    in Cell;    
+    var Erk                 in Cell;
+    var Erk_pT202_Y204      in Cell;
+    const Insulin           in Cell;
     
     // global variables
     Insulin = 1;
     
-    //IRS1_tot                    := IRS1 + IRS1pS636_639;
-    //Akt_tot                     := Akt + AktpT308;
-    //TSC2_tot                    := TSC2 + TSC2pT1462;
-    //PRAS40_tot                  := PRAS40 + PRAS40pT246;
-    //FourEBP1_tot                := FourEBP1 + FourE_BP1pT37_46;
-    //S6K_tot                     := S6K + S6KpT389;    
+    // Offset is added onto total proteins in order to prevent phospho being present in 
+    //  greater quantity than total
+    offset_amount                  = 1
     
-    IRS1_tot                := 1.700789 + 1;
-    Akt_tot                 := 1.241997 + 1;
-    TSC2_tot                := 1.136033 + 1;
-    PRAS40_tot              := 0.981968 + 1;
-    FourEBP1_tot            := 0.458272 + 1;
-    S6K_tot                 := 1.330735 + 1;
+    FourEBP1_tot                  := 0.458272 + offset_amount;
+    Akt_tot                       := 1.241997 + offset_amount;
+    IRS1_tot                      := 1.925974 + offset_amount;
+    TSC2_tot                      := 1.136033 + offset_amount;
+    PRAS40_tot                    := 0.981968 + offset_amount;
+    S6K_tot                       := 1.330735 + offset_amount;
+    Erk_tot                       := 1.305048 + offset_amount;
 
+    // we do not need to fit total proteins
+    // IRS1_obs                   := IRS1_tot;       
+    // Akt_obs                    := Akt_tot;   
+    // TSC2_obs                   := TSC2_tot;       
+    // PRAS40_obs                 := PRAS40_tot;       
+    // S6K_obs                    := S6K_tot ;       
     
-    // IRS1_obs                    := IRS1_tot;       
-    // Akt_obs                     := Akt_tot;   
-    // TSC2_obs                    := TSC2_tot;       
-    // PRAS40_obs                  := PRAS40_tot;       
-    // S6K_obs                     := S6K_tot ;       
-    
-    IRS1pS636_639_obs           := IRS1pS636_639;          
-    AktpT308_obs                := AktpT308;           
-    TSC2pT1462_obs              := TSC2pT1462;              
-    PRAS40pT246_obs             := PRAS40pT246;        
-    S6KpT389_obs                := S6KpT389;
-    FourE_BP1pT37_46_obs        := FourE_BP1pT37_46;           
-       
+    IRS1pS636_639_obs             := IRS1pS636_639;          
+    AktpT308_obs                  := AktpT308;           
+    TSC2pT1462_obs                := TSC2pT1462;              
+    PRAS40pT246_obs               := PRAS40pT246;        
+    S6KpT389_obs                  := S6KpT389;
+    FourE_BP1pT37_46_obs          := FourE_BP1pT37_46;           
+    Erk_pT202_Y204_obs            := Erk_pT202_Y204
     
     //initial conditions
-    IRS1pS636_639       = 0.861333;
-    AktpT308            = 0.486243;
-    TSC2pT1462          = 0.644957;
-    PRAS40pT246         = 0.387190  
-    FourE_BP1pT37_46    = 0.488169;
-    S6KpT389            = 0.395656;
+    IRS1pS636_639                  = 0.861333;
+    AktpT308                       = 0.486243;
+    TSC2pT1462                     = 0.644957;
+    PRAS40pT246                    = 0.387190  
+    FourE_BP1pT37_46               = 0.488169;
+    S6KpT389                       = 0.395656;
+    Erk_pT202_Y204                 = 0.115661;
+    Feedback                       = 0;
     
-    IRS1                := IRS1_tot - IRS1pS636_639              // 1.700789 ;
-    Akt                 := Akt_tot  - AktpT308                  // 1.241997 ;
-    TSC2                := TSC2_tot - TSC2pT1462                  // 1.136033 ;
-    PRAS40              := PRAS40_tot - PRAS40pT246                   // 0.981968 ;
-    FourEBP1            := FourEBP1_tot - FourE_BP1pT37_46;                                 //FourEBP1_tot - FourE_BP1pT37_46                // 0.458272 ;
-    S6K                 : = S6K_tot  - S6KpT389                   // 1.330735;
+    IRS1                           := IRS1_tot       -     IRS1pS636_639     ;
+    Akt                            := Akt_tot        -     AktpT308          ;
+    TSC2                           := TSC2_tot       -     TSC2pT1462        ;
+    PRAS40                         := PRAS40_tot     -     PRAS40pT246       ;
+    FourEBP1                       := FourEBP1_tot   -     FourE_BP1pT37_46  ;
+    S6K                            := S6K_tot        -     S6KpT389          ;
+    Erk                            := Erk_tot        -     Erk_pT202_Y204_obs;
     
     // kinetic parameters
     _kIRS1Phos                 = 0.1; 
@@ -175,6 +178,11 @@ model SimpleAktModel()
     _kS6KPhos_km               = 0.1;     
     _kS6KPhos_kcat             = 0.1;     
     _kS6KDephos                = 0.1; 
+    _kErkPhos_km               = 0.1;  
+    _kErkPhos_kcat             = 0.1;  
+    _kErkDephos                = 0.1; 
+    _kFeedbackIn               = 0.1;  
+    kFeedbackOut               = 0.1;  
     
     // reactions // MMWithKcat(km, kcat, S, E)
     R1 : IRS1 => IRS1pS636_639 ;                Cell*   MMWithKcat(_kIRS1Phos_km, _kIRS1Phos_kcat, IRS1, Insulin);
@@ -184,12 +192,15 @@ model SimpleAktModel()
     R5 : TSC2 => TSC2pT1462 ;                   Cell*   MMWithKcat(_kTSC2Phos_km, _kTSC2Phos_kcat, TSC2, AktpT308);
     R6 : TSC2pT1462 => TSC2 ;                   Cell*   _kTSC2Dephos*TSC2pT1462;
     R7 : PRAS40 => PRAS40pT246 ;                Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
-    //R8 : PRAS40 => PRAS40pT246 ;                Cell*   _kPras40PhosByTSC*TSC2pT1462*PRAS40;
     R9 : PRAS40pT246 => PRAS40 ;                Cell*   _kPras40Dephos*TSC2pT1462;
     R10: FourEBP1 => FourE_BP1pT37_46 ;         Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2);
     R11: FourE_BP1pT37_46 => FourEBP1 ;         Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
     R12: S6K => S6KpT389 ;                      Cell*   MMWithKcat(_kS6KPhos_km, _kS6KPhos_kcat, S6K, TSC2);
     R13: S6KpT389 => S6K ;                      Cell*   _kS6KDephos*S6KpT389;
+    R14: Erk => Erk_pT202_Y204 ;                Cell * MMWithKcat(_kErkPhos_km, _kErkPhos_kcat, Erk, Insulin);
+    R15: Erk_pT202_Y204 => Erk ;                Cell * _kErkDephos * Erk_pT202_Y204 * Feedback;
+    R16: => Feedback ;                          Cell * _kFeedbackIn * Erk_pT202_Y204;
+    R17: Feedback => ;                          Cell * kFeedbackOut * Feedback;    
 
 end
 

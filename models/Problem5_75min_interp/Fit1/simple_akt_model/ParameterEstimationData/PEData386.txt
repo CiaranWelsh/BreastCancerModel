@@ -1,2 +1,0 @@
-_kAktDephos	_kAktPhos_kcat	_kAktPhos_km	_kFourEBP1Dephos	_kFourEBP1Phos_kcat	_kFourEBP1Phos_km	_kIRS1Dephos	_kIRS1Phos	_kIRS1Phos_kcat	_kIRS1Phos_km	_kPras40Dephos	_kPras40PhosByAkt_kcat	_kPras40PhosByAkt_km	_kS6KDephos	_kS6KPhos_kcat	_kS6KPhos_km	_kTSC2Dephos	_kTSC2Phos_kcat	_kTSC2Phos_km	RSS
-15.7131	2497.48	319.654	1.39349	974.6489999999999	590.629	0.0209185	595.9209999999999	27.4712	1184.31	0.000274989	6.53918	566.058	0.0438879	4.1827	105.755	0.0001	1.8595599999999999	344.361	6.33186

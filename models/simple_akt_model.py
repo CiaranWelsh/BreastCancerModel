@@ -494,19 +494,14 @@ if __name__ == '__main__':
     BUILD_NEW = True
     # indicates which problem we are on. Increment when you try something new
     # PROBLEM = 2 #45 minute interpolation
-    PROBLEM = '3_60min_interp'  # Using 60 minutes of interpolated data instead
-    PROBLEM = '4_interp'  # Using no truncation with interpolated data instead
-    PROBLEM = '5_75min_interp'
-    PROBLEM = '5_75min_interp_wider_boundary'
-    PROBLEM = '6_75min_interp_wider_boundary'
-    PROBLEM = '7_manual'
+    PROBLEM = '1_first_try'
 
     # passed on to the run_mode in ParameterEstimation. Can be False, True, or 'slurm'
     FIT = '1'
     # FIT = 3 #current
-    RUN = False
+    RUN = 'slurm'
     # Open the sbml model in copasi
-    OPEN = True
+    OPEN = False
     # Parameter estimation copy number argument. Is automatically changed when RUN='slurm'
     COPY_NUMBER = 1
     # Open with copasi with best parameter set from PROBLEM
@@ -541,19 +536,19 @@ if __name__ == '__main__':
     if COPY_NUMBER == 0:
         raise ValueError
 
-    with tasks.ParameterEstimation.Context(mod, COPASI_DATA_FILES, parameters='g') as context:
+    with tasks.ParameterEstimation.Context(mod, COPASI_DATA_FILES, parameters='gm') as context:
         context.set('separator', ',')
         context.set('run_mode', RUN)
         context.set('problem', 'Problem{}'.format(PROBLEM))
         context.set('fit', '{}'.format(FIT))
         context.set('copy_number', COPY_NUMBER)
-        context.set('randomize_start_values', False)
+        context.set('randomize_start_values', True)
         context.set('method', 'particle_swarm')
         context.set('population_size', 200)
         context.set('swarm_size', 200)
         context.set('iteration_limit', 3000)
-        context.set('lower_bound', 0.00001)
-        context.set('upper_bound', 10000)
+        context.set('lower_bound', 0.001)
+        context.set('upper_bound', 100000)
         context.set('weight_method', 'standard_deviation')
         context.set('prefix', '_')
         config = context.get_config()

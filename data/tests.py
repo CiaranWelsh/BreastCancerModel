@@ -83,6 +83,9 @@ class ParseDataFromNewFileTests(unittest.TestCase):
     def test_to_copasi_format(self):
         self.gd.to_copasi_format()
 
+    def test_average_0_time_point(self):
+        self.gd.get_average_of_0_time_points()
+
 
 
 

@@ -7,6 +7,7 @@ import seaborn
 from scipy.interpolate import interp1d
 import site
 from pathlib import Path
+
 site.addsitedir(r'D:\pytseries')
 from pytseries.core import TimeSeries, TimeSeriesGroup
 
@@ -15,9 +16,14 @@ DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 PLOTS_DIR = os.path.join(DATA_DIRECTORY, 'plots')
-COPASI_DATA_FILES = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
+COPASI_DATA_FILES_DIR = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
 
+COPASI_DATA_FILES_DIR = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
+COPASI_DATA_FILES = glob.glob(os.path.join(COPASI_DATA_FILES_DIR, '*.csv'))
+OFFSET_PARAMETER = 5
 
+total_proteins = ['4E_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
+                  'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
 replacement_names = {
     '4E_BP1': 'FourEBP1_obs',
     '4E_BP1pT37_46': 'FourE_BP1pT37_46_obs',
@@ -171,7 +177,8 @@ class GetDataFromOldDataFile:
         total_proteins = ['4E_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
                           'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
         total_proteins = [i.replace('_obs', '') for i in total_proteins]
-        print('Warning. We have added 1 to the total protein data sets ({}). Always remember this. '.format(total_proteins))
+        print('Warning. We have added 1 to the total protein data sets ({}). Always remember this. '.format(
+            total_proteins))
         # we have added the offset parameter!
         data = self.get_data_normed_to_average()
         df_dct = {}
@@ -257,14 +264,14 @@ class GetDataFromOldDataFile:
 
         ic_dct = {}
         exclude = ['Insulin_indep', 'FourEBP1_obs', 'Akt_obs',
-                   'ERK_obs', 'GAPDH_obs','IRS1_obs','PRAS40_obs',
-                   'S6K_obs','TSC2_obs']
+                   'ERK_obs', 'GAPDH_obs', 'IRS1_obs', 'PRAS40_obs',
+                   'S6K_obs', 'TSC2_obs']
         for label, df in data.groupby(level='repeats'):
             ic_dct[label] = df.loc[label, 0]
         ic_df = pandas.concat(ic_dct).unstack(level=0)
         ic_df = ic_df.drop(exclude)
         print(ic_df)
-        new_idx = [i[:-4]+'_indep' for i in ic_df.index]# if i[:-4] not in exclude]
+        new_idx = [i[:-4] + '_indep' for i in ic_df.index]  # if i[:-4] not in exclude]
         ic_df.index = new_idx
 
         repeats = list(set(data.index.get_level_values(0)))
@@ -326,7 +333,7 @@ class GetDataFromOldDataFile:
         data = data.rename(replacement_names)
         data = pandas.DataFrame(data)
         data.columns = [0]
-        return(data)
+        return (data)
         # data = data.stack().unstack(level=0).stack(level=0)
         # data.index = data.index.swaplevel(0, 1)
         # tsg_dct = {}
@@ -350,11 +357,40 @@ class GetDataNormedToMax:
         '4E-BP1': 'FourEBP1',
         '4E-BP1pT37/46': 'FourEBP1pT37_46',
         'ERK': 'Erk',
-        'ERK-pT202/Y204': 'pT202_Y204',
+        'ERK-pT202/Y204': 'ErkpT202_Y204',
         'IRS1pS636/639': 'IRS1pS636_639',
-        'p38-pT180/Y182': 'p38_pT180_Y182',
+        'p38-pT180/Y182': 'p38pT180Y182',
         'ER alpha': 'ER_alpha'
     }
+
+    total_proteins = ['4E_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
+                      'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
+    observable_names = {
+        '4EBP1': 'FourEBP1_obs',
+        '4EBP1pT37_46': 'FourEBP1pT37_46_obs',
+        'Akt': 'Akt_obs',
+        'AktpS473': 'AktpS473_obs',
+        'AktpT308': 'AktpT308_obs',
+        'ERK': 'ERK_obs',
+        'GAPDH': 'GAPDH_obs',
+        'IRS1': 'IRS1_obs',
+        'IRS1pS636_639': 'IRS1pS636_639_obs',
+        'PRAS40': 'PRAS40_obs',
+        'PRAS40pS183': 'PRAS40pS183_obs',
+        'PRAS40pT246': 'PRAS40pT246_obs',
+        'S6K': 'S6K_obs',
+        'S6KpT229': 'S6KpT229_obs',
+        'S6KpT389': 'S6KpT389_obs',
+        'TSC2': 'TSC2_obs',
+        'TSC2pT1462': 'TSC2pT1462_obs',
+        'ERKpT202Y204': 'ErkpT202Y204_obs',
+        'p38': 'p38_obs',
+        'p38pT180Y182': 'p38pT180Y182_obs',
+        'ER alpha': 'ER_alpha_obs'
+    }
+
+    total_proteins = ['FourEBP1', 'Akt', 'ER_alpha', 'Erk',
+                      'GAPDH', 'IRS1', 'PRAS40', 'S6K', 'TSC2', 'p38']
 
     def __init__(self, fname):
         self.fname = fname
@@ -367,25 +403,35 @@ class GetDataNormedToMax:
         data = data.rename(columns=self.replacement_names, level=0)
         return data
 
-    def to_copasi_format(self, prefix='normed_to_max'):
+    def to_copasi_format(self, prefix='normed_to_max', offset_for_total_proteins=5):
         data = self.data
         data.index = data.index.swaplevel(1, 2)
         for label, df in self.data.groupby(level=['cell_line', 'repeat']):
             ics = df.iloc[0]
             ics.name = None
             ics = pandas.DataFrame(ics).transpose()
+            ics = ics.drop(self.total_proteins, axis=1)
             ics.columns = [f'{i}_indep' for i in ics.columns]
-            ics = pandas.concat([ics]*df.shape[0], axis=0)
-            insulin = pandas.DataFrame(pandas.Series([1.0]*df.shape[0]),
+            ics = pandas.concat([ics] * df.shape[0], axis=0)
+            insulin = pandas.DataFrame(pandas.Series([1.0] * df.shape[0]),
                                        columns=['Insulin_indep'])
             ics.index = df.index
             insulin.index = df.index
+
             df2 = pandas.concat([df, ics, insulin], axis=1)
             df2 = df2.loc[label]
-            fname = os.path.join(COPASI_DATA_FILES, f'{prefix}_{label[0]}{label[1]}.csv')
+            for i in df2:
+                if i in self.total_proteins:
+                    df2[i] = df2[i] + offset_for_total_proteins
+            df2 = df2.dropna(how='all', axis=1)
+            fname = os.path.join(COPASI_DATA_FILES_DIR, f'{prefix}_{label[0]}{label[1]}.csv')
+            df2 = df2.drop(self.total_proteins, axis=1)
+            df2 = df2.rename(columns=self.observable_names)
             df2.to_csv(fname)
+        print(data.columns)
 
-
+    def get_average_of_0_time_points(self):
+        print(self.data.xs(0, level=1).mean())
 
 
 def plot(data, prefix, savefig=False):
@@ -447,7 +493,7 @@ def get_initial_conc():
 
 def ss_data_to_copasi_format():
     total_proteins = ['FourEBP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
-     'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
+                      'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
     data = get_initial_conc()
     data = data.rename(columns=replacement_names_2)
     data['Insulin_indep'] = 0.005
@@ -457,13 +503,8 @@ def ss_data_to_copasi_format():
     return data
 
 
-
-
 if __name__ == '__main__':
     gd = GetDataFromOldDataFile(DATA_FILE)
-
-
-
 
 '''
 

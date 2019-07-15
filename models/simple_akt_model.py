@@ -24,26 +24,24 @@ except ImportError:
 matplotlib.use('Qt5Agg')
 seaborn.set_context('talk')
 
-WORKING_DIRECTORY = Path(os.path.abspath(__file__)).parents[1]
+# WORKING_DIRECTORY = Path(os.path.abspath(__file__)).parents[1]
 
 # WORKING_DIRECTORY = r'D:\BreastCancerModel'
-MODELS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'models')
-DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
-EXPERIMENTAL_DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
-SIMULATION_GRAPHS_DIR = os.path.join(DATA_DIRECTORY, 'simulation_graphs')
-if not os.path.isdir(SIMULATION_GRAPHS_DIR):
-    os.makedirs(SIMULATION_GRAPHS_DIR)
+# DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
+# EXPERIMENTAL_DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
+# SIMULATION_GRAPHS_DIR = os.path.join(DATA_DIRECTORY, 'simulation_graphs')
+# if not os.path.isdir(SIMULATION_GRAPHS_DIR):
+#     os.makedirs(SIMULATION_GRAPHS_DIR)
+#
 
+MODELS_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'models')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 COPASI_FILE = os.path.join(MODELS_DIRECTORY, 'simple_akt_model.cps')
 COPASI_FORMATTED_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_formatted_data.csv')
 COPASI_INTERP_DATA = fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
-COPASI_INTERP_DATA_FILES = glob.glob(COPASI_INTERP_DATA[:-4] + '*')
-COPASI_INTERP_DATA_FILES = [i for i in COPASI_INTERP_DATA_FILES if i != COPASI_INTERP_DATA]
 
 
-
-model_string = """
+model_string = f"""
 
 function MM(km, Vmax, S)
     Vmax * S / (km + S)
@@ -106,13 +104,11 @@ model SimpleAktModel()
     var PRAS40pT246         in Cell;
     var S6K                 in Cell;
     var S6KpT389            in Cell;
+    var S6KpT229           in Cell;
     var FourEBP1            in Cell;
-    var FourE_BP1pT37_46    in Cell;    
-    var Erk                 in Cell;
-    var Erk_pT202_Y204      in Cell;
-    var Feedback            in Cell;
+    var FourEBP1pT37_46     in Cell;    
     var PI3K                in Cell;
-    var pPI3K               in Cell;
+    var _pPI3K               in Cell;
     const Insulin           in Cell;
     
     // global variables
@@ -120,16 +116,15 @@ model SimpleAktModel()
     
     // Offset is added onto total proteins in order to prevent phospho being present in 
     //  greater quantity than total
-    offset_amount                  = 5
+    offset_amount                  = {OFFSET_PARAMETER}
     
-    FourEBP1_tot                  := 0.458272 + offset_amount;
-    Akt_tot                       := 1.241997 + offset_amount;
-    IRS1_tot                      := 1.925974 + offset_amount;
-    TSC2_tot                      := 1.136033 + offset_amount;
-    PRAS40_tot                    := 0.981968 + offset_amount;
-    S6K_tot                       := 1.330735 + offset_amount;
-    Erk_tot                       := 1.305048 + offset_amount;
-    _PI3K_tot                     = 5;
+    FourEBP1_tot                  := 1.593687 + offset_amount;
+    Akt_tot                       := 0.736138 + offset_amount;
+    IRS1_tot                      := 0.458843 + offset_amount;
+    TSC2_tot                      := 0.816176 + offset_amount;
+    PRAS40_tot                    := 0.954775 + offset_amount;
+    S6K_tot                       := 0.487419 + offset_amount;
+    PI3K_tot                      := 1          + offset_amount;
 
     // we do not need to fit total proteins
     // IRS1_obs                   := IRS1_tot;       
@@ -143,86 +138,98 @@ model SimpleAktModel()
     TSC2pT1462_obs                := TSC2pT1462;              
     PRAS40pT246_obs               := PRAS40pT246;        
     S6KpT389_obs                  := S6KpT389;
-    FourE_BP1pT37_46_obs          := FourE_BP1pT37_46;           
-    Erk_pT202_Y204_obs            := Erk_pT202_Y204
+    S6KpS229_obs                 := S6KpT229;
+    FourEBP1pT37_46_obs           := FourEBP1pT37_46;           
     
     //initial conditions
-    IRS1pS636_639                  = 0.861333;
-    AktpT308                       = 0.486243;
-    TSC2pT1462                     = 0.644957;
-    PRAS40pT246                    = 0.387190  
-    FourE_BP1pT37_46               = 0.488169;
-    S6KpT389                       = 0.395656;
-    Erk_pT202_Y204                 = 0.115661;
-    Feedback                       = 0;
-    _pPI3K                         = 0.1;
+    FourEBP1pT37_46    = 0.644677;
+    AktpT308           = 0.585251;
+    IRS1pS636_639      = 0.458843;
+    PRAS40pT246        = 0.537742;
+    S6KpT229           = 0.241475;
+    S6KpT389           = 0.177316;
+    TSC2pT1462         = 0.654499;
+    _pPI3K             = 0.1;
+
     
-    IRS1                           := IRS1_tot       -     IRS1pS636_639     ;
-    Akt                            := Akt_tot        -     AktpT308          ;
-    TSC2                           := TSC2_tot       -     TSC2pT1462        ;
-    PRAS40                         := PRAS40_tot     -     PRAS40pT246       ;
-    FourEBP1                       := FourEBP1_tot   -     FourE_BP1pT37_46  ;
-    S6K                            := S6K_tot        -     S6KpT389          ;
-    Erk                            := Erk_tot        -     Erk_pT202_Y204_obs;
-    PI3K                           := PI3K_tot       -     pPI3K             ; 
+    IRS1               := IRS1_tot       -     IRS1pS636_639             ;
+    Akt                := Akt_tot        -     AktpT308                  ;
+    TSC2               := TSC2_tot       -     TSC2pT1462                ;
+    PRAS40             := PRAS40_tot     -     PRAS40pT246               ;
+    FourEBP1           := FourEBP1_tot   -     FourEBP1pT37_46           ;
+    S6K                := S6K_tot        -     S6KpT389   - S6KpT229    ;
+    PI3K               := PI3K_tot       -     _pPI3K                    ; 
     
     // kinetic parameters
-    kFeedbackOut              = 0.01326991221;         
-    kFeedbackIn               = 1092.520199;         
+    _kIRS1Phos_km             = 0.1;      
+    _kIRS1Phos_kcat           = 0.1;      
+    _kIRS1Dephos_km           = 0.1;      
+    _kIRS1Dephos_kcat         = 0.1;          
+    _kPI3KPhos_km             = 0.1;      
+    _kPI3KPhos_kcat           = 0.1;      
+    _kPI3KDephos              = 0.1;      
+    _kS6KPhosS229_km         = 0.1;          
+    _kS6KPhosS229_kcat       = 0.1;          
+    _kS6KDephosS229          = 0.1;          
+    _kAktPhos_km              = 0.1;      
+    _kAktPhos_kcat            = 0.1;      
+    _kAktDephos               = 0.1;  
+    _kTSC2Phos_km             = 0.1;      
+    _kTSC2Phos_kcat           = 0.1;      
+    _kTSC2Dephos              = 0.1;      
+    _kPras40PhosByAkt_km      = 0.1;              
+    _kPras40PhosByAkt_kcat    = 0.1;              
+    _kPras40Dephos            = 0.1;      
+    _kFourEBP1Phos_km         = 0.1;          
+    _kFourEBP1Phos_kcat       = 0.1;          
+    _kFourEBP1Dephos          = 0.1;          
+    _kS6KT389Phos_km          = 0.1;          
+    _kS6KT389Phos_kcat        = 0.1;          
+    _kS6KDephos               = 0.1;  
     
-    _kFourEBP1Dephos           = 0.04760716822;             
-    _kS6KDephos                = 0.02513594021;     
-    _kPras40Dephos             = 0.1001194064;
-    
-    _kFourEBP1Phos_km          = 82.73582413;             
-    _kS6KT389Phos_km           = 9711.278764;         
-    _kPras40PhosByAkt_km       = 2684.754046;
-    
-    _kS6KT389Phos_kcat         = 350.115286;         
-    _kFourEBP1Phos_kcat        = 4.768585613;             
-    _kPras40PhosByAkt_kcat     = 286.5647513;
-    
-    _kAktDephos               = 403.46200;     
-    _kAktPhos_km              = 23.32000;
-    _kAktPhos_kcat            = 4887.04000;
-    
-    _kIRS1Phos_km              = 4469.348507;
-    _kIRS1Dephos_km            = 1732.050115;
-    _kIRS1Dephos_kcat          = 31.97748246;
-    _kIRS1Phos_kcat            = 91.25250293;
-    
-    
-    _kTSC2Phos_kcat            = 1285.13000;
-    _kTSC2Phos_km              = 9527.75000;
-    _kTSC2Phos_ki              = 1621.49000;
-    _kTSC2Dephos_vmax          = 1136.83000
-    _kTSC2Dephos_km            = 7776.66000;
+    //// old parameters
+    // _kFourEBP1Dephos           = 0.04760716822;             
+    // _kS6KDephos                = 0.02513594021;     
+    // _kPras40Dephos             = 0.1001194064;
+    // _kFourEBP1Phos_km          = 82.73582413;             
+    // _kS6KT389Phos_km           = 9711.278764;         
+    // _kPras40PhosByAkt_km       = 2684.754046;
+    // _kS6KT389Phos_kcat         = 350.115286;         
+    // _kFourEBP1Phos_kcat        = 4.768585613;             
+    // _kPras40PhosByAkt_kcat     = 286.5647513;
+    // _kAktDephos               = 403.46200;     
+    // _kAktPhos_km              = 23.32000;
+    // _kAktPhos_kcat            = 4887.04000;
+    // _kIRS1Phos_km              = 4469.348507;
+    // _kIRS1Dephos_km            = 1732.050115;
+    // _kIRS1Dephos_kcat          = 31.97748246;
+    // _kIRS1Phos_kcat            = 91.25250293;
+    // _kTSC2Phos_kcat            = 1285.13000;
+    // _kTSC2Phos_km              = 9527.75000;
+    // _kTSC2Dephos_vmax          = 1136.83000
+    // _kTSC2Dephos_km            = 7776.66000;
     
         
     // reactions // MMWithKcat(km, kcat, S, E)
     // function CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
     // function MM(km, Vmax, S)
     // function NonCompetitiveInhibitionWithKcat(km, ki, kcat, E, n, I, S)
-    R1f : IRS1 => IRS1pS636_639 ;                Cell*   MMWithKcat(_kIRS1Phos_km, _kIRS1Phos_kcat, IRS1, S6KpT389);
-    R1b : IRS1pS636_639 => IRS1 ;                Cell*   MMWithKcat(_kIRS1Dephos_km, _kIRS1Dephos_kcat, IRS1pS636_639, Insulin );
-    R2f : PI3K => pPI3K         ;                Cell*   MMWithKcat(_kPI3KPhos_km, _kPI3KPhos_kcat, PI3K, IRS1);
-    R2b : pPI3K => PI3K         ;                Cell*   _kPI3KDephos*pPI3K;
-    R3f : S6K => S6KpS6228      ;                Cell*   MMWithKcat(_kS6KPhosS6228_km, _kS6KPhosS6228_kcat, S6K, pPI3K); 
-    R3b : S6KpS6228 => S6K      ;                Cell*   _kS6KDephosS6228*S6KpS6228; 
-    R4f : Akt => AktpT308 ;                      Cell*   MMWithKcat(_kAktPhos_km, _kAktPhos_kcat, Akt, pPI3K);
-    R4b : AktpT308 => Akt ;                      Cell*   _kAktDephos*AktpT308*Erk_pT202_Y204;
-    R5f : TSC2 => TSC2pT1462 ;                   Cell*   NonCompetitiveInhibitionWithKcat(_kTSC2Phos_km, _kTSC2Phos_ki, _kTSC2Phos_kcat, AktpT308, 1, Erk_pT202_Y204, TSC2);
-    R5b: TSC2pT1462 => TSC2 ;                   Cell*   _kTSC2Dephos*TSC2pT1462;
-    R6f: PRAS40 => PRAS40pT246 ;                Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
-    R6b: PRAS40pT246 => PRAS40 ;                Cell*   _kPras40Dephos*PRAS40pT246;
-    R7f: FourEBP1 => FourE_BP1pT37_46 ;         Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2);
-    R7b: FourE_BP1pT37_46 => FourEBP1 ;         Cell*   _kFourEBP1Dephos*FourE_BP1pT37_46;
-    R8f: S6K => S6KpT389 ;                      Cell*   MMWithKcat(_kS6KT389Phos_km, _kS6KT389Phos_kcat, S6K, TSC2);
-    R8b: S6KpT389 => S6K ;                      Cell*   _kS6KDephos*S6KpT389;
-    // R17: Erk => Erk_pT202_Y204 ;                Cell * MMWithKcat(kErkPhos_km, kErkPhos_kcat, Erk, Insulin);
-    // R18: Erk_pT202_Y204 => Erk ;                Cell * kErkDephos * Erk_pT202_Y204 * Feedback;
-    // R19: => Feedback ;                          Cell * kFeedbackIn * Erk_pT202_Y204;
-    // R20: Feedback => ;                          Cell * kFeedbackOut * Feedback;    
+    R1f : IRS1 => IRS1pS636_639 ;      Cell*   MMWithKcat(_kIRS1Phos_km, _kIRS1Phos_kcat, IRS1, S6KpT389);
+    R1b : IRS1pS636_639 => IRS1 ;      Cell*   MMWithKcat(_kIRS1Dephos_km, _kIRS1Dephos_kcat, IRS1pS636_639, Insulin );
+    R2f : PI3K => _pPI3K         ;     Cell*   MMWithKcat(_kPI3KPhos_km, _kPI3KPhos_kcat, PI3K, IRS1);
+    R2b : _pPI3K => PI3K         ;     Cell*   _kPI3KDephos*_pPI3K;
+    R3f : S6K => S6KpT229      ;      Cell*   MMWithKcat(_kS6KPhosS229_km, _kS6KPhosS229_kcat, S6K, _pPI3K); 
+    R3b : S6KpT229 => S6K      ;      Cell*   _kS6KDephosS229*S6KpT229; 
+    R4f : Akt => AktpT308 ;            Cell*   MMWithKcat(_kAktPhos_km, _kAktPhos_kcat, Akt, _pPI3K);
+    R4b : AktpT308 => Akt ;            Cell*   _kAktDephos*AktpT308;
+    R5f : TSC2 => TSC2pT1462 ;         Cell*   MMWithKcat(_kTSC2Phos_km, _kTSC2Phos_kcat, TSC2, AktpT308);
+    R5b: TSC2pT1462 => TSC2 ;          Cell*   _kTSC2Dephos*TSC2pT1462;
+    R6f: PRAS40 => PRAS40pT246 ;       Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
+    R6b: PRAS40pT246 => PRAS40 ;       Cell*   _kPras40Dephos*PRAS40pT246;
+    R7f: FourEBP1 => FourEBP1pT37_46 ; Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2);
+    R7b: FourEBP1pT37_46 => FourEBP1 ; Cell*   _kFourEBP1Dephos*FourEBP1pT37_46;
+    R8f: S6K => S6KpT389 ;             Cell*   MMWithKcat(_kS6KT389Phos_km, _kS6KT389Phos_kcat, S6K, TSC2);
+    R8b: S6KpT389 => S6K ;             Cell*   _kS6KDephos*S6KpT389;
 end
 
 """
@@ -244,16 +251,17 @@ def plot_best_fit(problem):
     # simulate insulin stimulated condition
     mod.set('global_quantity', 'Insulin', 1, match_field='name', change_field='initial_value')
     data = mod.simulate(0, 120, 1, variables='gm')
-    exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(offset_for_total_proetins=1)
+    exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(
+        offset_for_total_proetins=1)
     exp = exp.stack()
     exp = exp.loc['MCF7']
     exp = exp.rename(columns={'4E_BP1': 'FourE_BP1',
-                              '4E_BP1pT37_46': 'FourE_BP1pT37_46',
+                              '4E_BP1pT37_46': 'FourEBP1pT37_46',
                               'ERK': 'Erk',
                               'ERK_pT202_Y204': 'Erk_pT202_Y204',
                               })
 
-    phospho_species_that_were_fitted = ['AktpT308_obs', 'FourE_BP1pT37_46_obs',
+    phospho_species_that_were_fitted = ['AktpT308_obs', 'FourEBP1pT37_46_obs',
                                         'IRS1pS636_639_obs', 'PRAS40pT246_obs',
                                         'S6KpT389_obs', 'TSC2pT1462_obs',
                                         'Erk_pT202_Y204']
@@ -325,6 +333,7 @@ def plot_best_fit(problem):
     fig.savefig(fname, dpi=300, bbox_inches='tight')
     print('figure saved to "{}"'.format(fname))
 
+
 def plotpl():
     '/home/ncw135/Documents/MesiSTRAT2/BreastCancerModel/models/ProfileLikelihoods/Fit1/_kAktPhos_kcat/ParameterEstimationData'
     print(WORKING_DIRECTORY)
@@ -353,24 +362,26 @@ def plotpl():
         plt.title(k)
     plt.show()
 
+
 def insert_parameters_from_dct_into_antimony(dct, model_string):
     import re
     for k, v in dct.items():
-        p = '^    '+k+' .*'
-        model_string = re.sub(p, '    '+k+'\t\t='+str(v)+';', model_string, flags=re.MULTILINE)
+        p = '^    ' + k + ' .*'
+        model_string = re.sub(p, '    ' + k + '\t\t=' + str(v) + ';', model_string, flags=re.MULTILINE)
     return model_string
+
 
 def simulation_with_t47d_ics(mod, t47d_data, problem):
     # mod = te.loada(model_string)
-    # dct = {'FourEBP1': 3.2466649329564135, 'FourE_BP1pT37_46': 0.7124890900275289, 'Akt': 2.8086251256904022, 'AktpT308': 0.7665804071985246, 'Erk_pT202_Y204': 0.39184126883631254, 'IRS1': 2.1221090610329165, 'IRS1pS636_639': 0.4200918742913655, 'PRAS40': 3.0166401225784516, 'PRAS40pT246': 1.1005998527632517, 'S6K': 2.394884041398308, 'S6KpT389': 0.5414110988836646, 'TSC2': 2.9584411371727395, 'TSC2pT1462': 1.1184222827344148}
+    # dct = {'FourEBP1': 3.2466649329564135, 'FourEBP1pT37_46': 0.7124890900275289, 'Akt': 2.8086251256904022, 'AktpT308': 0.7665804071985246, 'Erk_pT202_Y204': 0.39184126883631254, 'IRS1': 2.1221090610329165, 'IRS1pS636_639': 0.4200918742913655, 'PRAS40': 3.0166401225784516, 'PRAS40pT246': 1.1005998527632517, 'S6K': 2.394884041398308, 'S6KpT389': 0.5414110988836646, 'TSC2': 2.9584411371727395, 'TSC2pT1462': 1.1184222827344148}
     replacement_names = {
         'FourEBP1_obs': 'FourEBP1_tot',
-        'FourE_BP1pT37_46_obs': 'FourE_BP1pT37_46',
+        'FourEBP1pT37_46_obs': 'FourEBP1pT37_46',
         'Akt_obs': 'Akt_tot',
         'AktpS473_obs': 'AktpS473',
         'AktpT308_obs': 'AktpT308',
         'ERK_obs': 'Erk_tot',
-        'Erk_pT202_Y204_obs': 'Erk_pT202_Y204',
+        'ErkpT202_Y204': 'Erk_pT202_Y204',
         'IRS1_obs': 'IRS1_tot',
         'IRS1pS636_639_obs': 'IRS1pS636_639',
         'PRAS40_obs': 'PRAS40_tot',
@@ -400,23 +411,24 @@ def simulation_with_t47d_ics(mod, t47d_data, problem):
         mod.set('global_quantity', 'Insulin', 1, match_field='name', change_field='initial_value')
         mod.set('global_quantity', 'offset_amount', 1, match_field='name', change_field='initial_value')
         data = mod.simulate(0, 120, 2, variables='gm')
-        exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(offset_for_total_proetins=2)
+        exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(
+            offset_for_total_proetins=2)
         exp = exp.stack()
         exp = exp.loc['T47D']
         exp = exp.rename(columns={'4E_BP1': 'FourE_BP1',
-                                  '4E_BP1pT37_46': 'FourE_BP1pT37_46',
+                                  '4E_BP1pT37_46': 'FourEBP1pT37_46',
                                   'ERK': 'Erk',
                                   'ERK_pT202_Y204': 'Erk_pT202_Y204',
                                   })
 
-        phospho_species_that_were_fitted = ['AktpT308_obs', 'FourE_BP1pT37_46_obs',
+        phospho_species_that_were_fitted = ['AktpT308_obs', 'FourEBP1pT37_46_obs',
                                             'IRS1pS636_639_obs', 'PRAS40pT246_obs',
                                             'S6KpT389_obs', 'TSC2pT1462_obs',
                                             'Erk_pT202_Y204']
 
         ss_sim = data[sorted(['IRS1_tot', 'Akt_tot', 'TSC2_tot',
-                                 'PRAS40_tot', 'FourEBP1_tot', 'S6K_tot',
-                                 'Erk_tot'])]
+                              'PRAS40_tot', 'FourEBP1_tot', 'S6K_tot',
+                              'Erk_tot'])]
 
         ss_exp = exp[sorted(['FourE_BP1', 'Akt', 'IRS1',
                              'PRAS40', 'S6K', 'TSC2', 'Erk'])]
@@ -476,16 +488,14 @@ def simulation_with_t47d_ics(mod, t47d_data, problem):
         print('figure saved to "{}"'.format(fname))
 
 
-
-
 if __name__ == '__main__':
 
     # Build a new sbml model from scratch. When False, the existing model is worked on
     BUILD_NEW = True
     # indicates which problem we are on. Increment when you try something new
-    #PROBLEM = 2 #45 minute interpolation
-    PROBLEM = '3_60min_interp' # Using 60 minutes of interpolated data instead
-    PROBLEM = '4_interp' # Using no truncation with interpolated data instead
+    # PROBLEM = 2 #45 minute interpolation
+    PROBLEM = '3_60min_interp'  # Using 60 minutes of interpolated data instead
+    PROBLEM = '4_interp'  # Using no truncation with interpolated data instead
     PROBLEM = '5_75min_interp'
     PROBLEM = '5_75min_interp_wider_boundary'
     PROBLEM = '6_75min_interp_wider_boundary'
@@ -531,9 +541,8 @@ if __name__ == '__main__':
     if COPY_NUMBER == 0:
         raise ValueError
 
-    with tasks.ParameterEstimation.Context(mod, [SS_DATA_FILE] + COPASI_INTERP_DATA_FILES,
-                                           parameters='g') as context:
-        context.set('separator', '\t')
+    with tasks.ParameterEstimation.Context(mod, COPASI_DATA_FILES, parameters='g') as context:
+        context.set('separator', ',')
         context.set('run_mode', RUN)
         context.set('problem', 'Problem{}'.format(PROBLEM))
         context.set('fit', '{}'.format(FIT))
@@ -590,4 +599,3 @@ if __name__ == '__main__':
         t47d_data = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_ics_for_t47d(offset_for_total_proetins=1)
         # print(simulation_with_t47d_ics(model_string, t47d_data))
         print(simulation_with_t47d_ics(mod, t47d_data, 't47d'))
-

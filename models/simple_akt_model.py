@@ -15,12 +15,8 @@ site.addsitedir(r'/mnt/nfs/home/b3053674/pycotools3')  # cluster
 site.addsitedir(r'/mnt/nfs/home/b3053674/WorkingDirectory/MesiSTRAT2/BreastCancerModel/data')  # cluster
 from pycotools3 import model, tasks, viz
 
-try:
-    # for my computer
-    from data.data_analysis import *
-except ImportError:
-    # for cluster macihne
-    from data_analysis import GetData
+from data.data_analysis import *
+
 matplotlib.use('Qt5Agg')
 seaborn.set_context('talk')
 

@@ -13,7 +13,7 @@ class ParseDataTests(unittest.TestCase):
         self.data_dir = os.path.join(WORKING_DIRECTORY, 'data')
         self.data_file = os.path.join(self.data_dir, 'experimental_data.xlsx')
         assert os.path.isfile(self.data_file), self.data_file
-        self.gd = GetData(self.data_file)
+        self.gd = GetDataFromOldDataFile(self.data_file)
 
     def test_open_workbook(self):
         self.assertIsInstance(self.gd.workbook, xlrd.book.Book)
@@ -68,13 +68,32 @@ class ParseDataTests(unittest.TestCase):
         self.gd.to_copasi_format_multiple_files(fname=fname, data=data)
 
 
+class ParseDataFromNewFileTests(unittest.TestCase):
+
+    def setUp(self):
+        self.data_dir = os.path.join(WORKING_DIRECTORY, 'data')
+        self.data_file = os.path.join(self.data_dir, 'experimental_data_with_norm_to_max.csv')
+        assert os.path.isfile(self.data_file), self.data_file
+        self.gd = GetDataNormedToMax(self.data_file)
+
+    def test_read_data2(self):
+        data = self.gd.read_data()
+        self.assertIsInstance(data, pandas.DataFrame)
+
+    def test_to_copasi_format(self):
+        self.gd.to_copasi_format()
+
+
+
+
+
 class DataTests(unittest.TestCase):
 
     def setUp(self):
         self.data_dir = os.path.join(WORKING_DIRECTORY, 'data')
         self.data_file = os.path.join(self.data_dir, 'experimental_data.xlsx')
         assert os.path.isfile(self.data_file)
-        self.gd = GetData(self.data_file)
+        self.gd = GetDataFromOldDataFile(self.data_file)
         self.raw_data = self.gd.get_raw_data()
         self.normed_to_average_data = self.gd.get_data_normed_to_average()
         self.normed_to_coomassie = self.gd.get_data_normalised_to_coomassie_blue()
@@ -143,6 +162,16 @@ class DataTests(unittest.TestCase):
         # expected = 20
         # actual = len(columns)
         # self.assertEqual(expected, actual)
+
+    def test_get_ics_for_t47d(self):
+        data = self.gd.get_ics_for_t47d()
+        expected = 1.246665
+        actual = data.loc[('FourE_BP1_obs', 1), 0]
+        self.assertAlmostEqual(expected, actual, 6)
+
+    def test_simulation_with_t47d_data(self):
+        data = self.gd.get_ics_for_t47d(offset_for_total_proetins=2)
+
 
 
 if __name__ == '__main__':

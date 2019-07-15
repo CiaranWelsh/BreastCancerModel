@@ -15,14 +15,16 @@ DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 PLOTS_DIR = os.path.join(DATA_DIRECTORY, 'plots')
+COPASI_DATA_FILES = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
+
 
 replacement_names = {
-    '4E_BP1': 'FourE_BP1_obs',
+    '4E_BP1': 'FourEBP1_obs',
     '4E_BP1pT37_46': 'FourE_BP1pT37_46_obs',
     'Akt': 'Akt_obs',
     'AktpS473': 'AktpS473_obs',
     'AktpT308': 'AktpT308_obs',
-    'Coomassie staining': 'Coomassie _obs',
+    'Coomassie staining': 'Coomassie_obs',
     'ERK': 'ERK_obs',
     'GAPDH': 'GAPDH_obs',
     'IRS1': 'IRS1_obs',
@@ -41,8 +43,43 @@ replacement_names = {
     'ER alpha': 'ER_alpha'
 }
 
+replacement_names_2 = {
+    '4E_BP1': 'FourEBP1_tot',
+    '4E_BP1pT37_46': 'FourE_BP1pT37_46',
+    'Akt': 'Akt_tot',
+    'AktpS473': 'AktpS473',
+    'AktpT308': 'AktpT308',
+    'Coomassie staining': 'Coomassie_obs',
+    'ERK': 'Erk_tot',
+    'GAPDH': 'GAPDH_obs',
+    'IRS1': 'IRS1_tot',
+    'IRS1pS636_639': 'IRS1pS636_639',
+    'PRAS40': 'PRAS40_tot',
+    'PRAS40pS183': 'PRAS40pS183',
+    'PRAS40pT246': 'PRAS40pT246',
+    'S6K': 'S6K_tot',
+    'S6KpT229': 'S6KpT229',
+    'S6KpT389': 'S6KpT389',
+    'TSC2': 'TSC2_tot',
+    'TSC2pT1462': 'TSC2pT1462',
+    'ERK_pT202_Y204': 'Erk_pT202_Y204',
+    'p38': 'p38_tot',
+    'p38_pT180_Y182': 'p38_pT180_Y182',
+    'ER alpha': 'ER_alpha_tot'
+}
 
-class GetData:
+replacement_names_3 = {
+    '4E-BP1': 'FourEBP1',
+    '4E-BP1pT37/46': 'FourEBP1pT37_46',
+    'ERK': 'Erk',
+    'ERK-pT202/Y204': 'pT202_Y204',
+    'IRS1pS636/639': 'IRS1pS636_639',
+    'p38-pT180/Y182': 'p38_pT180_Y182',
+    'ER alpha': 'ER_alpha'
+}
+
+
+class GetDataFromOldDataFile:
     time = [0, 15, 30, 60, 90, 120]
     condition_names = ['MCF-7 0 minutes ins + aa', 'MCF-7 15 minutes ins + aa', 'MCF-7 30 minutes ins + aa',
                        'MCF-7 60 minutes ins + aa', 'MCF-7 90 minutes ins + aa', 'MCF-7 120 minutes ins + aa',
@@ -219,7 +256,7 @@ class GetData:
         data = data.rename(columns=replacement_names)
 
         ic_dct = {}
-        exclude = ['Insulin_indep', 'FourE_BP1_obs', 'Akt_obs',
+        exclude = ['Insulin_indep', 'FourEBP1_obs', 'Akt_obs',
                    'ERK_obs', 'GAPDH_obs','IRS1_obs','PRAS40_obs',
                    'S6K_obs','TSC2_obs']
         for label, df in data.groupby(level='repeats'):
@@ -280,6 +317,76 @@ class GetData:
         # print(data2)
         return data2
 
+    def get_ics_for_t47d(self, offset_for_total_proetins=0):
+        data = self.get_data_normalised_to_coomassie_blue(offset_for_total_proetins=offset_for_total_proetins)
+        data = data.transpose()
+        data.index.names = ['antibody', 'repeats']
+        data = data.transpose()
+        data = data.loc['T47D', 0]
+        data = data.rename(replacement_names)
+        data = pandas.DataFrame(data)
+        data.columns = [0]
+        return(data)
+        # data = data.stack().unstack(level=0).stack(level=0)
+        # data.index = data.index.swaplevel(0, 1)
+        # tsg_dct = {}
+        # for label, df in data.groupby(level='repeats'):
+        #     df.index = df.index.droplevel('repeats')
+        #     tsg = TimeSeriesGroup(df).interpolate(kind='linear', num=num)
+        #     tsg = tsg.as_df()
+        #     tsg_dct[label] = tsg
+        #
+        # data2 = pandas.concat(tsg_dct)
+        # data2.index.names = ['repeats', 'antibody']
+        # data2.columns.names = data.columns.names
+        # data2 = data2.unstack(level=1).stack(level=0).unstack(level=0)
+        # # data2.index = [(round(i, 3) for i in data2.index)]
+        # # print(data2)
+        # return data2
+
+
+class GetDataNormedToMax:
+    replacement_names = {
+        '4E-BP1': 'FourEBP1',
+        '4E-BP1pT37/46': 'FourEBP1pT37_46',
+        'ERK': 'Erk',
+        'ERK-pT202/Y204': 'pT202_Y204',
+        'IRS1pS636/639': 'IRS1pS636_639',
+        'p38-pT180/Y182': 'p38_pT180_Y182',
+        'ER alpha': 'ER_alpha'
+    }
+
+    def __init__(self, fname):
+        self.fname = fname
+        self.data = self.read_data()
+
+    def read_data(self):
+        data = pandas.read_csv(self.fname, index_col=[0, 1], header=[0, 1])
+        data = data.stack()
+        data.index.names = ['cell_line', 'time', 'repeat']
+        data = data.rename(columns=self.replacement_names, level=0)
+        return data
+
+    def to_copasi_format(self, prefix='normed_to_max'):
+        data = self.data
+        data.index = data.index.swaplevel(1, 2)
+        for label, df in self.data.groupby(level=['cell_line', 'repeat']):
+            ics = df.iloc[0]
+            ics.name = None
+            ics = pandas.DataFrame(ics).transpose()
+            ics.columns = [f'{i}_indep' for i in ics.columns]
+            ics = pandas.concat([ics]*df.shape[0], axis=0)
+            insulin = pandas.DataFrame(pandas.Series([1.0]*df.shape[0]),
+                                       columns=['Insulin_indep'])
+            ics.index = df.index
+            insulin.index = df.index
+            df2 = pandas.concat([df, ics, insulin], axis=1)
+            df2 = df2.loc[label]
+            fname = os.path.join(COPASI_DATA_FILES, f'{prefix}_{label[0]}{label[1]}.csv')
+            df2.to_csv(fname)
+
+
+
 
 def plot(data, prefix, savefig=False):
     data = data.stack().stack()
@@ -331,7 +438,7 @@ def principle_component_analysis(data, colourby='cell_line', savefig=False):
 
 
 def get_initial_conc():
-    data = GetData(DATA_FILE).get_data_normalised_to_coomassie_blue()
+    data = GetDataFromOldDataFile(DATA_FILE).get_data_normalised_to_coomassie_blue()
     data = data.stack()
     average = data.groupby(level=['cell_line', 'time']).mean()
     mcf70 = average.loc['MCF7', 0]
@@ -339,10 +446,10 @@ def get_initial_conc():
 
 
 def ss_data_to_copasi_format():
-    total_proteins = ['FourE_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
+    total_proteins = ['FourEBP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
      'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
     data = get_initial_conc()
-    data = data.rename(columns=replacement_names)
+    data = data.rename(columns=replacement_names_2)
     data['Insulin_indep'] = 0.005
     # for i in total_proteins:
     #     data[i] = data[i] + 1
@@ -353,7 +460,7 @@ def ss_data_to_copasi_format():
 
 
 if __name__ == '__main__':
-    gd = GetData(DATA_FILE)
+    gd = GetDataFromOldDataFile(DATA_FILE)
 
 
 

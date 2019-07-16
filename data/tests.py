@@ -77,7 +77,7 @@ class ParseDataFromNewFileTests(unittest.TestCase):
         self.gd = GetDataNormedToMax(self.data_file)
 
     def test_read_data2(self):
-        data = self.gd.read_data()
+        data = self.gd.read_data(offset_for_total_proteins=OFFSET_PARAMETER)
         self.assertIsInstance(data, pandas.DataFrame)
 
     def test_to_copasi_format(self):
@@ -85,6 +85,9 @@ class ParseDataFromNewFileTests(unittest.TestCase):
 
     def test_average_0_time_point(self):
         self.gd.get_average_of_0_time_points()
+
+    def test_plot(self):
+        plot2(self.gd.read_data(OFFSET_PARAMETER), 'NormedToMaxData', savefig=True)
 
 
 

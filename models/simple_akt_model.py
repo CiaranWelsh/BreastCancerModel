@@ -21,7 +21,7 @@ try:
 except ImportError:
     # for cluster macihne
     from data_analysis import *
-    
+
 matplotlib.use('Qt5Agg')
 seaborn.set_context('talk')
 
@@ -139,7 +139,7 @@ model SimpleAktModel()
     TSC2pT1462_obs                := TSC2pT1462;              
     PRAS40pT246_obs               := PRAS40pT246;        
     S6KpT389_obs                  := S6KpT389;
-    S6KpS229_obs                 := S6KpT229;
+    S6KpT229_obs                  := S6KpT229;
     FourEBP1pT37_46_obs           := FourEBP1pT37_46;           
     
     //initial conditions
@@ -254,6 +254,7 @@ def plot_best_fit(problem):
     data = mod.simulate(0, 120, 1, variables='gm')
     exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(
         offset_for_total_proetins=1)
+    # exp = GetDataNormedToMax()
     exp = exp.stack()
     exp = exp.loc['MCF7']
     exp = exp.rename(columns={'4E_BP1': 'FourE_BP1',
@@ -333,6 +334,135 @@ def plot_best_fit(problem):
     fname = os.path.join(SIMULATION_GRAPHS_DIR, '{}_simulations.png'.format(problem))
     fig.savefig(fname, dpi=300, bbox_inches='tight')
     print('figure saved to "{}"'.format(fname))
+
+def plot_best_fit2(problem, features=None, cell_line='MCF7'):
+    """
+
+    :param problem: string. Used for filename only
+    :return:
+    """
+    data = viz.Parse(pe).data
+    data['simple_akt_model'].to_csv(os.path.join(DATA_DIRECTORY, 'parameter_estimation_data.csv'))
+    print(data['simple_akt_model'].iloc[0])
+    mod.insert_parameters(df=data['simple_akt_model'], index=0, inplace=True)
+    # simulate steady state condition
+    mod.set('global_quantity', 'Insulin', 0.05, match_field='name', change_field='initial_value')
+    # ss_data = mod.simulate(0, 120, 1, variables='gm')
+    # simulate insulin stimulated condition
+    mod.set('global_quantity', 'Insulin', 1, match_field='name', change_field='initial_value')
+    data = mod.simulate(0, 120, 1, variables='gm')
+    # exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(
+    #     offset_for_total_proetins=1)
+    exp = GetDataNormedToMax(DATA_FILE_NORMED_TO_MAX).data
+    # print(exp)
+    exp = exp.stack()
+    exp = exp.loc[cell_line]
+    exp = pandas.DataFrame(exp)
+    exp.index.names = ['time', 'repeat', 'antibody']
+    exp.columns = ['signal']
+
+    if features is None:
+        features = [i for i in data.columns if '_obs' in i]
+
+    data = data[features]
+    data.columns = [i.replace('_obs', '') for i in data.columns]
+    data = data.stack()
+    data = pandas.DataFrame(data)
+    data.index.names = ['time', 'antibody']
+    data.columns = ['signal']
+
+    print(data.head())
+    mod.open()
+    # print(exp)
+    for i in sorted(list(set(data.index.get_level_values('antibody')))):
+        print(i)
+        df = data.xs(level='antibody', key=i)
+        exp_df = exp.xs(level='antibody', key=i)
+        print(exp_df)
+        # plt.figure()
+        # seaborn.lineplot(x='time', y='signal', data=df.reset_index())
+        # seaborn.lineplot(x='time', y='signal', data=exp.reset_index())
+
+    plt.show()
+
+
+
+
+    # exp = exp.rename(columns={'4E_BP1': 'FourE_BP1',
+    #                           '4E_BP1pT37_46': 'FourEBP1pT37_46',
+    #                           'ERK': 'Erk',
+    #                           'ERK_pT202_Y204': 'Erk_pT202_Y204',
+    #                           })
+    #
+    # phospho_species_that_were_fitted = ['AktpT308_obs', 'FourEBP1pT37_46_obs',
+    #                                     'IRS1pS636_639_obs', 'PRAS40pT246_obs',
+    #                                     'S6KpT389_obs', 'TSC2pT1462_obs',
+    #                                     'Erk_pT202_Y204']
+    #
+    # ss_sim = ss_data[sorted(['IRS1_tot', 'Akt_tot', 'TSC2_tot',
+    #                          'PRAS40_tot', 'FourEBP1_tot', 'S6K_tot',
+    #                          'Erk_tot'])]
+    #
+    # print(exp.columns)
+    # ss_exp = exp[sorted(['FourE_BP1', 'Akt', 'IRS1',
+    #                      'PRAS40', 'S6K', 'TSC2', 'Erk'])]
+    #
+    # print(ss_sim.columns)
+    # print(ss_exp.columns)
+
+    # ts_sim = data[sorted(phospho_species_that_were_fitted)]
+    #
+    # ts_exp = exp[sorted([i.replace('_obs', '') for i in phospho_species_that_were_fitted])]
+    #
+    # assert ss_sim.shape[1] == 7, ss_sim.shape[1]
+    # assert ss_exp.shape[1] == 7, ss_exp.shape[1]
+    # assert ts_sim.shape[1] == 7, ts_sim.shape[1]
+    # assert ts_exp.shape[1] == 7, ts_exp.shape[1]
+    #
+    # fig = plt.figure(figsize=(20, 10))
+    # for i in range(ss_sim.shape[1]):
+    #     ax = plt.subplot(3, 3, i + 1)
+    #     ss_sim_var = ss_sim.columns[i]
+    #     ss_exp_var = ss_exp.columns[i]
+    #     ts_sim_var = ts_sim.columns[i]
+    #     ts_exp_var = ts_exp.columns[i]
+    #
+    #     ss_sim_plt = ss_sim[ss_sim.columns[i]]
+        # ts_sim_plt = ts_sim[ts_sim.columns[i]]
+
+        # steady state stuff
+        # total_color = 'green'
+        # phos_color = 'blue'
+        # seaborn.lineplot(x='time', y=ss_exp_var,
+        #                  data=ss_exp.reset_index(), label='Total protein, experimental',
+        #                  ax=ax, legend=False, color=total_color,
+        #                  markers=True)
+        # ax.lines[0].set_linestyle("--")
+        # ax.plot(ss_sim_plt.index, ss_sim_plt.values, label='Total protein, simulated',
+        #         linestyle='-', color=total_color,
+        #         )
+
+        # time series stuff
+        # seaborn.lineplot(x='time', y=ts_exp_var, data=ts_exp.reset_index(),
+        #                  label='pProtein, experimental', ax=ax, legend=False, color=phos_color,
+        #                  markers=True
+        #                  )
+        # ax.lines[2].set_linestyle("--")
+        #
+        # ax.plot(ts_sim_plt.index, ts_sim_plt.values, label='pProtein, simulated',
+        #         linestyle='-', color=phos_color)
+        #
+        # plt.title(ss_exp_var)
+        # seaborn.despine(fig=fig, top=True, right=True)
+        # plt.xlabel('')
+        # plt.ylabel('')
+    # plt.subplots_adjust(left=0.25, right=0.25, top=0.25, bottom=0.25)
+    # plt.subplots_adjust(wspace=0.1, hspace=0.4)
+    # plt.legend(loc=(1.35, 0.1))
+    # plt.show()
+    # fname = os.path.join(SIMULATION_GRAPHS_DIR, '{}_simulations.png'.format(problem))
+    # fig.savefig(fname, dpi=300, bbox_inches='tight')
+    # print('figure saved to "{}"'.format(fname))
 
 
 def plotpl():
@@ -495,12 +625,19 @@ if __name__ == '__main__':
     BUILD_NEW = True
     # indicates which problem we are on. Increment when you try something new
     # PROBLEM = 2 #45 minute interpolation
-    PROBLEM = '1_first_try'
+    PROBLEM = '1_first_try' # didn't get a fit with all of the data in the estimation.
+    PROBLEM = '2_individual_cell_lines'
 
     # passed on to the run_mode in ParameterEstimation. Can be False, True, or 'slurm'
-    FIT = '1'
+    FIT = 'MCF7'
+    if FIT == 'MCF7':
+        COPASI_DATA_FILES = [i for i in COPASI_DATA_FILES if 'MCF7' in i]
+    elif FIT == 'T47D':
+        COPASI_DATA_FILES = [i for i in COPASI_DATA_FILES if 'T47D' in i]
+    elif FIT == 'ZR75':
+        COPASI_DATA_FILES = [i for i in COPASI_DATA_FILES if 'ZR-75' in i]
     # FIT = 3 #current
-    RUN = 'slurm'
+    RUN = False
     # Open the sbml model in copasi
     OPEN = False
     # Parameter estimation copy number argument. Is automatically changed when RUN='slurm'
@@ -510,7 +647,7 @@ if __name__ == '__main__':
     # Run profile likelihoods
     RUN_PROFIE_LIKELIHOOD = False
     # plot the best fits in presentable format
-    PLOT_BEST_FIT = False
+    PLOT_BEST_FIT = True
 
     PLOT_PL = False
 
@@ -528,7 +665,7 @@ if __name__ == '__main__':
         mod = model.Model(COPASI_FILE)
 
     if RUN == 'slurm':
-        COPY_NUMBER = 500
+        COPY_NUMBER = 176
     elif RUN == True:
         COPY_NUMBER = 1
     elif RUN == 'parallel':
@@ -543,11 +680,11 @@ if __name__ == '__main__':
         context.set('problem', 'Problem{}'.format(PROBLEM))
         context.set('fit', '{}'.format(FIT))
         context.set('copy_number', COPY_NUMBER)
-        context.set('randomize_start_values', True)
+        context.set('randomize_start_values', False)
         context.set('method', 'particle_swarm')
         context.set('population_size', 200)
-        context.set('swarm_size', 200)
-        context.set('iteration_limit', 3000)
+        context.set('swarm_size', 100)
+        context.set('iteration_limit', 2000)
         context.set('lower_bound', 0.001)
         context.set('upper_bound', 100000)
         context.set('weight_method', 'standard_deviation')
@@ -589,7 +726,8 @@ if __name__ == '__main__':
         print(mod.open())
 
     if PLOT_BEST_FIT:
-        plot_best_fit(PROBLEM)
+        # plot_best_fit(PROBLEM)
+        plot_best_fit2(PROBLEM)
 
     if RUN_SIMULATION_FROM_DIFFERENT_INITIAL_CONDITIONS:
         t47d_data = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_ics_for_t47d(offset_for_total_proetins=1)

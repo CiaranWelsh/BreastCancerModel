@@ -13,7 +13,10 @@ from pytseries.core import TimeSeries, TimeSeriesGroup
 
 WORKING_DIRECTORY = Path(os.path.abspath(__file__)).parents[1]
 DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
+DATA_DIRECTORY = os.path.join(WORKING_DIRECTORY, 'data')
 DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
+DATA_FILE_NORMED_TO_MAX =  os.path.join(DATA_DIRECTORY, 'experimental_data_with_norm_to_max.csv')
+
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
 PLOTS_DIR = os.path.join(DATA_DIRECTORY, 'plots')
 COPASI_DATA_FILES_DIR = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
@@ -396,14 +399,17 @@ class GetDataNormedToMax:
         self.fname = fname
         self.data = self.read_data()
 
-    def read_data(self):
+    def read_data(self, offset_for_total_proteins=OFFSET_PARAMETER):
         data = pandas.read_csv(self.fname, index_col=[0, 1], header=[0, 1])
         data = data.stack()
         data.index.names = ['cell_line', 'time', 'repeat']
         data = data.rename(columns=self.replacement_names, level=0)
+        for i in data:
+            if i in self.total_proteins:
+                data[i] = data[i] + offset_for_total_proteins
         return data
 
-    def to_copasi_format(self, prefix='normed_to_max', offset_for_total_proteins=5):
+    def to_copasi_format(self, prefix='normed_to_max'):
         data = self.data
         data.index = data.index.swaplevel(1, 2)
         for label, df in self.data.groupby(level=['cell_line', 'repeat']):
@@ -420,9 +426,7 @@ class GetDataNormedToMax:
 
             df2 = pandas.concat([df, ics, insulin], axis=1)
             df2 = df2.loc[label]
-            for i in df2:
-                if i in self.total_proteins:
-                    df2[i] = df2[i] + offset_for_total_proteins
+
             df2 = df2.dropna(how='all', axis=1)
             fname = os.path.join(COPASI_DATA_FILES_DIR, f'{prefix}_{label[0]}{label[1]}.csv')
             df2 = df2.drop(self.total_proteins, axis=1)
@@ -444,6 +448,24 @@ def plot(data, prefix, savefig=False):
                          hue='cell_line', style='cell_line',
                          palette='bright', markers=True, ci=95, linestyle='-', estimator=None,
                          units='repeats')
+        seaborn.despine(fig, top=True, right=True)
+        plt.ylabel('AU')
+        plt.title(label)
+        fname = os.path.join(PLOTS_DIR, '{}_{}'.format(prefix, label))
+        if savefig:
+            plt.savefig(fname, dpi=200, bbox_inches='tight')
+
+def plot2(data, prefix, savefig=False):
+    data = data.stack()
+    data = pandas.DataFrame(data)
+    data.index.names = ['cell_line', 'time', 'repeat', 'antibody']
+    for label, df in data.groupby(level=[3]):
+        fig = plt.figure()
+
+        seaborn.lineplot(x='time', y=0, data=df.reset_index(),
+                         hue='cell_line', style='cell_line',
+                         palette='bright', markers=True, ci=95, linestyle='-', estimator=None,
+                         units='repeat')
         seaborn.despine(fig, top=True, right=True)
         plt.ylabel('AU')
         plt.title(label)
@@ -505,6 +527,7 @@ def ss_data_to_copasi_format():
 
 if __name__ == '__main__':
     gd = GetDataFromOldDataFile(DATA_FILE)
+
 
 '''
 

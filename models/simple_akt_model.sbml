@@ -495,8 +495,17 @@
       <parameter id="TSC2pT1462_obs" constant="false"/>
       <parameter id="PRAS40pT246_obs" constant="false"/>
       <parameter id="S6KpT389_obs" constant="false"/>
-      <parameter id="S6KpS229_obs" constant="false"/>
+      <parameter id="S6KpT229_obs" constant="false"/>
       <parameter id="FourEBP1pT37_46_obs" constant="false"/>
+      <parameter id="_kAktPhos_km" value="0.1" constant="true"/>
+      <parameter id="_kAktPhos_kcat" value="0.1" constant="true"/>
+      <parameter id="_kAktDephos" value="0.1" constant="true"/>
+      <parameter id="_kS6KT389Phos_km" value="0.1" constant="true"/>
+      <parameter id="_kS6KT389Phos_kcat" value="0.1" constant="true"/>
+      <parameter id="_kS6KT389Dephos" value="0.1" constant="true"/>
+      <parameter id="_kTSC2Phos_km" value="0.1" constant="true"/>
+      <parameter id="_kTSC2Phos_kcat" value="0.1" constant="true"/>
+      <parameter id="_kTSC2Dephos" value="0.1" constant="true"/>
       <parameter id="_kIRS1Phos_km" value="0.1" constant="true"/>
       <parameter id="_kIRS1Phos_kcat" value="0.1" constant="true"/>
       <parameter id="_kIRS1Dephos_km" value="0.1" constant="true"/>
@@ -506,22 +515,13 @@
       <parameter id="_kPI3KDephos" value="0.1" constant="true"/>
       <parameter id="_kS6KPhosS229_km" value="0.1" constant="true"/>
       <parameter id="_kS6KPhosS229_kcat" value="0.1" constant="true"/>
-      <parameter id="_kS6KDephosS229" value="0.1" constant="true"/>
-      <parameter id="_kAktPhos_km" value="0.1" constant="true"/>
-      <parameter id="_kAktPhos_kcat" value="0.1" constant="true"/>
-      <parameter id="_kAktDephos" value="0.1" constant="true"/>
-      <parameter id="_kTSC2Phos_km" value="0.1" constant="true"/>
-      <parameter id="_kTSC2Phos_kcat" value="0.1" constant="true"/>
-      <parameter id="_kTSC2Dephos" value="0.1" constant="true"/>
+      <parameter id="kS6KDephosS229" value="1" constant="true"/>
       <parameter id="_kPras40PhosByAkt_km" value="0.1" constant="true"/>
       <parameter id="_kPras40PhosByAkt_kcat" value="0.1" constant="true"/>
-      <parameter id="_kPras40Dephos" value="0.1" constant="true"/>
+      <parameter id="kPras40Dephos" value="1" constant="true"/>
       <parameter id="_kFourEBP1Phos_km" value="0.1" constant="true"/>
       <parameter id="_kFourEBP1Phos_kcat" value="0.1" constant="true"/>
-      <parameter id="_kFourEBP1Dephos" value="0.1" constant="true"/>
-      <parameter id="_kS6KT389Phos_km" value="0.1" constant="true"/>
-      <parameter id="_kS6KT389Phos_kcat" value="0.1" constant="true"/>
-      <parameter id="_kS6KDephos" value="0.1" constant="true"/>
+      <parameter id="kFourEBP1Dephos" value="1" constant="true"/>
     </listOfParameters>
     <listOfRules>
       <assignmentRule variable="IRS1">
@@ -679,7 +679,7 @@
           <ci> S6KpT389 </ci>
         </math>
       </assignmentRule>
-      <assignmentRule variable="S6KpS229_obs">
+      <assignmentRule variable="S6KpT229_obs">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
           <ci> S6KpT229 </ci>
         </math>
@@ -822,7 +822,7 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> _kS6KDephosS229 </ci>
+              <ci> kS6KDephosS229 </ci>
               <ci> S6KpT229 </ci>
             </apply>
           </math>
@@ -954,7 +954,7 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> _kPras40Dephos </ci>
+              <ci> kPras40Dephos </ci>
               <ci> PRAS40pT246 </ci>
             </apply>
           </math>
@@ -998,7 +998,7 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> _kFourEBP1Dephos </ci>
+              <ci> kFourEBP1Dephos </ci>
               <ci> FourEBP1pT37_46 </ci>
             </apply>
           </math>
@@ -1042,7 +1042,7 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> _kS6KDephos </ci>
+              <ci> _kS6KT389Dephos </ci>
               <ci> S6KpT389 </ci>
             </apply>
           </math>

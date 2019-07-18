@@ -23,6 +23,10 @@ COPASI_DATA_FILES_DIR = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
 
 COPASI_DATA_FILES_DIR = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
 COPASI_DATA_FILES = glob.glob(os.path.join(COPASI_DATA_FILES_DIR, '*.csv'))
+
+SIMULATION_GRAPHS_DIR = os.path.join(PLOTS_DIR, 'simulation_graphs')
+if not os.path.isdir(SIMULATION_GRAPHS_DIR):
+    os.makedirs(SIMULATION_GRAPHS_DIR)
 OFFSET_PARAMETER = 5
 
 total_proteins = ['4E_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
@@ -397,7 +401,6 @@ class GetDataNormedToMax:
 
     def __init__(self, fname):
         self.fname = fname
-        self.data = self.read_data()
 
     def read_data(self, offset_for_total_proteins=OFFSET_PARAMETER):
         data = pandas.read_csv(self.fname, index_col=[0, 1], header=[0, 1])
@@ -409,10 +412,21 @@ class GetDataNormedToMax:
                 data[i] = data[i] + offset_for_total_proteins
         return data
 
-    def to_copasi_format(self, prefix='normed_to_max'):
-        data = self.data
+    def to_copasi_format(self, prefix='normed_to_max', interpolation_num=20):
+        data = self.read_data(OFFSET_PARAMETER)
         data.index = data.index.swaplevel(1, 2)
-        for label, df in self.data.groupby(level=['cell_line', 'repeat']):
+        data = data.sort_index(level=[0, 1, 2])
+        # print(data)
+        dct = {}
+        for label, df in data.groupby(level=[0, 1]):
+            df = df.loc[label]
+            tsg = TimeSeriesGroup(df.transpose()).interpolate(kind='linear', num=interpolation_num)
+            df = tsg.as_df().transpose()
+            df.index.name = 'time'
+            dct[label] = df
+        data = pandas.concat(dct)
+        data.index.names = ['cell_line', 'repeat', 'time']
+        for label, df in data.groupby(level=['cell_line', 'repeat']):
             ics = df.iloc[0]
             ics.name = None
             ics = pandas.DataFrame(ics).transpose()
@@ -434,8 +448,33 @@ class GetDataNormedToMax:
             df2.to_csv(fname)
         print(data.columns)
 
+    def interpolate_mcf7_data(self, num=12, offset_for_total_proetins=0):
+        data = self.get_data_normalised_to_coomassie_blue(offset_for_total_proetins=offset_for_total_proetins)
+        data = data.transpose()
+        data.index.names = ['antibody', 'repeats']
+        data = data.transpose()
+        data = data.loc['MCF7']
+        data = data.stack().unstack(level=0).stack(level=0)
+        data.index = data.index.swaplevel(0, 1)
+        tsg_dct = {}
+        for label, df in data.groupby(level='repeats'):
+            df.index = df.index.droplevel('repeats')
+            tsg = TimeSeriesGroup(df).interpolate(kind='linear', num=num)
+            tsg = tsg.as_df()
+            tsg_dct[label] = tsg
+
+        data2 = pandas.concat(tsg_dct)
+        data2.index.names = ['repeats', 'antibody']
+        data2.columns.names = data.columns.names
+        data2 = data2.unstack(level=1).stack(level=0).unstack(level=0)
+        # data2.index = [(round(i, 3) for i in data2.index)]
+        # print(data2)
+        return data2
+
     def get_average_of_0_time_points(self):
-        print(self.data.xs(0, level=1).mean())
+        data = self.read_data(offset_for_total_proteins=0).xs(0, level=1)
+        mean = data.mean(level=0)
+        return mean
 
 
 def plot(data, prefix, savefig=False):

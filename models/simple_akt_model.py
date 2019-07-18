@@ -229,9 +229,9 @@ model SimpleAktModel()
     R5b: TSC2pT1462 => TSC2 ;          Cell*   _kTSC2Dephos*TSC2pT1462;
     R6f: PRAS40 => PRAS40pT246 ;       Cell*   MMWithKcat(_kPras40PhosByAkt_km, _kPras40PhosByAkt_kcat, PRAS40, AktpT308);
     R6b: PRAS40pT246 => PRAS40 ;       Cell*   kPras40Dephos*PRAS40pT246;
-    R7f: FourEBP1 => FourEBP1pT37_46 ; Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2);
+    R7f: FourEBP1 => FourEBP1pT37_46 ; Cell*   MMWithKcat(_kFourEBP1Phos_km, _kFourEBP1Phos_kcat, FourEBP1, TSC2pT1462);
     R7b: FourEBP1pT37_46 => FourEBP1 ; Cell*   kFourEBP1Dephos*FourEBP1pT37_46;
-    R8f: S6K => S6KpT389 ;             Cell*   MMWithKcat(_kS6KT389Phos_km, _kS6KT389Phos_kcat, S6K, TSC2);
+    R8f: S6K => S6KpT389 ;             Cell*   MMWithKcat(_kS6KT389Phos_km, _kS6KT389Phos_kcat, S6K, TSC2pT1462);
     R8b: S6KpT389 => S6K ;             Cell*   _kS6KT389Dephos*S6KpT389;
 end
 
@@ -584,6 +584,7 @@ if __name__ == '__main__':
     PROBLEM = '4_fix_backwards_parameters' # Like 3. But with S6K 4ebp and pras40 backwards parameters fixed to 1
     PROBLEM = '5_fixed_more_parameters_based_on_MCF7_sims' # I fixed parameters for Akt, TSC and S6Kp based on MCF7 simulations
     PROBLEM = '6_with_interpolation' # interpolated the data so that we have 20 data points per time series
+    PROBLEM = '7_TSC_to_s6k_roles_reversed' # Like 6. But pTSC2 phosphorylates S6K rather than TSC.
 
     # passed on to the run_mode in ParameterEstimation. Can be False, True, or 'slurm'
     three = ['T47D', 'ZR-75', 'MCF7']

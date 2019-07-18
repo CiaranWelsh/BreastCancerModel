@@ -476,6 +476,19 @@ class GetDataNormedToMax:
         mean = data.mean(level=0)
         return mean
 
+    def ss_data_to_copasi_format(self):
+        total_proteins = ['FourEBP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
+                          'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
+        data = self.read_data(offset_for_total_proteins=OFFSET_PARAMETER)
+        data = data.xs(key=0, level='time').mean(level='cell_line')
+        print(data)
+        # data = data.rename(columns=replacement_names_2)
+        # data['Insulin_indep'] = 0.005
+        # for i in total_proteins:
+        #     data[i] = data[i] + 1
+        # data.to_csv(SS_DATA_FILE, index=False, sep='\t')
+        # return data
+
 
 def plot(data, prefix, savefig=False):
     data = data.stack().stack()

@@ -67,6 +67,11 @@ class ParseDataTests(unittest.TestCase):
         data = self.gd.interpolate_mcf7_data(num=30, offset_for_total_proetins=1)
         self.gd.to_copasi_format_multiple_files(fname=fname, data=data)
 
+    def tst_ss_data_to_copasi_format(self):
+        fname = os.path.join(DATA_DIRECTORY, 'copasi_data_interp.csv')
+        data = self.gd.interpolate_mcf7_data(num=30, offset_for_total_proetins=1)
+        self.gd.to_copasi_format_multiple_files(fname=fname, data=data)
+
 
 class ParseDataFromNewFileTests(unittest.TestCase):
 
@@ -88,6 +93,9 @@ class ParseDataFromNewFileTests(unittest.TestCase):
 
     def test_plot(self):
         plot2(self.gd.read_data(OFFSET_PARAMETER), 'NormedToMaxData', savefig=True)
+
+    def test_ss_data_to_copasi_format(self):
+        self.gd.ss_data_to_copasi_format()
 
 
 

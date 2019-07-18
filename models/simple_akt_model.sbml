@@ -968,7 +968,7 @@
           <speciesReference species="FourEBP1pT37_46" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <listOfModifiers>
-          <modifierSpeciesReference species="TSC2"/>
+          <modifierSpeciesReference species="TSC2pT1462"/>
         </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -980,7 +980,7 @@
                 <ci> _kFourEBP1Phos_km </ci>
                 <ci> _kFourEBP1Phos_kcat </ci>
                 <ci> FourEBP1 </ci>
-                <ci> TSC2 </ci>
+                <ci> TSC2pT1462 </ci>
               </apply>
             </apply>
           </math>
@@ -1012,7 +1012,7 @@
           <speciesReference species="S6KpT389" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <listOfModifiers>
-          <modifierSpeciesReference species="TSC2"/>
+          <modifierSpeciesReference species="TSC2pT1462"/>
         </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -1024,7 +1024,7 @@
                 <ci> _kS6KT389Phos_km </ci>
                 <ci> _kS6KT389Phos_kcat </ci>
                 <ci> S6K </ci>
-                <ci> TSC2 </ci>
+                <ci> TSC2pT1462 </ci>
               </apply>
             </apply>
           </math>

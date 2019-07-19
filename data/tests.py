@@ -82,7 +82,7 @@ class ParseDataFromNewFileTests(unittest.TestCase):
         self.gd = GetDataNormedToMax(self.data_file)
 
     def test_read_data2(self):
-        data = self.gd.read_data(offset_for_total_proteins=OFFSET_PARAMETER)
+        data = self.gd.read_data(offset_for_inactive_species=OFFSET_PARAMETER)
         self.assertIsInstance(data, pandas.DataFrame)
 
     def test_to_copasi_format(self):

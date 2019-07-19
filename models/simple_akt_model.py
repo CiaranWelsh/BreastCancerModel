@@ -369,17 +369,17 @@ def plot_best_fit2(mod, problem, features=None, cell_line='MCF7', savefig=False)
     # ss_data = mod.simulate(0, 120, 1, variables='gm')
     # simulate insulin stimulated condition
     gd = GetDataNormedToMax(DATA_FILE_NORMED_TO_MAX)
-    ics = gd.get_average_of_0_time_points()
+    ics = gd.get_average_of_0_time_points(offset_for_inactive_species=OFFSET_PARAMETER)
     ics = ics[list(variables_for_ic_change.keys())]
     ics = ics.rename(columns=variables_for_ic_change)
     ics = ics.loc[cell_line].to_dict()
-    print(ics)
+    # print(ics)
     mod.insert_parameters(parameter_dict=ics)
     mod = mod.set('global_quantity', 'Insulin', 1, match_field='name', change_field='initial_value')
     data = mod.simulate(0, 120, 1, variables='gm')
     # exp = GetDataFromOldDataFile(EXPERIMENTAL_DATA_FILE).get_data_normalised_to_coomassie_blue(
     #     offset_for_total_proetins=1)
-    exp = gd.read_data(offset_for_total_proteins=OFFSET_PARAMETER)
+    exp = gd.read_data(offset_for_inactive_species=OFFSET_PARAMETER)
     exp = exp.stack()
     exp = exp.loc[cell_line]
     exp = pandas.DataFrame(exp)
@@ -585,6 +585,8 @@ if __name__ == '__main__':
     PROBLEM = '5_fixed_more_parameters_based_on_MCF7_sims' # I fixed parameters for Akt, TSC and S6Kp based on MCF7 simulations
     PROBLEM = '6_with_interpolation' # interpolated the data so that we have 20 data points per time series
     PROBLEM = '7_TSC_to_s6k_roles_reversed' # Like 6. But pTSC2 phosphorylates S6K rather than TSC.
+    PROBLEM = '8_OffsetForInactiveSpecies' # like 5. But I have added offest parameter to inactive proteins, rather than total proteins.
+    PROBLEM = '9_1000ParameterEstimationsPerModel' # same as 8 but running each model 1000 times with more stringent hyperparameters
 
     # passed on to the run_mode in ParameterEstimation. Can be False, True, or 'slurm'
     three = ['T47D', 'ZR-75', 'MCF7']
@@ -636,7 +638,7 @@ if __name__ == '__main__':
             mod = model.Model(COPASI_FILE)
 
         if RUN == 'slurm':
-            COPY_NUMBER = 176
+            COPY_NUMBER = 1000
         elif RUN == True:
             COPY_NUMBER = 1
         elif RUN == 'parallel':
@@ -654,8 +656,8 @@ if __name__ == '__main__':
             context.set('randomize_start_values', True)
             context.set('method', 'particle_swarm')
             context.set('population_size', 200)
-            context.set('swarm_size', 200)
-            context.set('iteration_limit', 3000)
+            context.set('swarm_size', 300)
+            context.set('iteration_limit', 4000)
             context.set('lower_bound', 0.0001)
             context.set('upper_bound', 10000)
             context.set('weight_method', 'standard_deviation')

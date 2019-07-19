@@ -399,17 +399,19 @@ class GetDataNormedToMax:
     total_proteins = ['FourEBP1', 'Akt', 'ER_alpha', 'Erk',
                       'GAPDH', 'IRS1', 'PRAS40', 'S6K', 'TSC2', 'p38']
 
+    inactive_species = [i for i in total_proteins if i not in ['IRS1', 'TSC2']] + ['IRS1pS636_639', 'TSC2pT1462']
+
     def __init__(self, fname):
         self.fname = fname
 
-    def read_data(self, offset_for_total_proteins=OFFSET_PARAMETER):
+    def read_data(self, offset_for_inactive_species=OFFSET_PARAMETER):
         data = pandas.read_csv(self.fname, index_col=[0, 1], header=[0, 1])
         data = data.stack()
         data.index.names = ['cell_line', 'time', 'repeat']
         data = data.rename(columns=self.replacement_names, level=0)
         for i in data:
-            if i in self.total_proteins:
-                data[i] = data[i] + offset_for_total_proteins
+            if i in self.inactive_species:
+                data[i] = data[i] + offset_for_inactive_species
         return data
 
     def to_copasi_format(self, prefix='normed_to_max', interpolation_num=20):
@@ -471,15 +473,16 @@ class GetDataNormedToMax:
         # print(data2)
         return data2
 
-    def get_average_of_0_time_points(self):
-        data = self.read_data(offset_for_total_proteins=0).xs(0, level=1)
+    def get_average_of_0_time_points(self, offset_for_inactive_species=0):
+        data = self.read_data(offset_for_inactive_species=offset_for_inactive_species).xs(0, level=1)
         mean = data.mean(level=0)
+        print(mean.transpose())
         return mean
 
     def ss_data_to_copasi_format(self):
         total_proteins = ['FourEBP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
                           'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
-        data = self.read_data(offset_for_total_proteins=OFFSET_PARAMETER)
+        data = self.read_data(offset_for_inactive_species=OFFSET_PARAMETER)
         data = data.xs(key=0, level='time').mean(level='cell_line')
         print(data)
         # data = data.rename(columns=replacement_names_2)

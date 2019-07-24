@@ -545,7 +545,7 @@ def simulation_with_t47d_ics(mod, t47d_data, problem):
             #                  ax=ax, legend=False, color=total_color,
             #                  markers=True)
             # ax.lines[0].set_linestyle("--")
-            # ax.plot(ss_sim_plt.index, ss_sim_plt.values, label='Total protein, simulated',
+            # ax.paired_plot(ss_sim_plt.index, ss_sim_plt.values, label='Total protein, simulated',
             #         linestyle='-', color=total_color,
             #         )
 
@@ -614,7 +614,7 @@ if __name__ == '__main__':
         OPEN_WITH_BEST_PARAMETERS = False
         # Run profile likelihoods
         RUN_PROFIE_LIKELIHOOD = False
-        # plot the best fits in presentable format
+        # paired_plot the best fits in presentable format
         PLOT_BEST_FIT = True
 
         PLOT_PL = False
@@ -622,7 +622,7 @@ if __name__ == '__main__':
         # set to True to run a simulation from different initial conditions
         RUN_SIMULATION_FROM_DIFFERENT_INITIAL_CONDITIONS = False
 
-        # plot likelihood ranks
+        # paired_plot likelihood ranks
         PLOT_LIKELIHOOD_RANKS = False
 
         COMPARE_PARAMETERS = True

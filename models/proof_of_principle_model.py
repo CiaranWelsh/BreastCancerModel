@@ -1,3 +1,5 @@
+import pandas
+from functools import reduce
 from collections import OrderedDict
 from itertools import product
 import numpy as np
@@ -19,7 +21,7 @@ matplotlib.use('Qt5Agg')
 WORKING_DIR = os.path.dirname(__file__)
 COPASI_FILE = os.path.join(WORKING_DIR, 'copasi_model.cps')
 
-model_with_mtor = """
+pi3k_system = """
 
 model ModelWithMTOR()
     compartment       Cell = 1;
@@ -81,11 +83,14 @@ model ModelWithMTOR()
     FourEBP1            = 3.0731485001845575;
     pFourEBP1           = 6.926851499815441;
     
+    n = 2;
+    kd = 0.5;
+    
     // observables
     // with mTORC1
     R1In: => IRS1                                   ; Cell * kIRS1In;
     R2Out: IRS1 =>                                  ; Cell * kIRS1Out*IRS1;
-    R1a : IRS1 => IRS1_a                            ; Cell * kIRS1Act*IRS1*Insulin;
+    R1a : IRS1 => IRS1_a                            ; Cell * IRS1*Insulin^n/(kd + Insulin^n);
     R1i : IRS1_a => pIRS1                           ; Cell * kIRS1Phos*IRS1_a*pS6K;
     R1o : pIRS1 =>                                  ; Cell * kIRS1Dephos*pIRS1;
     R2f : Akt => pAkt                               ; Cell * kAktPhos*Akt*IRS1_a;
@@ -104,47 +109,6 @@ model ModelWithMTOR()
     R7b : pFourEBP1 => FourEBP1                     ; Cell * k4EBP1Dephos*pFourEBP1;
 end
 """
-
-tsc2_model = """
-
-model TSC2_component()
-    compartment Cell=1;
-    var RhebGDP             in Cell;
-    var RhebGTP             in Cell;
-    var mTORC1              in Cell;
-    var pmTORC1             in Cell;
-    var TSC2                in Cell;
-    var pTSC2               in Cell;
-    const Insulin;
-    
-    Insulin                     = 0;
-    TSC2                        = 10;
-    pTSC2                       = 0;
-    RhebGDP                     = 5;
-    RhebGTP                     = 5;
-    mTORC1                      = 10;
-    mTORC1_RhebGDP              = 0;
-    pmTORC1                     = 0;
-    
-    kTSC2Phos                   = 0.1;     
-    kTSC2Dephos                 = 0.1;     
-    kRhebLoad                   = 1;     
-    kRhebUnload                 = 0.1;     
-    kmTORC1Phos                 = 0.1;             
-    kmTORC1Dephos               = 0.1;         
-    
-    
-    R1f : TSC2      => pTSC2                    ;           Cell * kTSC2Phos*TSC2*Insulin
-    R1b : pTSC2     => TSC2                     ;           Cell * kTSC2Dephos*pTSC2
-    R2f : RhebGDP   => RhebGTP                  ;           Cell * kRhebLoad*RhebGDP
-    R2b : RhebGTP   => RhebGDP                  ;           Cell * kRhebUnload*RhebGTP*TSC2
-    R3f : mTORC1    => pmTORC1                  ;           Cell * kmTORC1Phos*mTORC1*RhebGTP
-    R3f : pmTORC1   => mTORC1                   ;           Cell * kmTORC1Dephos*pmTORC1*RhebGDP
-    
-    
-end
-"""
-
 
 # py3_model = py3.model.loada(model_with_mtor, os.path.abspath('model.cps'))
 # py3_model.open()
@@ -188,7 +152,7 @@ def paired_plot(ant_str, insulin=0, savefig=True, title='', prefix='', ncols=3,
 
 class _Plotter:
 
-    def __init__(self, ant_str, plot_selection, subplot_titles=None, inputs=None, savefig=False,
+    def __init__(self, ant_str, plot_selection, subplot_titles={}, inputs={}, savefig=False,
                  plot_dir=os.path.abspath(''), ncols=3, wspace=0.25, hspace=0.3, **kwargs):
         self.ant_str = ant_str
         self.plot_selection = plot_selection
@@ -209,6 +173,8 @@ class _Plotter:
         self.mod = te.loada(self.ant_str)
 
         self._nplots = len(self.plot_selection)
+        if self._nplots == 1:
+            self.ncols = 1
         self._num_rows = int(self._nplots / ncols)
         self._remainder = self._nplots % ncols
         if self._remainder > 0:
@@ -283,88 +249,65 @@ class TimeSeries(_Plotter):
             plt.show()
 
 
-def dct_plot(ant_str, dct, subplot_titles, inputs, insulin=0, savefig=True, title='', plot_dir='', ncols=3,
-             wspace=0.25, hspace=0.3):
-    def recursive_fname(zipped):
-        from functools import reduce
-        if isinstance(zipped[0], (list, tuple)):  # if zipped is nested list
-            new_zipped = [reduce(lambda x, y: f'{x}_{y}', i) for i in zipped]
-            reduced = recursive_fname(new_zipped)
-            return reduced
-        else:
-            reduced = reduce(lambda x, y: f'{x}_{y}', zipped)
-            assert reduced is not None
-            return reduced
+class DoseResponse(_Plotter):
+    """
+    plots dose response at steady state
+    """
+    def __init__(self, ant_str, plot_selection, variable, values, logx=False, **kwargs):
+        self.ant_str = ant_str
+        self.plot_selection = plot_selection
+        self.kwargs = kwargs
+        self.variable = variable
+        self.values = values
+        self.logx = logx
+        super().__init__(self.ant_str, self.plot_selection, **kwargs)
 
-    def do1simulation(mod, indep_vars_keys, ic_values):
-        data = mod.simulate(0, 50, 51)
-        # calculate number of rows needed
-        nplots = len(dct)
-        num_rows = int(nplots / ncols)
-        remainder = nplots % ncols
-        if remainder > 0:
-            num_rows += 1
+        if not hasattr(self.mod, variable):
+            raise ValueError()
 
+        self.simulate()
+
+
+    def simulate(self):
+        df_lst = []
+        for k in self.values:
+            setattr(self.mod, self.variable, k)
+            x = self.mod.getSteadyStateValues()
+            y = self.mod.getFloatingSpeciesIds()
+            df_lst.append(pandas.DataFrame(dict(zip(y, x)), index=[k]))
+        data = pandas.concat(df_lst)
+        print(data)
         fig = plt.figure(figsize=(12, 7))
-        gs = GridSpec(num_rows, ncols, wspace=wspace, hspace=hspace)
-        for k, v in dct.items():
+        gs = GridSpec(self._num_rows, self.ncols, wspace=self.wspace, hspace=self.hspace)
+        for k, v in self.plot_selection.items():
             ax = fig.add_subplot(gs[k])
-            for i in v:
-                plt.plot(data['time'], data[f'[{i}]'], label=i)
+            for metab in v:
+                if self.logx:
+                    x = np.log10(data.index)
+                else:
+                    x = data.index
+                plt.plot(x, data[metab], label=metab)
             plt.legend(loc='upper right', fontsize=10)
-            plt.title(subplot_titles[k])
+            if self.subplot_titles != {}:
+                plt.title(self.subplot_titles[k])
             seaborn.despine(fig, top=True, right=True)
 
-        zipped = zip(ics, ic_values)
-        zipped = [i for i in zipped]
-        plot_title = recursive_fname(zipped)
-
-        fig.suptitle(plot_title)
-
-        if savefig:
-            dir = os.path.join(os.path.dirname(__file__), 'ProofOfPrincipleModelSims')
-            dir = os.path.join(dir, plot_dir)
-            if not os.path.isdir(dir):
-                os.makedirs(dir)
-            fname = os.path.join(dir, f'{plot_title}.png')
-            plt.savefig(fname, dpi=300, bbox_inches='tight')
-            print('saved to {}'.format(fname))
-        else:
-            plt.show()
+        plt.show()
 
 
-    mod = te.loada(ant_str)
-    ics = list(product(*inputs.values()))
-    self.indep_vars_keys = list(inputs.keys())
-    for i in range(len(ics)):
-        for j in range(len(self.indep_vars_keys)):
-            mod.reset()
-            if not hasattr(mod, self.indep_vars_keys[j]):
-                raise ValueError('model does not have an attribute called {}'.format(self.indep_vars_keys[j]))
-            setattr(mod, self.indep_vars_keys[j], ics[i][j])
-            print(self.indep_vars_keys[j], ics[i][j], getattr(mod, self.indep_vars_keys[j], ics[i][j]))
-        do1simulation(mod, self.indep_vars_keys, ics[i])
 
-# paired_plot(model_with_mtor, hspace=0.55, ncols=3, insulin=0, savefig=True, title='Insulin is set to 0 (constant)',
-#             prefix='logic_with_mtor')
-# paired_plot(model_with_mtor, hspace=0.55, ncols=3, insulin=1, savefig=True, title='Insulin is set to 1 (constant)',
-#             prefix='logic_with_mtor')
-#
 
-# mod = py3.model.loada(model_with_mtor, COPASI_FILE)
-# mod.open()
 
-# paired_plot the best fits in presentable format
-# PLOT_BEST_FIT = False
-#
-# PLOT_PL = False
+
+
+
 
 if __name__ == '__main__':
 
     BUILD_NEW = True
 
     ####### Model simulation options
-    ACTIVE_ANTIMONY = model_with_mtor
+    ACTIVE_ANTIMONY = pi3k_system
 
     # Where to put the simulations. Directory called PLOT_DIR will be created and simulations placed inside
     PLOT_BASE_DIR = os.path.join(WORKING_DIR)
@@ -463,18 +406,25 @@ if __name__ == '__main__':
             print(f'{i} = {j}')
 
     if DOSE_RESPONSE:
-        mod = te.loada(ACTIVE_ANTIMONY)
-        insulin = [0.001, 0.01, 0.1, 1, 10, 100]
-        df_lst = []
-        for k in insulin:
-            mod.Insulin = k
-            x = mod.getSteadyStateValues()
-            y = mod.getFloatingSpeciesIds()
-            import pandas
+        plot_selection = {
+            0: ['IRS1_a'],
+        }
+        vals = [0.01, 0.1, 1, 10, 100]
+        DoseResponse(ACTIVE_ANTIMONY, plot_selection, variable='Insulin', values=vals,
+                     logx=True)
 
-            df_lst.append(pandas.DataFrame(dict(zip(y, x)), index=[k]))
-        df = pandas.concat(df_lst)
-        plot_dose_response()
+        # mod = te.loada(ACTIVE_ANTIMONY)
+        # insulin = [0.001, 0.01, 0.1, 1, 10, 100]
+        # df_lst = []
+        # for k in insulin:
+        #     mod.Insulin = k
+        #     x = mod.getSteadyStateValues()
+        #     y = mod.getFloatingSpeciesIds()
+        #     import pandas
+        #
+        #     df_lst.append(pandas.DataFrame(dict(zip(y, x)), index=[k]))
+        # df = pandas.concat(df_lst)
+        # plot_dose_response()
 
     if CONFIGURE_PARAMETER_ESTIMATION:
         three = ['T47D', 'ZR-75', 'MCF7']

@@ -97,6 +97,21 @@ class ParseDataFromNewFileTests(unittest.TestCase):
     def test_ss_data_to_copasi_format(self):
         self.gd.ss_data_to_copasi_format()
 
+    def test_plot(self):
+        for i in ['ZR-75', 'T47D', 'MCF7']:
+            self.gd.plot(i)
+
+class ParseDataFromSteadyStateFileTests(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.gd = SteadyStateData(SS_DATA_FILE)
+
+    def test_read_data(self):
+        self.assertIsInstance(self.gd.read_data(), pandas.DataFrame)
+
+    def test_plot(self):
+        self.gd.plot(hue='cell_line')
+        # self.gd.plot(hue='antibody')
 
 
 

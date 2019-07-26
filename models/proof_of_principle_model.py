@@ -23,6 +23,57 @@ COPASI_FILE = os.path.join(WORKING_DIR, 'copasi_model.cps')
 
 pi3k_system = """
 
+
+function MM(km, Vmax, S)
+    Vmax * S / (km + S)
+end
+
+function MMWithKcat(km, kcat, S, E)
+    kcat * E * S / (km + S)
+end
+
+function NonCompetitiveInhibition(km, ki, Vmax, n, I, S)
+    Vmax * S / ( (km + S) * (1 + (I / ki)^n ) )
+end
+
+function NonCompetitiveInhibitionWithKcat(km, ki, kcat, E, n, I, S)
+    kcat * E * S / ( (km + S) * (1 + (I / ki)^n ) )
+end
+
+function NonCompetitiveInhibitionWithKcatAndExtraActivator(km, ki, kcat, E1, E2, n, I, S)
+    kcat * E1 * E2 * S / ( (km + S) * (1 + (I / ki)^n ) )
+end
+
+
+function MA1(k, S)
+    k * S
+end
+
+function MA2(k, S1, S2)
+    k * S1 * S2
+end
+
+function MA1Mod(k, S, M)
+    k * S * M
+end
+
+function MA2Mod(k, S1, S2, M)
+    k * S1 * S2 * M
+end
+
+function CompetitiveInhibitionWithKcat(km, ki, kcat, E, I, S)
+    kcat * E * S / (km + S + ((km * I )/ ki)  )
+end    
+
+function CompetitiveInhibition(Vmax, km, ki, I, S)
+    Vmax * S / (km + S + ((km * I )/ ki)  )
+end
+
+function Hill(km, kcat, E, S, h)
+    kcat * E * (S / km)^h  /   (1 + (S / km)^h )
+end
+
+
 model ModelWithMTOR()
     compartment       Cell = 1;
     var IRS1          in Cell;
@@ -34,9 +85,13 @@ model ModelWithMTOR()
     var pTSC2         in Cell;
     var RhebGDP       in Cell;
     var RhebGTP       in Cell;
+    var Pras40        in Cell;
+    var mTORC1_Pras40_Lys in Cell;
+    var mTORC1_Pras40_Cyt in Cell;
     var mTORC1        in Cell;
     var pmTORC1       in Cell;
     var mTORC1_i      in Cell;
+    var mTORC1_ii     in Cell;
     var S6K           in Cell;
     var pS6K          in Cell;
     var FourEBP1      in Cell;
@@ -46,114 +101,101 @@ model ModelWithMTOR()
     
     kIRS1In             = 1;
     kIRS1Out            = 0.1;
-    kIRS1Act            = 0.7;
-    kIRS1Phos           = 0.7;
+    kIRS1Act_km         = 1
+    kIRS1Act_kcat       = 10
+    kIRS1Act_h          = 2
+    kIRS1Act            = 0.1;
+    kIRS1Inact          = 0.1;
+    kIRS1Phos           = 0.5;
     kIRS1Dephos         = 0.1;
     kAktPhos            = 0.1;
     kAktDephos          = 0.1;
     kTSC2Phos           = 0.1;
     kTSC2Dephos         = 0.1;
+    kmTORC1ToLys        = 0.1;
+    kmTORC1ToCyt        = 0.1;
     kmTORC1Phos         = 0.1;
     kmTORC1Dephos       = 0.1;
     kmTORC1BindRapa     = 2.0;
     kmTORC1UnbindRapa   = 0.1;
-    kS6KPhos            = 0.1;
+    kS6KPhos_km         = 100;
+    kS6KPhos_kcat       = 2;
     kS6KDephos          = 0.1;
-    k4EBP1Phos          = 0.1;
+    k4Phos_km           = 5;
+    k4EBP1Phos_kcat     = 5;
     k4EBP1Dephos        = 0.1;
-    kRhebPhos           = 0.5;
+    kRhebPhos           = 0.1;
     kRhebDephos         = 0.1;
+    kRhebIn             = 1; 
+    kRhebOut            = 0.1; 
+    kmTORC1BindPras40   = 0.1;
+    kPras40Dephos       = 0.1
     
     Rapamycin           = 0;
-    Insulin             = 0.01;
-    IRS1                = 9.702909427296259;
-    IRS1_a              = 0.0060032898852622266;
-    pIRS1               = 0.29108728281888757;
-    Akt                 = 9.940325345397746;
-    pAkt                = 0.05967465460224265;
-    TSC2                = 9.436858715615493;
-    pTSC2               = 0.5631412843845068;
-    RhebGDP             = 7.746008206437293;
-    RhebGTP             = 2.2539917935626987;
-    mTORC1              = 7.746008206437293;
-    pmTORC1             = 2.2539917935626996;
-    mTORC1_i            = 0.0;
-    S6K                 = 3.0731485001845567;
-    pS6K                = 6.926851499815436;
-    FourEBP1            = 3.0731485001845575;
-    pFourEBP1           = 6.926851499815441;
-    
-    n = 2;
-    kd = 0.5;
+    Insulin             = 0;
+    AA                  = 1;
+    IRS1                = 10;
+    IRS1_a              = 0;
+    pIRS1               = 0;
+    Akt                 = 10;
+    pAkt                = 0;
+    TSC2                = 10;
+    pTSC2               = 0;
+    RhebGDP             = 10;
+    RhebGTP             = 0;
+    mTORC1              = 0;
+    mTORC1_Pras40_Lys   = 0
+    mTORC1_Pras40_Cyt   = 10
+    ppPras40            = 0;
+    Pras40              = 0;
+    pmTORC1             = 0;
+    mTORC1_i            = 0;
+    mTORC1_ii           = 0;
+    S6K                 = 10;
+    pS6K                = 0;
+    FourEBP1            = 10;
+    pFourEBP1           = 0;
     
     // observables
-    // with mTORC1
-    R1In: => IRS1                                   ; Cell * kIRS1In;
-    R2Out: IRS1 =>                                  ; Cell * kIRS1Out*IRS1;
-    R1a : IRS1 => IRS1_a                            ; Cell * IRS1*Insulin^n/(kd + Insulin^n);
-    R1i : IRS1_a => pIRS1                           ; Cell * kIRS1Phos*IRS1_a*pS6K;
-    R1o : pIRS1 =>                                  ; Cell * kIRS1Dephos*pIRS1;
-    R2f : Akt => pAkt                               ; Cell * kAktPhos*Akt*IRS1_a;
-    R2b : pAkt => Akt                               ; Cell * kAktDephos*pAkt;
-    R3f : TSC2 => pTSC2                             ; Cell * kTSC2Phos*TSC2*pAkt;
-    R3b : pTSC2 => TSC2                             ; Cell * kTSC2Dephos*pTSC2;
-    R4f : RhebGDP => RhebGTP                        ; Cell * kRhebPhos*RhebGDP;
-    R4b : RhebGTP => RhebGDP                        ; Cell * kRhebDephos*RhebGTP*TSC2;
-    R5f : mTORC1 + RhebGTP => pmTORC1 + RhebGDP     ; Cell * kmTORC1Phos*mTORC1*RhebGTP;
-    R5b : pmTORC1 => mTORC1                         ; Cell * kmTORC1Dephos*pmTORC1*RhebGDP;
-    R5i : mTORC1 + Rapamycin => mTORC1_i            ; Cell * kmTORC1BindRapa*mTORC1*Rapamycin;
-    R5ii: mTORC1_i => mTORC1 + Rapamycin            ; Cell * kmTORC1UnbindRapa*mTORC1_i;
-    R6f : S6K => pS6K                               ; Cell * kS6KPhos*S6K*pmTORC1;
-    R6b : pS6K => S6K                               ; Cell * kS6KDephos*pS6K;
-    R7f : FourEBP1 => pFourEBP1                     ; Cell * k4EBP1Phos*FourEBP1*pmTORC1;
-    R7b : pFourEBP1 => FourEBP1                     ; Cell * k4EBP1Dephos*pFourEBP1;
+    // MM(km, Vmax, S)
+    // MMWithKcat(km, kcat, S, E)
+    // Hill(km, kcat, L, S, h) or Hill(km, kcat, E, S, h)
+    R1In    : => IRS1                                               ; Cell * kIRS1In;
+    R2Out   : IRS1 =>                                               ; Cell * kIRS1Out*IRS1;
+    R1f     : IRS1 => IRS1_a                                        ; Cell * kIRS1Act*IRS1*Insulin;//Hill(kIRS1Act_km, kIRS1Act_kcat, Insulin, IRS1, kIRS1Act_h);;
+    R1b     : IRS1_a => IRS1                                        ; Cell * kIRS1Inact*IRS1_a;
+    R1i     : IRS1_a => pIRS1                                       ; Cell * kIRS1Phos*IRS1_a*pS6K;
+    R1o     : pIRS1 =>                                              ; Cell * kIRS1Dephos*pIRS1;
+    R2f     : Akt => pAkt                                           ; Cell * kAktPhos*Akt*IRS1_a;
+    R2b     : pAkt => Akt                                           ; Cell * kAktDephos*pAkt;
+    R3f     : TSC2 => pTSC2                                         ; Cell * kTSC2Phos*TSC2*pAkt;
+    R3b     : pTSC2 => TSC2                                         ; Cell * kTSC2Dephos*pTSC2;
+    R4f      : RhebGDP => RhebGTP                                   ; Cell * kRhebPhos*RhebGDP
+    R4b     : RhebGTP => RhebGDP                                    ; Cell * kRhebDephos*RhebGTP*TSC2;
+    R5f     : mTORC1_Pras40_Cyt => mTORC1_Pras40_Lys                ; Cell * kmTORC1ToLys*mTORC1_Pras40_Cyt*AA;
+    R5b     : mTORC1_Pras40_Lys => mTORC1_Pras40_Cyt                ; Cell * kmTORC1ToCyt*mTORC1_Pras40_Lys;
+    R6f     : mTORC1_Pras40_Lys + RhebGTP => mTORC1 + ppPras40 + RhebGDP ; Cell * kmTORC1Phos*pAkt*RhebGTP*mTORC1_Pras40_Lys;
+    R6b     : mTORC1 + Pras40 => mTORC1_Pras40_Lys                  ; Cell * kmTORC1BindPras40*mTORC1*Pras40;
+    R6c     : ppPras40 => Pras40                                    ; Cell * kPras40Dephos*ppPras40;
+    R7if    : mTORC1_Pras40_Cyt + Rapamycin => mTORC1_i             ; Cell * kmTORC1BindRapa*mTORC1_Pras40_Cyt*Rapamycin;
+    R7ib    : mTORC1_i => mTORC1_Pras40_Cyt + Rapamycin             ; Cell * kmTORC1UnbindRapa*mTORC1_i;
+    R8iif   : mTORC1_Pras40_Lys + Rapamycin => mTORC1_ii            ; Cell * kmTORC1BindRapa*mTORC1_Pras40_Lys*Rapamycin;
+    R8iib   : mTORC1_ii => mTORC1_Pras40_Lys + Rapamycin            ; Cell * kmTORC1UnbindRapa*mTORC1_ii;
+    R9iiif  : mTORC1 + Rapamycin => mTORC1_iii                      ; Cell * kmTORC1BindRapa*mTORC1*Rapamycin;
+    R9iiib  : mTORC1_iii => mTORC1 + Rapamycin                      ; Cell * kmTORC1UnbindRapa*mTORC1_iii;
+    R10f     : S6K => pS6K                                          ; Cell * MMWithKcat(kS6KPhos_km, kS6KPhos_kcat, S6K, mTORC1);
+    R10b     : pS6K => S6K                                          ; Cell * kS6KDephos*pS6K;
+    R11f     : FourEBP1 => pFourEBP1                                ; Cell * MMWithKcat(k4Phos_km, k4EBP1Phos_kcat, FourEBP1, mTORC1); //k4EBP1Phos*FourEBP1*mTORC1;
+    R11b     : pFourEBP1 => FourEBP1                                ; Cell * k4EBP1Dephos*pFourEBP1;
 end
 """
-
-# py3_model = py3.model.loada(model_with_mtor, os.path.abspath('model.cps'))
-# py3_model.open()
-
-def paired_plot(ant_str, insulin=0, savefig=True, title='', prefix='', ncols=3,
-                wspace=0.25, hspace=0.3):
-    mod = te.loada(ant_str)
-    setattr(mod, 'Insulin', insulin)
-
-    data = mod.simulate(0, 50, 51)
-    # calculate number of rows needed
-    nspecies = data.shape[1] - 1
-    nplots = nspecies / 2  # for phos and non phos on save ax
-    num_rows = int(nplots / ncols)
-    remainder = nplots % ncols
-    if remainder > 0:
-        num_rows += 1
-
-    fig = plt.figure(figsize=(12, 7))
-    gs = GridSpec(num_rows, ncols, wspace=wspace, hspace=hspace)
-    for i in range(1, nspecies, 2):
-        natural_i = int((i - 1) / 2)
-        ax = fig.add_subplot(gs[natural_i])
-        nonp = data.colnames[i]
-        p = data.colnames[i + 1]
-        plt.plot(data['time'], data[nonp], label='non-phos')
-        plt.plot(data['time'], data[p], label='phos')
-        plt.title(nonp)
-        seaborn.despine(fig, top=True, right=True)
-    plt.legend(loc=(1.2, 0.2))
-
-    fig.suptitle(title)
-
-    if savefig:
-        dir = os.path.join(os.path.dirname(__file__), 'ProofOfPrincipleModelSims')
-        if not os.path.isdir(dir):
-            os.makedirs(dir)
-        fname = os.path.join(dir, f'{prefix}_insulin_set_to_{insulin}.png')
-        plt.savefig(fname, dpi=300, bbox_inches='tight')
 
 
 class _Plotter:
 
     def __init__(self, ant_str, plot_selection, subplot_titles={}, inputs={}, savefig=False,
-                 plot_dir=os.path.abspath(''), ncols=3, wspace=0.25, hspace=0.3, **kwargs):
+                 plot_dir=os.path.abspath(''), ncols=3, wspace=0.25, hspace=0.3,
+                 parallel=False, use_cached=False, **kwargs):
         self.ant_str = ant_str
         self.plot_selection = plot_selection
         self.subplot_titles = subplot_titles
@@ -163,12 +205,21 @@ class _Plotter:
         self.ncols = ncols
         self.wspace = wspace
         self.hspace = hspace
+        self.parallel = parallel
+        self.use_cached = use_cached
         self.kwargs = kwargs
+
+        if not self.savefig:
+            self.animation = False
 
         self.indep_vars_keys = list(inputs.keys())
         self.indep_vars_values = list(product(*inputs.values()))
 
         self._zipped_inputs = [i for i in zip(self.indep_vars_keys, self.indep_vars_values)]
+        self.ntotal = len(self.indep_vars_values)
+        self.num_zeros_needed = len(str(self.ntotal))
+
+        self.count = -1
 
         self.mod = te.loada(self.ant_str)
 
@@ -179,6 +230,22 @@ class _Plotter:
         self._remainder = self._nplots % ncols
         if self._remainder > 0:
             self._num_rows += 1
+
+        if not self.use_cached:
+            if self.parallel:
+                self.simulate_parallel()
+            else:
+                self.simulate()
+        else:
+            import re
+            self.files_ = glob.glob(os.path.join(self.plot_dir, '*.png'))
+            self.files_.sort(key=lambda var: [int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
+
+    def simulate(self):
+        raise NotImplementedError('Please implement the simulate method')
+
+    def simulate_parallel(self):
+        raise NotImplementedError('Please implement the simulate_parallel method')
 
     def _recursive_fname(self, zipped_inputs) -> str:
         """
@@ -198,9 +265,32 @@ class _Plotter:
     def _savefig(self, fname):
         if not os.path.isdir(self.plot_dir):
             os.makedirs(self.plot_dir)
-        fname = os.path.join(self.plot_dir, f'{fname}.png')
+
+        fname = os.path.join(self.plot_dir, f'{fname}-{str(self.count).zfill(self.num_zeros_needed)}.png')
         plt.savefig(fname, dpi=300, bbox_inches='tight')
         print('saved to {}'.format(fname))
+        return fname
+
+    def animate(self, fname, ext='mp4', ovewrite=False, fps=8):
+        if not hasattr(self, 'files_'):
+            raise ValueError('must simulate files first')
+        # files_str = "' '".join(self.files_)
+        fname = f'{fname}.{ext}'
+
+        if ovewrite:
+            if os.path.isfile(fname):
+                os.remove(fname)
+        s = ''
+        for f in self.files_:
+            s += "file '{}'\n".format(f)
+            tmp = os.path.join(self.plot_dir, 'tmp.txt')
+        with open(tmp, 'w') as f:
+            f.write(s)
+
+        s = f"ffmpeg -f concat -safe 0 -r {fps} -i {tmp} {fname}"
+        print('final command', s)
+        os.system(s)
+        os.remove(tmp)
 
 
 class TimeSeries(_Plotter):
@@ -213,24 +303,43 @@ class TimeSeries(_Plotter):
         self.steps = steps
         self.kwargs = kwargs
         super().__init__(self.ant_str, self.plot_selection, **kwargs)
-        self.simulate()
 
     def simulate(self):
+        files = []
         for i in range(len(self.indep_vars_values)):
+            self.count += 1
             for j in range(len(self.indep_vars_keys)):
                 self.mod.reset()
                 if not hasattr(self.mod, self.indep_vars_keys[j]):
                     raise ValueError('model does not have an attribute called {}'.format(self.indep_vars_keys[j]))
                 setattr(self.mod, self.indep_vars_keys[j], self.indep_vars_values[i][j])
-                print(self.indep_vars_keys[j], self.indep_vars_values[i][j],
-                      getattr(self.mod, self.indep_vars_keys[j], self.indep_vars_values[i][j]))
-            self.do1simulation(self.indep_vars_values[i])
-            # do1simulation(mod, self.indep_vars_keys, ics[i])
+                # print(self.indep_vars_keys[j], self.indep_vars_values[i][j],
+                #       getattr(self.mod, self.indep_vars_keys[j], self.indep_vars_values[i][j]))
+            files.append(self.do1simulation(self.indep_vars_values[i]))
+        self.files_ = files
+
+    def simulate_parallel(self):
+        import subprocess
+        files = []
+        for i in range(len(self.indep_vars_values)):
+            self.count += 1
+            for j in range(len(self.indep_vars_keys)):
+                self.mod.reset()
+                if not hasattr(self.mod, self.indep_vars_keys[j]):
+                    raise ValueError('model does not have an attribute called {}'.format(self.indep_vars_keys[j]))
+                setattr(self.mod, self.indep_vars_keys[j], self.indep_vars_values[i][j])
+            file = self.do1simulation(self.indep_vars_values[i])
+            file = self.do1simulation(self.indep_vars_values[i])
+            subprocess.Popen(self.do1simulation, self.indep_vars_values[i])
+
+            # files.append(self.do1simulation(self.indep_vars_values[i]))
+        self.files_ = files
 
     def do1simulation(self, indep_vars):
         data = self.mod.simulate(self.start, self.stop, self.steps)
         fig = plt.figure(figsize=(12, 7))
         gs = GridSpec(self._num_rows, self.ncols, wspace=self.wspace, hspace=self.hspace)
+        print(data.colnames)
         for k, v in self.plot_selection.items():
             ax = fig.add_subplot(gs[k])
             for i in v:
@@ -244,15 +353,17 @@ class TimeSeries(_Plotter):
         plot_suptitle = self._recursive_fname(zipped)
         plt.suptitle(plot_suptitle)
         if self.savefig:
-            self._savefig(plot_suptitle)
+            fname = self._savefig(plot_suptitle)
         else:
             plt.show()
+        return fname
 
 
 class DoseResponse(_Plotter):
     """
     plots dose response at steady state
     """
+
     def __init__(self, ant_str, plot_selection, variable, values, logx=False, **kwargs):
         self.ant_str = ant_str
         self.plot_selection = plot_selection
@@ -264,9 +375,6 @@ class DoseResponse(_Plotter):
 
         if not hasattr(self.mod, variable):
             raise ValueError()
-
-        self.simulate()
-
 
     def simulate(self):
         df_lst = []
@@ -295,23 +403,12 @@ class DoseResponse(_Plotter):
         plt.show()
 
 
-
-
-
-
-
-
-
 if __name__ == '__main__':
 
     BUILD_NEW = True
 
-    ####### Model simulation options
+    ####### Task simulation options
     ACTIVE_ANTIMONY = pi3k_system
-
-    # Where to put the simulations. Directory called PLOT_DIR will be created and simulations placed inside
-    PLOT_BASE_DIR = os.path.join(WORKING_DIR)
-    PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'InsulinOnly')
 
     # Plot the model simulations using dictionaries to supply conditions (parameter scan)
     PLOT_CONDITIONS = True
@@ -320,13 +417,14 @@ if __name__ == '__main__':
 
     DOSE_RESPONSE = False
 
+    CONFIGURE_PARAMETER_ESTIMATION = False
+
+    OPEN = False
     ###### Parameter estimation config options ########################################################################
     # Whether or not to configure parameter estimaotin
-    CONFIGURE_PARAMETER_ESTIMATION = False
 
     RUN = False
     # Open the sbml model in copasi
-    OPEN = False
     # Parameter estimation copy number argument. Is automatically changed when RUN='slurm'
     COPY_NUMBER = 1
     # Open with copasi with best parameter set from PROBLEM
@@ -362,14 +460,28 @@ if __name__ == '__main__':
         mod.open()
 
     if PLOT_CONDITIONS:
+        # Where to put the simulations. Directory called PLOT_DIR will be created and simulations placed inside
+        PLOT_BASE_DIR = os.path.join(WORKING_DIR, 'ToyModelOutput')
+        PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'mTORC1PhosScan/low_kmTORC1Phos_km')
+        PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'AminoAcidsAndRapamycin')
+        # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'InsulinAndAA')
+        # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'ScratchPad')
+
+        DELETE_EXISTING_FILES = False
+        if DELETE_EXISTING_FILES:
+            for i in glob.glob(os.path.join(PLOT_DIR, '*.png')):
+                os.remove(i)
+
         species_in_plot = {
             0: ['IRS1', 'IRS1_a', 'pIRS1'],
             1: ['Akt', 'pAkt'],
             2: ['TSC2', 'pTSC2'],
             3: ['RhebGDP', 'RhebGTP'],
-            4: ['mTORC1', 'pmTORC1', 'mTORC1_i'],
-            5: ['S6K', 'pS6K'],
-            6: ['FourEBP1', 'pFourEBP1'],
+            4: ['mTORC1', 'mTORC1_Pras40_Lys', 'mTORC1_Pras40_Cyt'],
+            5: ['mTORC1_i', 'mTORC1_iii'],
+            6: ['S6K', 'pS6K'],
+            7: ['FourEBP1', 'pFourEBP1'],
+            8: ['ppPras40', 'Pras40']
         }
         titles = {
             0: 'IRS1',
@@ -377,23 +489,34 @@ if __name__ == '__main__':
             2: 'TSC2',
             3: 'Rheb',
             4: 'mTORC1',
-            5: 'S6K',
-            6: '4EBP'
+            5: 'mTORC1_i',
+            6: 'S6K',
+            7: '4EBP',
+            8: 'ppPras40'
         }
+        x = np.linspace(0.1, 5, 100)
+        x = [round(i, 2) for i in x]
         inputs = OrderedDict(
-            Insulin=[0, 1],
+            # Insulin=[0, 1],
+            AA=[0, 1],
             Rapamycin=[0, 1],
+            # kRhebIn=x
+            # TSC2=x
+            # kmTORC1Phos_kcat=[0.001, 0.01, 0.1, 1, 10],
+            # kmTORC1Phos_km=[0.001],
+            # Rapamycin=[0, 1],
             # RhebGDP=[0, 10, 20, 30, 40]
-            # TSC2=[0, 10]
+            # TSC2=range(11)
             # S6K=[0, 10, 20, 30, 40]
         )
-        TimeSeries(ACTIVE_ANTIMONY, plot_selection=species_in_plot, start=0, stop=50, steps=51,
-                   subplot_titles=titles,
-                   inputs=inputs, hspace=0.55, ncols=3, savefig=True,
-                   plot_dir=PLOT_DIR)
-        # dct_plot(ACTIVE_ANTIMONY, species_in_plot, titles, inputs,
-        #          hspace=0.55, ncols=3, savefig=True,
-        #          plot_dir=PLOT_DIR)
+        ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=species_in_plot,
+                        start=0, stop=50, steps=51,
+                        subplot_titles=titles,
+                        inputs=inputs, hspace=0.55, ncols=3, savefig=True,
+                        plot_dir=PLOT_DIR, use_cached=False, parallel=False)
+        # ts.animate(os.path.join(PLOT_DIR, 'Insulin1Rapa0RhebScan'),
+        #            ovewrite=True,
+        #            fps=10)
 
     if STEADY_STATE:
         # from roadrunner import Config
@@ -409,9 +532,9 @@ if __name__ == '__main__':
         plot_selection = {
             0: ['IRS1_a'],
         }
-        vals = [0.01, 0.1, 1, 10, 100]
-        DoseResponse(ACTIVE_ANTIMONY, plot_selection, variable='Insulin', values=vals,
-                     logx=True)
+        vals = np.linspace(0, 100, 101)
+        dr = DoseResponse(ACTIVE_ANTIMONY, plot_selection, variable='Insulin', values=vals,
+                          logx=True)
 
         # mod = te.loada(ACTIVE_ANTIMONY)
         # insulin = [0.001, 0.01, 0.1, 1, 10, 100]

@@ -18,6 +18,7 @@ DATA_FILE = os.path.join(DATA_DIRECTORY, 'experimental_data.xlsx')
 DATA_FILE_NORMED_TO_MAX =  os.path.join(DATA_DIRECTORY, 'experimental_data_with_norm_to_max.csv')
 
 SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'ss_data.csv')
+SS_DATA_FILE = fname = os.path.join(DATA_DIRECTORY, 'steady_state_data_quantified.csv')
 PLOTS_DIR = os.path.join(DATA_DIRECTORY, 'plots')
 COPASI_DATA_FILES_DIR = os.path.join(DATA_DIRECTORY, 'CopasiDataFiles')
 
@@ -27,7 +28,7 @@ COPASI_DATA_FILES = glob.glob(os.path.join(COPASI_DATA_FILES_DIR, '*.csv'))
 SIMULATION_GRAPHS_DIR = os.path.join(PLOTS_DIR, 'simulation_graphs')
 if not os.path.isdir(SIMULATION_GRAPHS_DIR):
     os.makedirs(SIMULATION_GRAPHS_DIR)
-OFFSET_PARAMETER = 5
+OFFSET_PARAMETER = 0
 
 total_proteins = ['4E_BP1_obs', 'Akt_obs', 'ERK_obs', 'IRS1_obs',
                   'PRAS40_obs', 'S6K_obs', 'TSC2_obs']
@@ -399,7 +400,7 @@ class GetDataNormedToMax:
     total_proteins = ['FourEBP1', 'Akt', 'ER_alpha', 'Erk',
                       'GAPDH', 'IRS1', 'PRAS40', 'S6K', 'TSC2', 'p38']
 
-    inactive_species = [i for i in total_proteins if i not in ['IRS1', 'TSC2']] + ['IRS1pS636_639', 'TSC2pT1462']
+    inactive_species = [i for i in total_proteins if i not in ['IRS1', 'TSC2']] + ['IRS1pS636_639']
 
     def __init__(self, fname):
         self.fname = fname
@@ -491,6 +492,98 @@ class GetDataNormedToMax:
         #     data[i] = data[i] + 1
         # data.to_csv(SS_DATA_FILE, index=False, sep='\t')
         # return data
+
+    def plot(self, cell_line, plot_selection={}, subplot_titles={},
+             ncols=3, wspace=0.25, hspace=0.3, **kwargs):
+        if plot_selection == {}:
+            plot_selection = {
+                0: ['IRS1', 'IRS1pS636_639'],
+                1: ['Akt', 'AktpT308', 'AktpS473'],
+                2: ['TSC2', 'TSC2pT1462'],
+                3: ['S6K', 'S6KpT229', 'S6KpT389'],
+                4: ['FourEBP1', 'FourEBP1pT37_46'],
+                5: ['PRAS40', 'PRAS40pT246', 'PRAS40pS183'],
+                6: ['p38', 'p38pT180Y182'],
+                7: ['Erk', 'ErkpT202_Y204'],
+
+            }
+        if subplot_titles == {}:
+            subplot_titles = {
+                0: 'IRS1',
+                1: 'Akt',
+                2: 'TSC2',
+                3: 'S6K',
+                4: '4EBP',
+                5: 'Pras40',
+                6: 'p38',
+                7: 'Erk'
+            }
+        from matplotlib.gridspec import GridSpec
+        _nplots = len(plot_selection)
+        if _nplots == 1:
+            ncols = 1
+        _num_rows = int(_nplots / ncols)
+        _remainder = _nplots % ncols
+        if _remainder > 0:
+            _num_rows += 1
+        data = self.read_data(offset_for_inactive_species=OFFSET_PARAMETER).loc[cell_line]
+        avg = data.groupby(level='time').mean()
+        sem = data.groupby(level='time').sem()
+        fig = plt.figure(figsize=(12, 7))
+        gs = GridSpec(_num_rows, ncols, wspace=wspace, hspace=hspace)
+        for k, v in plot_selection.items():
+            ax = fig.add_subplot(gs[k])
+            for i in v:
+                plt.errorbar(avg.index, avg[i], yerr=sem[i], marker='.', label=i,
+                             ls='None', capsize=2)
+            plt.legend(loc='best', fontsize=10)
+            plt.title(subplot_titles[k])
+            seaborn.despine(fig, top=True, right=True)
+        plt.suptitle('Insulin Stimulation: {}'.format(cell_line))
+        fname = os.path.join(PLOTS_DIR, 'experimental_data_{}.png'.format(cell_line))
+        plt.savefig(fname, dpi=300, bbox_inches='tight')
+
+class SteadyStateData(GetDataNormedToMax):
+
+    def read_data(self, offset_for_inactive_species=OFFSET_PARAMETER):
+        data = pandas.read_csv(self.fname, header=[0, 1], index_col=[0]).transpose()
+        df_dct = {}
+        for label, df in data.groupby(level=0):
+            df = df.loc[label]
+            new_idx = range(df.shape[0])
+            df.index = new_idx
+            df_dct[label] = df
+        data = pandas.concat(df_dct)
+        data.index.names = ['antibody', 'repeat']
+        data = data.rename(level=0, index=self.replacement_names)
+        return data
+
+    def plot(self, hue='cell_line'):
+        seaborn.set_context(context='talk')
+        data = self.read_data(OFFSET_PARAMETER)
+        data = data.stack()
+        data = pandas.DataFrame(data)
+        data.index.names = ['antibody', 'repeat', 'cell_line']
+        data.columns = ['value']
+        fig = plt.figure(figsize=(25, 10))
+        other_args = dict(
+            data=data.reset_index(), y='value',
+            errcolor='black',
+            edgecolor='black', linewidth=3,
+            palette=['black', 'darkgrey', 'dimgrey'],
+            units='repeat'
+        )
+        if hue == 'cell_line':
+            seaborn.barplot(x='antibody', hue='cell_line', capsize=0.1,
+                            **other_args)
+        elif hue == 'antibody':
+            seaborn.barplot(x='cell_line', hue='antibody', capsize=0,
+                            **other_args)
+        plt.legend(loc=(1, 0.1))
+        plt.xticks(rotation=90)
+        seaborn.despine(fig=fig, top=True, right=True)
+        fname = os.path.join(PLOTS_DIR, 'steady_state_data_{}_hue.png'.format(hue))
+        plt.savefig(fname, dpi=300, bbox_inches='tight')
 
 
 def plot(data, prefix, savefig=False):
@@ -584,7 +677,3 @@ if __name__ == '__main__':
     gd = GetDataFromOldDataFile(DATA_FILE)
 
 
-'''
-
-Independent variables are not being mapped propertly, i.e. the Insulin
-'''

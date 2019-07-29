@@ -502,7 +502,7 @@ if __name__ == '__main__':
             2: ['TSC2', 'pTSC2'],
             3: ['RhebGDP', 'RhebGTP'],
             4: ['pmTORC1', 'mTORC1_Pras40_Lys', 'mTORC1_Pras40_Cyt'],
-            5: ['mTORC1_i', 'mTORC1_iii'],
+            5: ['mTORC1_i', 'mTORC1_ii', 'mTORC1_iii'],
             6: ['S6K', 'pS6K'],
             7: ['FourEBP1', 'pFourEBP1'],
             8: ['ppPras40', 'Pras40']

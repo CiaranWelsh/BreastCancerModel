@@ -206,6 +206,7 @@ Notes
   phosphorylating 
 '''
 
+
 class _Plotter:
 
     def __init__(self, ant_str, plot_selection, subplot_titles={}, inputs={}, savefig=False,
@@ -531,11 +532,24 @@ if __name__ == '__main__':
                     Rapamycin=[0, 1],
                     AA=[1],
                     TSC2=[0, 10]
-                )                ,
-            InsulinWithTSC2KO=OrderedDict(
+                ),
+                InsulinWithTSC2KO=OrderedDict(
                     Insulin=[0, 1],
                     TSC2=[0, 10]
-                )
+                ),
+                InsulinAndRapa=OrderedDict(
+                    Insulin=[0, 1],
+                    Rapamycin=[0, 1]
+                ),
+                InsulinAndAA=OrderedDict(
+                    Insulin=[0, 1],
+                    AA=[0, 1]
+                ),
+                AAAndRapa=OrderedDict(
+                    AA=[0, 1],
+                    Rapamycin=[0, 1]
+                ),
+
             )
             validations_dir = os.path.join(PLOT_BASE_DIR, 'validations')
             for k, v in inputs.items():

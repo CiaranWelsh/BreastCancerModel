@@ -88,10 +88,11 @@ model ModelWithMTOR()
     var Pras40        in Cell;
     var mTORC1_Pras40_Lys in Cell;
     var mTORC1_Pras40_Cyt in Cell;
-    var mTORC1        in Cell;
+    var pmTORC1        in Cell;
     var pmTORC1       in Cell;
     var mTORC1_i      in Cell;
     var mTORC1_ii     in Cell;
+    var mTORC1_iii     in Cell;
     var S6K           in Cell;
     var pS6K          in Cell;
     var FourEBP1      in Cell;
@@ -101,9 +102,9 @@ model ModelWithMTOR()
     
     kIRS1In             = 1;
     kIRS1Out            = 0.1;
-    kIRS1Act_km         = 1
-    kIRS1Act_kcat       = 10
-    kIRS1Act_h          = 2
+    kIRS1Act_km         = 1;
+    kIRS1Act_kcat       = 10;
+    kIRS1Act_h          = 2;
     kIRS1Act            = 0.1;
     kIRS1Inact          = 0.1;
     kIRS1Phos           = 0.5;
@@ -114,8 +115,8 @@ model ModelWithMTOR()
     kTSC2Dephos         = 0.1;
     kmTORC1ToLys        = 0.1;
     kmTORC1ToCyt        = 0.1;
-    kmTORC1Phos         = 0.1;
-    kmTORC1Dephos       = 0.1;
+    kmTORC1Act          = 0.1;
+    kmTORC1Dephos       = 1;
     kmTORC1BindRapa     = 2.0;
     kmTORC1UnbindRapa   = 0.1;
     kS6KPhos_km         = 100;
@@ -126,35 +127,36 @@ model ModelWithMTOR()
     k4EBP1Dephos        = 0.1;
     kRhebPhos           = 0.1;
     kRhebDephos         = 0.1;
-    kRhebIn             = 1; 
+    kRhebIn             = 10; 
     kRhebOut            = 0.1; 
     kmTORC1BindPras40   = 0.1;
-    kPras40Dephos       = 0.1
+    kPras40Dephos       = 0.1;
     
     Rapamycin           = 0;
     Insulin             = 0;
     AA                  = 1;
-    IRS1                = 10;
-    IRS1_a              = 0;
-    pIRS1               = 0;
-    Akt                 = 10;
-    pAkt                = 0;
-    TSC2                = 10;
-    pTSC2               = 0;
-    RhebGDP             = 10;
-    RhebGTP             = 0;
-    mTORC1              = 0;
-    mTORC1_Pras40_Lys   = 0
-    mTORC1_Pras40_Cyt   = 10
-    ppPras40            = 0;
-    Pras40              = 0;
-    pmTORC1             = 0;
-    mTORC1_i            = 0;
-    mTORC1_ii           = 0;
-    S6K                 = 10;
-    pS6K                = 0;
-    FourEBP1            = 10;
-    pFourEBP1           = 0;
+    IRS1 = 10.000001549282924;
+    IRS1_a = -7.275110416987059e-25;
+    pIRS1 = 1.3306498814441865e-24;
+    Akt = 10.005001550057566;
+    pAkt = -5.983678207133178e-24;
+    TSC2 = 10.005001550057566;
+    pTSC2 = 0.0;
+    RhebGDP = 90.91323534809237;
+    RhebGTP = 9.086780144736869;
+    Pras40 = 8.659321556325276e-09;
+    mTORC1_Pras40_Lys = 5.012500772248403;
+    mTORC1_Pras40_Cyt = 5.012500772248403;
+    pmTORC1 = 8.659321555454408e-09;
+    mTORC1_i = -4.470501429353354e-16;
+    mTORC1_ii = 1.1003168937815499e-25;
+    mTORC1_iii = -1.6213592874447562e-24;
+    S6K = 10.005001534306187;
+    pS6K = 1.575137776819416e-08;
+    FourEBP1 = 10.005001261365424;
+    pFourEBP1 = 2.8869214083423275e-07;
+    Rapamycin = 0.0;
+    ppPras40 = -2.7062868383664535e-22;
     
     // observables
     // MM(km, Vmax, S)
@@ -162,7 +164,7 @@ model ModelWithMTOR()
     // Hill(km, kcat, L, S, h) or Hill(km, kcat, E, S, h)
     R1In    : => IRS1                                               ; Cell * kIRS1In;
     R2Out   : IRS1 =>                                               ; Cell * kIRS1Out*IRS1;
-    R1f     : IRS1 => IRS1_a                                        ; Cell * kIRS1Act*IRS1*Insulin;//Hill(kIRS1Act_km, kIRS1Act_kcat, Insulin, IRS1, kIRS1Act_h);;
+    R1f     : IRS1 => IRS1_a                                        ; Cell * kIRS1Act*IRS1*Insulin;//Hill(kIRS1Act_km, kIRS1Act_kcat, Insulin, IRS1, kIRS1Act_h);
     R1b     : IRS1_a => IRS1                                        ; Cell * kIRS1Inact*IRS1_a;
     R1i     : IRS1_a => pIRS1                                       ; Cell * kIRS1Phos*IRS1_a*pS6K;
     R1o     : pIRS1 =>                                              ; Cell * kIRS1Dephos*pIRS1;
@@ -170,26 +172,39 @@ model ModelWithMTOR()
     R2b     : pAkt => Akt                                           ; Cell * kAktDephos*pAkt;
     R3f     : TSC2 => pTSC2                                         ; Cell * kTSC2Phos*TSC2*pAkt;
     R3b     : pTSC2 => TSC2                                         ; Cell * kTSC2Dephos*pTSC2;
-    R4f      : RhebGDP => RhebGTP                                   ; Cell * kRhebPhos*RhebGDP
+    
+    R4Out   : RhebGDP =>                                            ; Cell * kRhebOut*RhebGDP;
+    R4In    : => RhebGTP                                            ; Cell * kRhebIn;
+    R4Out2  : RhebGTP =>                                            ; Cell * kRhebOut*RhebGTP; 
+    
+    R4f     : RhebGDP => RhebGTP                                    ; Cell * kRhebPhos*RhebGDP*AA;
     R4b     : RhebGTP => RhebGDP                                    ; Cell * kRhebDephos*RhebGTP*TSC2;
     R5f     : mTORC1_Pras40_Cyt => mTORC1_Pras40_Lys                ; Cell * kmTORC1ToLys*mTORC1_Pras40_Cyt*AA;
     R5b     : mTORC1_Pras40_Lys => mTORC1_Pras40_Cyt                ; Cell * kmTORC1ToCyt*mTORC1_Pras40_Lys;
-    R6f     : mTORC1_Pras40_Lys + RhebGTP => mTORC1 + ppPras40 + RhebGDP ; Cell * kmTORC1Phos*pAkt*RhebGTP*mTORC1_Pras40_Lys;
-    R6b     : mTORC1 + Pras40 => mTORC1_Pras40_Lys                  ; Cell * kmTORC1BindPras40*mTORC1*Pras40;
+    R6f     : mTORC1_Pras40_Lys + RhebGTP => pmTORC1 + ppPras40 + RhebGDP ; Cell * kmTORC1Act*pAkt*RhebGTP*mTORC1_Pras40_Lys;
+    R6b     : pmTORC1 + Pras40 => mTORC1_Pras40_Lys                  ; Cell * kmTORC1BindPras40*pmTORC1*Pras40;
     R6c     : ppPras40 => Pras40                                    ; Cell * kPras40Dephos*ppPras40;
     R7if    : mTORC1_Pras40_Cyt + Rapamycin => mTORC1_i             ; Cell * kmTORC1BindRapa*mTORC1_Pras40_Cyt*Rapamycin;
     R7ib    : mTORC1_i => mTORC1_Pras40_Cyt + Rapamycin             ; Cell * kmTORC1UnbindRapa*mTORC1_i;
     R8iif   : mTORC1_Pras40_Lys + Rapamycin => mTORC1_ii            ; Cell * kmTORC1BindRapa*mTORC1_Pras40_Lys*Rapamycin;
     R8iib   : mTORC1_ii => mTORC1_Pras40_Lys + Rapamycin            ; Cell * kmTORC1UnbindRapa*mTORC1_ii;
-    R9iiif  : mTORC1 + Rapamycin => mTORC1_iii                      ; Cell * kmTORC1BindRapa*mTORC1*Rapamycin;
-    R9iiib  : mTORC1_iii => mTORC1 + Rapamycin                      ; Cell * kmTORC1UnbindRapa*mTORC1_iii;
-    R10f     : S6K => pS6K                                          ; Cell * MMWithKcat(kS6KPhos_km, kS6KPhos_kcat, S6K, mTORC1);
+    R9iiif  : pmTORC1 + Rapamycin => mTORC1_iii                      ; Cell * kmTORC1BindRapa*pmTORC1*Rapamycin;
+    R9iiib  : mTORC1_iii => pmTORC1 + Rapamycin                      ; Cell * kmTORC1UnbindRapa*mTORC1_iii;
+    R10f     : S6K => pS6K                                          ; Cell * MMWithKcat(kS6KPhos_km, kS6KPhos_kcat, S6K, pmTORC1);
     R10b     : pS6K => S6K                                          ; Cell * kS6KDephos*pS6K;
-    R11f     : FourEBP1 => pFourEBP1                                ; Cell * MMWithKcat(k4Phos_km, k4EBP1Phos_kcat, FourEBP1, mTORC1); //k4EBP1Phos*FourEBP1*mTORC1;
+    R11f     : FourEBP1 => pFourEBP1                                ; Cell * MMWithKcat(k4Phos_km, k4EBP1Phos_kcat, FourEBP1, pmTORC1); 
     R11b     : pFourEBP1 => FourEBP1                                ; Cell * k4EBP1Dephos*pFourEBP1;
 end
 """
-
+'''
+Notes
+-----
+- Elimination of TSC2 function hypercharges RhebGTP
+  leading to constitutive activation of pmTORC1. 
+- However, in this model, pmTORC1 activation is dependent on 
+  pAkt two-fold 1) by deactivating TSC2 and 2) by 
+  phosphorylating 
+'''
 
 class _Plotter:
 
@@ -415,6 +430,10 @@ if __name__ == '__main__':
 
     STEADY_STATE = False
 
+    EXTRACT_ICS_FROM_COPASI = False
+    if EXTRACT_ICS_FROM_COPASI and BUILD_NEW:
+        raise ValueError('You are trying to extract parameters from a newly built model')
+
     DOSE_RESPONSE = False
 
     CONFIGURE_PARAMETER_ESTIMATION = False
@@ -460,11 +479,16 @@ if __name__ == '__main__':
         mod.open()
 
     if PLOT_CONDITIONS:
+
+        VALIDATION_PLOTS = True
         # Where to put the simulations. Directory called PLOT_DIR will be created and simulations placed inside
         PLOT_BASE_DIR = os.path.join(WORKING_DIR, 'ToyModelOutput')
         PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'mTORC1PhosScan/low_kmTORC1Phos_km')
-        PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'AminoAcidsAndRapamycin')
+        # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'InsAARapaInTSC2KOConditions')
         # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'InsulinAndAA')
+        # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'InsulinAndRapamycin')
+        # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'AminoAcidsAndRapamycin')
+        PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'TSC2KnockdownAndRapa')
         # PLOT_DIR = os.path.join(PLOT_BASE_DIR, 'ScratchPad')
 
         DELETE_EXISTING_FILES = False
@@ -477,7 +501,7 @@ if __name__ == '__main__':
             1: ['Akt', 'pAkt'],
             2: ['TSC2', 'pTSC2'],
             3: ['RhebGDP', 'RhebGTP'],
-            4: ['mTORC1', 'mTORC1_Pras40_Lys', 'mTORC1_Pras40_Cyt'],
+            4: ['pmTORC1', 'mTORC1_Pras40_Lys', 'mTORC1_Pras40_Cyt'],
             5: ['mTORC1_i', 'mTORC1_iii'],
             6: ['S6K', 'pS6K'],
             7: ['FourEBP1', 'pFourEBP1'],
@@ -488,45 +512,87 @@ if __name__ == '__main__':
             1: 'Akt',
             2: 'TSC2',
             3: 'Rheb',
-            4: 'mTORC1',
+            4: 'pmTORC1',
             5: 'mTORC1_i',
             6: 'S6K',
             7: '4EBP',
             8: 'ppPras40'
         }
-        x = np.linspace(0.1, 5, 100)
-        x = [round(i, 2) for i in x]
-        inputs = OrderedDict(
-            # Insulin=[0, 1],
-            AA=[0, 1],
-            Rapamycin=[0, 1],
-            # kRhebIn=x
-            # TSC2=x
-            # kmTORC1Phos_kcat=[0.001, 0.01, 0.1, 1, 10],
-            # kmTORC1Phos_km=[0.001],
-            # Rapamycin=[0, 1],
-            # RhebGDP=[0, 10, 20, 30, 40]
-            # TSC2=range(11)
-            # S6K=[0, 10, 20, 30, 40]
-        )
-        ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=species_in_plot,
-                        start=0, stop=50, steps=51,
-                        subplot_titles=titles,
-                        inputs=inputs, hspace=0.55, ncols=3, savefig=True,
-                        plot_dir=PLOT_DIR, use_cached=False, parallel=False)
-        # ts.animate(os.path.join(PLOT_DIR, 'Insulin1Rapa0RhebScan'),
-        #            ovewrite=True,
-        #            fps=10)
+
+        if VALIDATION_PLOTS:
+            inputs = OrderedDict(
+                AAInsulinAndRapamycinOnly=OrderedDict(
+                    Insulin=[0, 1],
+                    AA=[0, 1],
+                    Rapamycin=[0, 1]
+                ),
+                InsulinAndRapaWithTSC2KO=OrderedDict(
+                    Insulin=[0, 1],
+                    Rapamycin=[0, 1],
+                    AA=[1],
+                    TSC2=[0, 10]
+                )                ,
+            InsulinWithTSC2KO=OrderedDict(
+                    Insulin=[0, 1],
+                    TSC2=[0, 10]
+                )
+            )
+            validations_dir = os.path.join(PLOT_BASE_DIR, 'validations')
+            for k, v in inputs.items():
+                plot_dir = os.path.join(validations_dir, k)
+                ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=species_in_plot,
+                                start=0, stop=50, steps=51,
+                                subplot_titles=titles,
+                                inputs=v, hspace=0.55, ncols=3, savefig=True,
+                                plot_dir=plot_dir
+                                )
+
+        else:
+            x = np.linspace(0.1, 5, 100)
+            x = [round(i, 2) for i in x]
+            inputs = OrderedDict(
+                Insulin=[1],
+                AA=[1],
+                Rapamycin=[0, 1],
+                TSC2=[0, 10],
+                # kRhebIn=x
+                # TSC2=x
+                # kmTORC1Phos_kcat=[0.001, 0.01, 0.1, 1, 10],
+                # kmTORC1Phos_km=[0.001],
+                # Rapamycin=[0, 1],
+                # RhebGDP=[0, 10, 20, 30, 40]
+                # TSC2=range(11)
+                # S6K=[0, 10, 20, 30, 40]
+            )
+            ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=species_in_plot,
+                            start=0, stop=50, steps=51,
+                            subplot_titles=titles,
+                            inputs=inputs, hspace=0.55, ncols=3, savefig=False,
+                            plot_dir=PLOT_DIR, use_cached=False, parallel=False)
+            # ts.animate(os.path.join(PLOT_DIR, 'Insulin1Rapa0RhebScan'),
+            #            ovewrite=True,
+            #            fps=10)
 
     if STEADY_STATE:
         # from roadrunner import Config
         #
         # Config.setValue(Config.LOADSBMLOPTIONS_CONSERVED_MOIETIES, True)
         mod = te.loada(ACTIVE_ANTIMONY)
+        mod.conservedMoietyAnalysis = True
         x = mod.getSteadyStateValues()
         y = mod.getFloatingSpeciesIds()
         for i, j in zip(y, x):
             print(f'{i} = {j}')
+
+    if EXTRACT_ICS_FROM_COPASI:
+        if not isinstance(mod, py3.model.Model):
+            raise ValueError
+
+        s = ''
+        for i in mod.metabolites:
+            s += f'{i.name} = {i.concentration};\n'
+
+        print(s)
 
     if DOSE_RESPONSE:
         plot_selection = {

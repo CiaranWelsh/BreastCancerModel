@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created by libAntimony version v2.9.4 with libSBML version 5.15.0. -->
 <sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1">
-  <model id="ModelWithMTOR" name="ModelWithMTOR">
+  <model id="ComplexPI3KModel" name="ComplexPI3KModel">
     <listOfFunctionDefinitions>
       <functionDefinition id="MM">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -465,63 +465,142 @@
       <compartment id="Cell" spatialDimensions="3" size="1" constant="true"/>
     </listOfCompartments>
     <listOfSpecies>
-      <species id="IRS1" compartment="Cell" initialConcentration="10.0000015492829" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="IRS1_a" compartment="Cell" initialConcentration="-7.27511041698706e-25" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pIRS1" compartment="Cell" initialConcentration="1.33064988144419e-24" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Akt" compartment="Cell" initialConcentration="10.0050015500576" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pAkt" compartment="Cell" initialConcentration="-5.98367820713318e-24" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="TSC2" compartment="Cell" initialConcentration="10.0050015500576" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pTSC2" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="RhebGDP" compartment="Cell" initialConcentration="90.9132353480924" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="RhebGTP" compartment="Cell" initialConcentration="9.08678014473687" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Pras40" compartment="Cell" initialConcentration="8.65932155632528e-09" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1_Pras40_Lys" compartment="Cell" initialConcentration="5.0125007722484" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1_Pras40_Cyt" compartment="Cell" initialConcentration="5.0125007722484" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pmTORC1" compartment="Cell" initialConcentration="8.65932155545441e-09" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1_i" compartment="Cell" initialConcentration="-4.47050142935335e-16" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1_ii" compartment="Cell" initialConcentration="1.10031689378155e-25" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1_iii" compartment="Cell" initialConcentration="-1.62135928744476e-24" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="S6K" compartment="Cell" initialConcentration="10.0050015343062" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pS6K" compartment="Cell" initialConcentration="1.57513777681942e-08" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="FourEBP1" compartment="Cell" initialConcentration="10.0050012613654" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pFourEBP1" compartment="Cell" initialConcentration="2.88692140834233e-07" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IRS1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IRS1a" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pIRS1" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PI3K" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pPI3K" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PIP2" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PIP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PDK1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PDK1_PIP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Akt" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Akt_PIP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pAkt" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Akti" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="TSC2" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pTSC2" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RhebGDP" compartment="Cell" initialConcentration="10.002" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RhebGTP" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="ppPras40" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1cyt" compartment="Cell" initialConcentration="0.002" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1_Pras40cyt" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1lys" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RAG_GDP" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RAG_GTP" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1i" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1ii" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1iii" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1iv" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="FourEBP1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pFourEBP1" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="S6K" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pS6K" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="AMPK" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pAMPKi" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pAMPK" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="CaMKK2a" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="CaMKK2" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="LKB1a" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="LKB1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RTK" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pRTK" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Sos" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pRTKa" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Raf" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pRaf" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Mek" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pMek" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Erk" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pErk" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Meki" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PLCeps" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pPLCeps" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DAG" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IpR" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IpRa" compartment="Cell" initialConcentration="0.0009" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Ca2" compartment="Cell" initialConcentration="0.0009" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Rapamycin" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
-      <species id="ppPras40" compartment="default_compartment" initialConcentration="-2.70628683836645e-22" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="MK2206" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
+      <species id="RasGDP" compartment="default_compartment" initialConcentration="10.002" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RasGTP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pmTORC1" compartment="default_compartment" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pSos" compartment="default_compartment" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
       <parameter id="Insulin" value="0" constant="true"/>
+      <parameter id="AA" value="0" constant="true"/>
+      <parameter id="AZD" value="0" constant="true"/>
+      <parameter id="EGF" value="0" constant="true"/>
       <parameter id="kIRS1In" value="1" constant="true"/>
       <parameter id="kIRS1Out" value="0.1" constant="true"/>
-      <parameter id="kIRS1Act_km" value="1" constant="true"/>
-      <parameter id="kIRS1Act_kcat" value="10" constant="true"/>
-      <parameter id="kIRS1Act_h" value="2" constant="true"/>
       <parameter id="kIRS1Act" value="0.1" constant="true"/>
       <parameter id="kIRS1Inact" value="0.1" constant="true"/>
-      <parameter id="kIRS1Phos" value="0.5" constant="true"/>
+      <parameter id="kIRS1Phos" value="0.1" constant="true"/>
       <parameter id="kIRS1Dephos" value="0.1" constant="true"/>
+      <parameter id="kPI3KPhos" value="0.1" constant="true"/>
+      <parameter id="kPI3KDephos" value="0.1" constant="true"/>
+      <parameter id="kPIPPhos" value="0.1" constant="true"/>
+      <parameter id="kPIPDephos" value="0.1" constant="true"/>
+      <parameter id="kPDK1BindPIP3" value="0.1" constant="true"/>
+      <parameter id="kPDK1UnbindPIP3" value="0.1" constant="true"/>
+      <parameter id="kAktBindPIP3" value="0.1" constant="true"/>
+      <parameter id="kAktUnbindPIP3" value="0.1" constant="true"/>
       <parameter id="kAktPhos" value="0.1" constant="true"/>
       <parameter id="kAktDephos" value="0.1" constant="true"/>
+      <parameter id="kAktBindMK" value="0.1" constant="true"/>
       <parameter id="kTSC2Phos" value="0.1" constant="true"/>
       <parameter id="kTSC2Dephos" value="0.1" constant="true"/>
-      <parameter id="kmTORC1ToLys" value="0.1" constant="true"/>
-      <parameter id="kmTORC1ToCyt" value="0.1" constant="true"/>
-      <parameter id="kmTORC1Act" value="0.1" constant="true"/>
-      <parameter id="kmTORC1Dephos" value="1" constant="true"/>
-      <parameter id="kmTORC1BindRapa" value="2" constant="true"/>
-      <parameter id="kmTORC1UnbindRapa" value="0.1" constant="true"/>
-      <parameter id="kS6KPhos_km" value="100" constant="true"/>
-      <parameter id="kS6KPhos_kcat" value="2" constant="true"/>
-      <parameter id="kS6KDephos" value="0.1" constant="true"/>
-      <parameter id="k4Phos_km" value="5" constant="true"/>
-      <parameter id="k4EBP1Phos_kcat" value="5" constant="true"/>
-      <parameter id="k4EBP1Dephos" value="0.1" constant="true"/>
       <parameter id="kRhebPhos" value="0.1" constant="true"/>
       <parameter id="kRhebDephos" value="0.1" constant="true"/>
-      <parameter id="kRhebIn" value="10" constant="true"/>
-      <parameter id="kRhebOut" value="0.1" constant="true"/>
       <parameter id="kmTORC1BindPras40" value="0.1" constant="true"/>
-      <parameter id="kPras40Dephos" value="0.1" constant="true"/>
-      <parameter id="AA" value="1" constant="true"/>
+      <parameter id="kmTORC1UnbindPras40" value="0.1" constant="true"/>
+      <parameter id="kmTORC1CytToLys" value="0.1" constant="true"/>
+      <parameter id="kmTORC1LysToCyt" value="0.1" constant="true"/>
+      <parameter id="kRAGPhos" value="0.1" constant="true"/>
+      <parameter id="kRAGDephos" value="0.1" constant="true"/>
+      <parameter id="kmTORC1Phos" value="0.1" constant="true"/>
+      <parameter id="kmTORC1Dephos" value="0.1" constant="true"/>
+      <parameter id="kmTORC1BindRapa" value="0.1" constant="true"/>
+      <parameter id="kmTORC1UnbindRapa" value="0.1" constant="true"/>
+      <parameter id="k4EBP1Phos" value="0.1" constant="true"/>
+      <parameter id="k4EBP1Dephos" value="0.1" constant="true"/>
+      <parameter id="kS6KPhos" value="0.1" constant="true"/>
+      <parameter id="kS6KDehos" value="0.1" constant="true"/>
+      <parameter id="kAMPKInhibPhosByAkt" value="0.1" constant="true"/>
+      <parameter id="kAMPKInhibPhosByS6K" value="0.1" constant="true"/>
+      <parameter id="kAMPKDephos" value="0.1" constant="true"/>
+      <parameter id="kAMPKActPhos" value="0.1" constant="true"/>
+      <parameter id="kAMPKActDephos" value="0.1" constant="true"/>
+      <parameter id="kCaMKK2Act" value="0.1" constant="true"/>
+      <parameter id="kCaMKK2Inact" value="0.1" constant="true"/>
+      <parameter id="kLKB1Act" value="0.1" constant="true"/>
+      <parameter id="kLKB1Inact" value="0.1" constant="true"/>
+      <parameter id="kTKRBindEGF" value="0.1" constant="true"/>
+      <parameter id="kTKRUnbindEGF" value="0.1" constant="true"/>
+      <parameter id="kTKRBindSOS" value="0.1" constant="true"/>
+      <parameter id="kTKRUnbindSOS" value="0.1" constant="true"/>
+      <parameter id="kSOSPhos" value="0.1" constant="true"/>
+      <parameter id="kSOSDephos" value="0.1" constant="true"/>
+      <parameter id="kRasLoad" value="0.1" constant="true"/>
+      <parameter id="kRasUnload" value="0.1" constant="true"/>
+      <parameter id="kRafPhos" value="0.1" constant="true"/>
+      <parameter id="kRafDephos" value="0.1" constant="true"/>
+      <parameter id="kMekPhos" value="0.1" constant="true"/>
+      <parameter id="kMekDephos" value="0.1" constant="true"/>
+      <parameter id="kErkPhos" value="0.01" constant="true"/>
+      <parameter id="kErkDephos" value="0.1" constant="true"/>
+      <parameter id="kMekBindAzd" value="0.1" constant="true"/>
+      <parameter id="kMekUnbindAzd" value="0.1" constant="true"/>
+      <parameter id="kPLCPhos" value="0.1" constant="true"/>
+      <parameter id="kPLCDephos" value="0.1" constant="true"/>
+      <parameter id="kPIP2Break" value="0.001" constant="true"/>
+      <parameter id="kPIP2form" value="0.1" constant="true"/>
+      <parameter id="kIP3BindIpR" value="0.1" constant="true"/>
+      <parameter id="kIP3UnbindIpR" value="0.1" constant="true"/>
+      <parameter id="kCa2In" value="0.1" constant="true"/>
+      <parameter id="kCa2Out" value="0.1" constant="true"/>
     </listOfParameters>
     <listOfReactions>
       <reaction id="R1In" reversible="false" fast="false">
@@ -558,7 +637,7 @@
           <speciesReference species="IRS1" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="IRS1_a" stoichiometry="1" constant="true"/>
+          <speciesReference species="IRS1a" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -574,7 +653,7 @@
       </reaction>
       <reaction id="R1b" reversible="false" fast="false">
         <listOfReactants>
-          <speciesReference species="IRS1_a" stoichiometry="1" constant="true"/>
+          <speciesReference species="IRS1a" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference species="IRS1" stoichiometry="1" constant="true"/>
@@ -585,14 +664,14 @@
               <times/>
               <ci> Cell </ci>
               <ci> kIRS1Inact </ci>
-              <ci> IRS1_a </ci>
+              <ci> IRS1a </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
       <reaction id="R1i" reversible="false" fast="false">
         <listOfReactants>
-          <speciesReference species="IRS1_a" stoichiometry="1" constant="true"/>
+          <speciesReference species="IRS1a" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference species="pIRS1" stoichiometry="1" constant="true"/>
@@ -606,13 +685,13 @@
               <times/>
               <ci> Cell </ci>
               <ci> kIRS1Phos </ci>
-              <ci> IRS1_a </ci>
+              <ci> IRS1a </ci>
               <ci> pS6K </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R1o" reversible="false" fast="false">
+      <reaction id="R1Out2" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pIRS1" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -629,13 +708,149 @@
       </reaction>
       <reaction id="R2f" reversible="false" fast="false">
         <listOfReactants>
+          <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pPI3K" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="IRS1a"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPI3KPhos </ci>
+              <ci> PI3K </ci>
+              <ci> IRS1a </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R2b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pPI3K" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPI3KDephos </ci>
+              <ci> pPI3K </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R3f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PIP2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPIPDephos </ci>
+              <ci> PIP3 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R4f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="PDK1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PDK1_PIP3" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPDK1BindPIP3 </ci>
+              <ci> PIP3 </ci>
+              <ci> PDK1 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R4b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PDK1_PIP3" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="PDK1" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPDK1UnbindPIP3 </ci>
+              <ci> PDK1_PIP3 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R5f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
           <speciesReference species="Akt" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Akt_PIP3" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAktBindPIP3 </ci>
+              <ci> PIP3 </ci>
+              <ci> Akt </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R5b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Akt_PIP3" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="Akt" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAktUnbindPIP3 </ci>
+              <ci> Akt_PIP3 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R6f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Akt_PIP3" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference species="pAkt" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <listOfModifiers>
-          <modifierSpeciesReference species="IRS1_a"/>
+          <modifierSpeciesReference species="PDK1_PIP3"/>
         </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -643,18 +858,18 @@
               <times/>
               <ci> Cell </ci>
               <ci> kAktPhos </ci>
-              <ci> Akt </ci>
-              <ci> IRS1_a </ci>
+              <ci> Akt_PIP3 </ci>
+              <ci> PDK1_PIP3 </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R2b" reversible="false" fast="false">
+      <reaction id="R6b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pAkt" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="Akt" stoichiometry="1" constant="true"/>
+          <speciesReference species="Akt_PIP3" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -667,7 +882,27 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R3f" reversible="false" fast="false">
+      <reaction id="R6i" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Akt" stoichiometry="1" constant="true"/>
+          <speciesReference species="MK2206" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Akti" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAktBindMK </ci>
+              <ci> Akt </ci>
+              <ci> MK2206 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R7f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="TSC2" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -689,7 +924,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R3b" reversible="false" fast="false">
+      <reaction id="R7b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pTSC2" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -707,51 +942,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R4Out" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="RhebGDP" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kRhebOut </ci>
-              <ci> RhebGDP </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R4In" reversible="false" fast="false">
-        <listOfProducts>
-          <speciesReference species="RhebGTP" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kRhebIn </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R4Out2" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="RhebGTP" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kRhebOut </ci>
-              <ci> RhebGTP </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R4f" reversible="false" fast="false">
+      <reaction id="R8f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="RhebGDP" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -770,7 +961,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R4b" reversible="false" fast="false">
+      <reaction id="R8b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="RhebGTP" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -792,52 +983,33 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R5f" reversible="false" fast="false">
+      <reaction id="R9f" reversible="false" fast="false">
         <listOfReactants>
-          <speciesReference species="mTORC1_Pras40_Cyt" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_Pras40_Lys" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1ToLys </ci>
-              <ci> mTORC1_Pras40_Cyt </ci>
-              <ci> AA </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R5b" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_Pras40_Lys" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_Pras40_Cyt" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1ToCyt </ci>
-              <ci> mTORC1_Pras40_Lys </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R6f" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_Pras40_Lys" stoichiometry="1" constant="true"/>
-          <speciesReference species="RhebGTP" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
           <speciesReference species="ppPras40" stoichiometry="1" constant="true"/>
-          <speciesReference species="RhebGDP" stoichiometry="1" constant="true"/>
+          <speciesReference species="mTORC1cyt" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1_Pras40cyt" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1BindPras40 </ci>
+              <ci> ppPras40 </ci>
+              <ci> mTORC1cyt </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R9b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1_Pras40cyt" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="ppPras40" stoichiometry="1" constant="true"/>
+          <speciesReference species="mTORC1cyt" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <listOfModifiers>
           <modifierSpeciesReference species="pAkt"/>
@@ -847,214 +1019,289 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kmTORC1Act </ci>
+              <ci> kmTORC1UnbindPras40 </ci>
+              <ci> mTORC1_Pras40cyt </ci>
               <ci> pAkt </ci>
-              <ci> RhebGTP </ci>
-              <ci> mTORC1_Pras40_Lys </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R6b" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
-          <speciesReference species="Pras40" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_Pras40_Lys" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1BindPras40 </ci>
-              <ci> pmTORC1 </ci>
-              <ci> Pras40 </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R6c" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="ppPras40" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="Pras40" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kPras40Dephos </ci>
-              <ci> ppPras40 </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R7if" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_Pras40_Cyt" stoichiometry="1" constant="true"/>
-          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_i" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1BindRapa </ci>
-              <ci> mTORC1_Pras40_Cyt </ci>
-              <ci> Rapamycin </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R7ib" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_i" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_Pras40_Cyt" stoichiometry="1" constant="true"/>
-          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1UnbindRapa </ci>
-              <ci> mTORC1_i </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R8iif" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_Pras40_Lys" stoichiometry="1" constant="true"/>
-          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_ii" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1BindRapa </ci>
-              <ci> mTORC1_Pras40_Lys </ci>
-              <ci> Rapamycin </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R8iib" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_ii" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_Pras40_Lys" stoichiometry="1" constant="true"/>
-          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1UnbindRapa </ci>
-              <ci> mTORC1_ii </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R9iiif" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
-          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="mTORC1_iii" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1BindRapa </ci>
-              <ci> pmTORC1 </ci>
-              <ci> Rapamycin </ci>
-            </apply>
-          </math>
-        </kineticLaw>
-      </reaction>
-      <reaction id="R9iiib" reversible="false" fast="false">
-        <listOfReactants>
-          <speciesReference species="mTORC1_iii" stoichiometry="1" constant="true"/>
-        </listOfReactants>
-        <listOfProducts>
-          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
-          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
-        </listOfProducts>
-        <kineticLaw>
-          <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-              <times/>
-              <ci> Cell </ci>
-              <ci> kmTORC1UnbindRapa </ci>
-              <ci> mTORC1_iii </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
       <reaction id="R10f" reversible="false" fast="false">
         <listOfReactants>
-          <speciesReference species="S6K" stoichiometry="1" constant="true"/>
+          <speciesReference species="mTORC1cyt" stoichiometry="1" constant="true"/>
+          <speciesReference species="RAG_GTP" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="pS6K" stoichiometry="1" constant="true"/>
+          <speciesReference species="mTORC1lys" stoichiometry="1" constant="true"/>
+          <speciesReference species="RAG_GDP" stoichiometry="1" constant="true"/>
         </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="pmTORC1"/>
-        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> Cell </ci>
-              <apply>
-                <ci> MMWithKcat </ci>
-                <ci> kS6KPhos_km </ci>
-                <ci> kS6KPhos_kcat </ci>
-                <ci> S6K </ci>
-                <ci> pmTORC1 </ci>
-              </apply>
+              <ci> kmTORC1CytToLys </ci>
+              <ci> mTORC1cyt </ci>
+              <ci> RAG_GTP </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
       <reaction id="R10b" reversible="false" fast="false">
         <listOfReactants>
-          <speciesReference species="pS6K" stoichiometry="1" constant="true"/>
+          <speciesReference species="mTORC1lys" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference species="S6K" stoichiometry="1" constant="true"/>
+          <speciesReference species="mTORC1cyt" stoichiometry="1" constant="true"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kS6KDephos </ci>
-              <ci> pS6K </ci>
+              <ci> kmTORC1LysToCyt </ci>
+              <ci> mTORC1lys </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
       <reaction id="R11f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="RAG_GDP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="RAG_GTP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kRAGPhos </ci>
+              <ci> RAG_GDP </ci>
+              <ci> AA </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R11b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="RAG_GTP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="RAG_GDP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kRAGDephos </ci>
+              <ci> RAG_GTP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R12f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1lys" stoichiometry="1" constant="true"/>
+          <speciesReference species="RhebGTP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
+          <speciesReference species="RhebGDP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1Phos </ci>
+              <ci> mTORC1lys </ci>
+              <ci> RhebGTP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R12b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1lys" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="AMPK"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1Dephos </ci>
+              <ci> pmTORC1 </ci>
+              <ci> AMPK </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13fi" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1cyt" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1i" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1BindRapa </ci>
+              <ci> mTORC1cyt </ci>
+              <ci> Rapamycin </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13bi" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1i" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1cyt" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1UnbindRapa </ci>
+              <ci> mTORC1i </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13fii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1lys" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1ii" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1BindRapa </ci>
+              <ci> mTORC1lys </ci>
+              <ci> Rapamycin </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13bii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1ii" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1lys" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1UnbindRapa </ci>
+              <ci> mTORC1ii </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13fiii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1iii" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1BindRapa </ci>
+              <ci> pmTORC1 </ci>
+              <ci> Rapamycin </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13biii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1iii" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pmTORC1" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1UnbindRapa </ci>
+              <ci> mTORC1iii </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13fiv" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1_Pras40cyt" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1iv" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1BindRapa </ci>
+              <ci> mTORC1_Pras40cyt </ci>
+              <ci> Rapamycin </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R13biv" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="mTORC1iv" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="mTORC1_Pras40cyt" stoichiometry="1" constant="true"/>
+          <speciesReference species="Rapamycin" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kmTORC1UnbindRapa </ci>
+              <ci> mTORC1iv </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R14f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="FourEBP1" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1069,18 +1316,14 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <apply>
-                <ci> MMWithKcat </ci>
-                <ci> k4Phos_km </ci>
-                <ci> k4EBP1Phos_kcat </ci>
-                <ci> FourEBP1 </ci>
-                <ci> pmTORC1 </ci>
-              </apply>
+              <ci> k4EBP1Phos </ci>
+              <ci> FourEBP1 </ci>
+              <ci> pmTORC1 </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R11b" reversible="false" fast="false">
+      <reaction id="R14b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pFourEBP1" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1094,6 +1337,696 @@
               <ci> Cell </ci>
               <ci> k4EBP1Dephos </ci>
               <ci> pFourEBP1 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R15f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="S6K" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pS6K" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pmTORC1"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kS6KPhos </ci>
+              <ci> S6K </ci>
+              <ci> pmTORC1 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R15b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pS6K" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S6K" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kS6KDehos </ci>
+              <ci> pS6K </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R16fi" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pAMPKi" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pAkt"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKInhibPhosByAkt </ci>
+              <ci> AMPK </ci>
+              <ci> pAkt </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R16fii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pAMPKi" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pS6K"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKInhibPhosByS6K </ci>
+              <ci> AMPK </ci>
+              <ci> pS6K </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R16b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pAMPKi" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKDephos </ci>
+              <ci> pAMPKi </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pAMPK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="CaMKK2a"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKActPhos </ci>
+              <ci> AMPK </ci>
+              <ci> CaMKK2a </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pAMPK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKActDephos </ci>
+              <ci> pAMPK </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R18f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="CaMKK2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="CaMKK2a" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="Ca2"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kCaMKK2Act </ci>
+              <ci> CaMKK2 </ci>
+              <ci> Ca2 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R18b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="CaMKK2a" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="CaMKK2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kCaMKK2Inact </ci>
+              <ci> CaMKK2a </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R19f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="LKB1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="LKB1a" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kLKB1Act </ci>
+              <ci> LKB1 </ci>
+              <ci> AA </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R19b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="LKB1a" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="LKB1" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kLKB1Inact </ci>
+              <ci> LKB1a </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R20f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="RTK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pRTK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kTKRBindEGF </ci>
+              <ci> RTK </ci>
+              <ci> EGF </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R20b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pRTK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="RTK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kTKRUnbindEGF </ci>
+              <ci> pRTK </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R21f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pRTK" stoichiometry="1" constant="true"/>
+          <speciesReference species="Sos" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pRTKa" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kTKRBindSOS </ci>
+              <ci> pRTK </ci>
+              <ci> Sos </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R21b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pRTKa" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pRTK" stoichiometry="1" constant="true"/>
+          <speciesReference species="Sos" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kTKRUnbindSOS </ci>
+              <ci> pRTKa </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R22f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Sos" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pSos" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pErk"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kSOSPhos </ci>
+              <ci> Sos </ci>
+              <ci> pErk </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R22b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pSos" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Sos" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kSOSDephos </ci>
+              <ci> pSos </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R23f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="RasGDP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="RasGTP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pRTKa"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kRasLoad </ci>
+              <ci> RasGDP </ci>
+              <ci> pRTKa </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R23b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="RasGTP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="RasGDP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kRasUnload </ci>
+              <ci> RasGTP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R24f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Raf" stoichiometry="1" constant="true"/>
+          <speciesReference species="RasGTP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pRaf" stoichiometry="1" constant="true"/>
+          <speciesReference species="RasGDP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kRafPhos </ci>
+              <ci> Raf </ci>
+              <ci> RasGTP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R24b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pRaf" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Raf" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kRafDephos </ci>
+              <ci> pRaf </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R25f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Mek" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pMek" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pRaf"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kMekPhos </ci>
+              <ci> Mek </ci>
+              <ci> pRaf </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R25b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pMek" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mek" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pErk"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kMekDephos </ci>
+              <ci> pMek </ci>
+              <ci> pErk </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R26f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Erk" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pErk" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pMek"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kErkPhos </ci>
+              <ci> Erk </ci>
+              <ci> pMek </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R26b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pErk" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Erk" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kErkDephos </ci>
+              <ci> pErk </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R27f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Mek" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Meki" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kMekBindAzd </ci>
+              <ci> Mek </ci>
+              <ci> AZD </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R27b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Meki" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="Mek" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kMekUnbindAzd </ci>
+              <ci> Meki </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R28f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PLCeps" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pPLCeps" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="RasGTP"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPLCPhos </ci>
+              <ci> PLCeps </ci>
+              <ci> RasGTP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R28b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pPLCeps" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PLCeps" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPLCDephos </ci>
+              <ci> pPLCeps </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R29f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PIP2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="IP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="DAG" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pPLCeps"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPIP2Break </ci>
+              <ci> PIP2 </ci>
+              <ci> pPLCeps </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R29b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="IP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="DAG" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PIP2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPIP2form </ci>
+              <ci> IP3 </ci>
+              <ci> DAG </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R30f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="IP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="IpR" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="IpRa" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kIP3BindIpR </ci>
+              <ci> IP3 </ci>
+              <ci> IpR </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R30b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="IpRa" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="IP3" stoichiometry="1" constant="true"/>
+          <speciesReference species="IpR" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kIP3UnbindIpR </ci>
+              <ci> IpRa </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R31f" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="Ca2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="IpRa"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kCa2In </ci>
+              <ci> IpRa </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R31b" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="Ca2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kCa2Out </ci>
+              <ci> Ca2 </ci>
             </apply>
           </math>
         </kineticLaw>

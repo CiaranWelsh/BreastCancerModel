@@ -466,69 +466,74 @@
     </listOfCompartments>
     <listOfSpecies>
       <species id="IRS1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="IRS1a" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pIRS1" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IRS1a" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pIRS1" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="PI3K" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pPI3K" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="PIP2" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="PIP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pPI3K" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PIP2" compartment="Cell" initialConcentration="100.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PIP3" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="PDK1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="PDK1_PIP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="PDK1_PIP3" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Akt" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Akt_PIP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pAkt" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Akt_PIP3" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pAkt" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Akti" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="TSC2" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pTSC2" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pTSC2" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="RhebGDP" compartment="Cell" initialConcentration="10.002" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="RhebGTP" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="ppPras40" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1cyt" compartment="Cell" initialConcentration="0.002" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1cyt" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="mTORC1_Pras40cyt" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="mTORC1lys" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="mTORC1lys" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="RAG_GDP" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="RAG_GTP" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="RAG_GTP" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="mTORC1i" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="mTORC1ii" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="mTORC1iii" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="mTORC1iv" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="FourEBP1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pFourEBP1" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pFourEBP1" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="S6K" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pS6K" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pS6K" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="AMPK" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="pAMPKi" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pAMPK" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pAMPK" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="CaMKK2a" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="CaMKK2" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="LKB1a" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="LKB1a" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="LKB1" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="RTK" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="pRTK" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Sos" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="pRTKa" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Raf" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pRaf" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pRaf" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Mek" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pMek" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pMek" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Erk" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pErk" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pErk" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Meki" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="PLCeps" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pPLCeps" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="IP3" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="DAG" compartment="Cell" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pPLCeps" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IP3" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DAG" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="IpR" compartment="Cell" initialConcentration="10.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="IpRa" compartment="Cell" initialConcentration="0.0009" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="Ca2" compartment="Cell" initialConcentration="0.0009" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="IpRa" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Ca2" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DUSPmRNA" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="DUSP" compartment="Cell" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="Rapamycin" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
       <species id="MK2206" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
+      <species id="Wortmannin" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="false"/>
+      <species id="PI3Ki" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="RasGDP" compartment="default_compartment" initialConcentration="10.002" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
       <species id="RasGTP" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pmTORC1" compartment="default_compartment" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
-      <species id="pSos" compartment="default_compartment" initialConcentration="0.001" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pmTORC1" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="pSos" compartment="default_compartment" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
     </listOfSpecies>
     <listOfParameters>
+      <parameter id="PTEN" value="1" constant="false"/>
       <parameter id="Insulin" value="0" constant="true"/>
       <parameter id="AA" value="0" constant="true"/>
       <parameter id="AZD" value="0" constant="true"/>
@@ -539,11 +544,14 @@
       <parameter id="kIRS1Inact" value="0.1" constant="true"/>
       <parameter id="kIRS1Phos" value="0.1" constant="true"/>
       <parameter id="kIRS1Dephos" value="0.1" constant="true"/>
-      <parameter id="kPI3KPhos" value="0.1" constant="true"/>
+      <parameter id="kPI3KPhosByIRS" value="0.1" constant="true"/>
       <parameter id="kPI3KDephos" value="0.1" constant="true"/>
+      <parameter id="kPI3KPhosByRas" value="0.1" constant="true"/>
+      <parameter id="kPI3KBindWort" value="0.1" constant="true"/>
+      <parameter id="kPI3KUnbindWort" value="0.1" constant="true"/>
       <parameter id="kPIPPhos" value="0.1" constant="true"/>
       <parameter id="kPIPDephos" value="0.1" constant="true"/>
-      <parameter id="kPDK1BindPIP3" value="0.1" constant="true"/>
+      <parameter id="kPDK1BindPIP3" value="0.01" constant="true"/>
       <parameter id="kPDK1UnbindPIP3" value="0.1" constant="true"/>
       <parameter id="kAktBindPIP3" value="0.1" constant="true"/>
       <parameter id="kAktUnbindPIP3" value="0.1" constant="true"/>
@@ -571,8 +579,10 @@
       <parameter id="kAMPKInhibPhosByAkt" value="0.1" constant="true"/>
       <parameter id="kAMPKInhibPhosByS6K" value="0.1" constant="true"/>
       <parameter id="kAMPKDephos" value="0.1" constant="true"/>
-      <parameter id="kAMPKActPhos" value="0.1" constant="true"/>
-      <parameter id="kAMPKActDephos" value="0.1" constant="true"/>
+      <parameter id="kAMPKActByCaMKK2" value="0.1" constant="true"/>
+      <parameter id="kAMPKInactByCaMKK2" value="0.1" constant="true"/>
+      <parameter id="kAMPKActByLKB1" value="0.1" constant="true"/>
+      <parameter id="kAMPKInactByLKB1" value="0.1" constant="true"/>
       <parameter id="kCaMKK2Act" value="0.1" constant="true"/>
       <parameter id="kCaMKK2Inact" value="0.1" constant="true"/>
       <parameter id="kLKB1Act" value="0.1" constant="true"/>
@@ -601,6 +611,10 @@
       <parameter id="kIP3UnbindIpR" value="0.1" constant="true"/>
       <parameter id="kCa2In" value="0.1" constant="true"/>
       <parameter id="kCa2Out" value="0.1" constant="true"/>
+      <parameter id="kDUSPmRNAIn" value="0" constant="true"/>
+      <parameter id="kDUSPmRNAOut" value="0.1" constant="true"/>
+      <parameter id="kDUSPIn" value="0.1" constant="true"/>
+      <parameter id="kDUSPOut" value="0.01" constant="true"/>
     </listOfParameters>
     <listOfReactions>
       <reaction id="R1In" reversible="false" fast="false">
@@ -706,7 +720,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R2f" reversible="false" fast="false">
+      <reaction id="R2fi" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -721,14 +735,14 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kPI3KPhos </ci>
+              <ci> kPI3KPhosByIRS </ci>
               <ci> PI3K </ci>
               <ci> IRS1a </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R2b" reversible="false" fast="false">
+      <reaction id="R2bi" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pPI3K" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -746,7 +760,90 @@
           </math>
         </kineticLaw>
       </reaction>
+      <reaction id="R2if" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
+          <speciesReference species="Wortmannin" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PI3Ki" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPI3KBindWort </ci>
+              <ci> PI3K </ci>
+              <ci> Wortmannin </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R2ib" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PI3Ki" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
+          <speciesReference species="Wortmannin" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPI3KUnbindWort </ci>
+              <ci> PI3Ki </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R2fii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PI3K" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pPI3K" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="RasGTP"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPI3KPhosByRas </ci>
+              <ci> PI3K </ci>
+              <ci> RasGTP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
       <reaction id="R3f" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="PIP2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pPI3K"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kPIPPhos </ci>
+              <ci> PIP2 </ci>
+              <ci> pPI3K </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R3b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="PIP3" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -760,6 +857,7 @@
               <ci> Cell </ci>
               <ci> kPIPDephos </ci>
               <ci> PIP3 </ci>
+              <ci> PTEN </ci>
             </apply>
           </math>
         </kineticLaw>
@@ -1443,7 +1541,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R17f" reversible="false" fast="false">
+      <reaction id="R17fi" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1458,14 +1556,14 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kAMPKActPhos </ci>
+              <ci> kAMPKActByCaMKK2 </ci>
               <ci> AMPK </ci>
               <ci> CaMKK2a </ci>
             </apply>
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R17b" reversible="false" fast="false">
+      <reaction id="R17bi" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pAMPK" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1477,7 +1575,44 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kAMPKActDephos </ci>
+              <ci> kAMPKInactByCaMKK2 </ci>
+              <ci> pAMPK </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17fii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="pAMPK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKActByLKB1 </ci>
+              <ci> AMPK </ci>
+              <ci> AA </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R17bii" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="pAMPK" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="AMPK" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kAMPKInactByLKB1 </ci>
               <ci> pAMPK </ci>
             </apply>
           </math>
@@ -1784,9 +1919,6 @@
         <listOfProducts>
           <speciesReference species="Mek" stoichiometry="1" constant="true"/>
         </listOfProducts>
-        <listOfModifiers>
-          <modifierSpeciesReference species="pErk"/>
-        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -1794,7 +1926,6 @@
               <ci> Cell </ci>
               <ci> kMekDephos </ci>
               <ci> pMek </ci>
-              <ci> pErk </ci>
             </apply>
           </math>
         </kineticLaw>
@@ -1828,6 +1959,9 @@
         <listOfProducts>
           <speciesReference species="Erk" stoichiometry="1" constant="true"/>
         </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="DUSP"/>
+        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
@@ -1835,6 +1969,7 @@
               <ci> Cell </ci>
               <ci> kErkDephos </ci>
               <ci> pErk </ci>
+              <ci> DUSP </ci>
             </apply>
           </math>
         </kineticLaw>
@@ -1876,7 +2011,73 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R28f" reversible="false" fast="false">
+      <reaction id="R28In" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="DUSPmRNA" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="pErk"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kDUSPmRNAIn </ci>
+              <ci> pErk </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R28OUT" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="DUSPmRNA" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kDUSPmRNAOut </ci>
+              <ci> DUSPmRNA </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R29In" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference species="DUSP" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="DUSPmRNA"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kDUSPIn </ci>
+              <ci> DUSPmRNA </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R29OUT" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference species="DUSP" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> Cell </ci>
+              <ci> kDUSPOut </ci>
+              <ci> DUSP </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="R30f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="PLCeps" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1898,7 +2099,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R28b" reversible="false" fast="false">
+      <reaction id="R30b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="pPLCeps" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1916,7 +2117,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R29f" reversible="false" fast="false">
+      <reaction id="R31f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="PIP2" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1939,7 +2140,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R29b" reversible="false" fast="false">
+      <reaction id="R31b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="IP3" stoichiometry="1" constant="true"/>
           <speciesReference species="DAG" stoichiometry="1" constant="true"/>
@@ -1959,7 +2160,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R30f" reversible="false" fast="false">
+      <reaction id="R32f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="IP3" stoichiometry="1" constant="true"/>
           <speciesReference species="IpR" stoichiometry="1" constant="true"/>
@@ -1979,7 +2180,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R30b" reversible="false" fast="false">
+      <reaction id="R32b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="IpRa" stoichiometry="1" constant="true"/>
         </listOfReactants>
@@ -1998,7 +2199,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R31f" reversible="false" fast="false">
+      <reaction id="R33f" reversible="false" fast="false">
         <listOfProducts>
           <speciesReference species="Ca2" stoichiometry="1" constant="true"/>
         </listOfProducts>
@@ -2016,7 +2217,7 @@
           </math>
         </kineticLaw>
       </reaction>
-      <reaction id="R31b" reversible="false" fast="false">
+      <reaction id="R33b" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="Ca2" stoichiometry="1" constant="true"/>
         </listOfReactants>

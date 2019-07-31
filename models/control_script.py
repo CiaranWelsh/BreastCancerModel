@@ -5,13 +5,12 @@ import tellurium as te
 import pycotools3 as py3
 import matplotlib
 import site
+
 site.addsitedir('..')
 from simple_akt_model import *
 from model_strings import *
 
-
 from models.plotter import TimeSeries, DoseResponse
-
 
 matplotlib.use('Qt5Agg')
 
@@ -39,11 +38,33 @@ if PLOT_CONDITIONS:
     #  build up of simulation files.
     VALIDATION_PLOTS = False
     # When doing not validation plots, this flag turn on deleting existing png files
-    DELETE_EXISTING_FILES = False
+    DELETE_EXISTING_FILES = True
     # Build animation from parameter scan using ffmpeg
     ANIMATION = False
     # how big to plot the figure
     FIGSIZE = (20, 15)
+
+    # INPUTS for Scratch simulations only
+    x = np.linspace(0.01, 3, 300)
+    x = [round(i, 2) for i in x]
+    inputs = OrderedDict(
+        Insulin=[0, 1],
+        EGF=[0, 1],
+        AA=[0, 1],
+        Wortmannin=[0, 1],
+        Rapamycin=[0, 1],
+        AZD=[0, 1],
+        MK2206=[0, 1],
+        # TSC2=[0, 10],
+        # kRhebIn=x
+        # TSC2=x
+        # kmTORC1Phos_kcat=[0.001, 0.01, 0.1, 1, 10],
+        # kmTORC1Phos_km=[0.001],
+        # Rapamycin=[0, 1],
+        # RhebGDP=[0, 10, 20, 30, 40]
+        # TSC2=range(11)
+        # S6K=[0, 10, 20, 30, 40]
+    )
 
 # Calculate the current steady state using telurium
 STEADY_STATE = False
@@ -134,18 +155,17 @@ if __name__ == '__main__':
             7: '4EBP',
             8: 'ppPras40'
         }
-        p = dict(x='d')
 
         plot_species = {
             0: ['IRS1', 'IRS1a', 'pIRS1'],
             1: ['PI3K', 'pPI3K'],
             2: ['PIP2', 'PIP3'],
-            3: ['PDK1', 'PDK1_PIP3', 'PDK1_PIP3'],
+            3: ['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
             4: ['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
             5: ['TSC2', 'pTSC2'],
             6: ['RhebGDP', 'RhebGTP'],
             7: ['ppPras40'],
-            8: ['mTORC1cyt', 'mTORC1_Pras40cyt', 'mTORC1lys'],
+            8: ['mTORC1cyt', 'mTORC1_Pras40cyt', 'mTORC1lys', 'pmTORC1'],
             9: ['RAG_GDP', 'RAG_GTP'],
             10: ['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
             11: ['FourEBP1', 'pFourEBP1'],
@@ -160,20 +180,21 @@ if __name__ == '__main__':
             20: ['Raf', 'pRaf'],
             21: ['Mek', 'pMek', 'Meki'],
             22: ['Erk', 'pErk'],
-            23: ['RasGDP', 'RasGTP']
+            23: ['RasGDP', 'RasGTP'],
+            24: ['DUSPmRNA', 'DUSP']
 
         }
         plot_titles = {
-            0:  'IRS1',
-            1:  'PI3K',
-            2:  'PIP2',
-            3:  'PDK1',
-            4:  'Akt',
-            5:  'TSC2',
-            6:  'Rheb',
-            7:  'Pras40',
-            8:  'mTORC1cyt',
-            9:  'RAG',
+            0: 'IRS1',
+            1: 'PI3K',
+            2: 'PIP',
+            3: 'PDK1',
+            4: 'Akt',
+            5: 'TSC2',
+            6: 'Rheb',
+            7: 'Pras40',
+            8: 'mTORC1cyt',
+            9: 'RAG',
             10: 'mTORC1i',
             11: 'FourEBP1',
             12: 'S6K',
@@ -188,66 +209,39 @@ if __name__ == '__main__':
             21: 'Mek',
             22: 'Erk',
             23: 'Ras',
+            24: 'DUSP',
         }
 
         if VALIDATION_PLOTS:
+            from itertools import combinations
+
+            # make all two way inputs
+            all_inputs = ['AA', 'Insulin', 'EGF', 'Wortmannin', 'Rapamycin', 'AZD', 'MK2206']
+            two_way_combs = [{f'{i}With{j}': {i: [0, 1], j: [0, 1]}} for i, j in combinations(all_inputs, 2)]
+            three_way_combs = [{f'{i}With{j}With{k}': {i: [0, 1], j: [0, 1], k: [0, 1]}} for i, j, k in
+                               combinations(all_inputs, 3)]
             inputs = OrderedDict(
-                AAInsulinAndRapamycinOnly=OrderedDict(
-                    Insulin=[0, 1],
-                    AA=[0, 1],
-                    Rapamycin=[0, 1]
-                ),
-                InsulinAndRapaWithTSC2KO=OrderedDict(
-                    Insulin=[0, 1],
-                    Rapamycin=[0, 1],
-                    AA=[1],
-                    TSC2=[0, 10]
-                ),
                 InsulinWithTSC2KO=OrderedDict(
                     Insulin=[0, 1],
                     TSC2=[0, 10]
                 ),
-                InsulinAndRapa=OrderedDict(
-                    Insulin=[0, 1],
-                    Rapamycin=[0, 1]
-                ),
-                InsulinAndAA=OrderedDict(
-                    Insulin=[0, 1],
-                    AA=[0, 1]
-                ),
-                AAAndRapa=OrderedDict(
-                    AA=[0, 1],
-                    Rapamycin=[0, 1]
-                ),
-
             )
+            [inputs.update(i) for i in two_way_combs]
+            [inputs.update(i) for i in three_way_combs]
             for k, v in inputs.items():
+                directory = os.path.join(VALIDATIONS_DIR, k)
+                if not os.path.isdir(directory):
+                    os.makedirs(directory)
                 ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=plot_species,
                                 start=0, stop=150, steps=151,
                                 figsize=FIGSIZE,
                                 subplot_titles=plot_titles,
                                 inputs=v, hspace=0.55, ncols=5, savefig=True,
-                                plot_dir=VALIDATIONS_DIR
+                                plot_dir=directory
                                 )
 
         else:
-            x = np.linspace(0.01, 3, 300)
-            x = [round(i, 2) for i in x]
-            inputs = OrderedDict(
-                Insulin=[0, 1],
-                # kmTORC1Act=x,
-                # AA=[1],
-                # Rapamycin=[0],
-                # TSC2=[0, 10],
-                # kRhebIn=x
-                # TSC2=x
-                # kmTORC1Phos_kcat=[0.001, 0.01, 0.1, 1, 10],
-                # kmTORC1Phos_km=[0.001],
-                # Rapamycin=[0, 1],
-                # RhebGDP=[0, 10, 20, 30, 40]
-                # TSC2=range(11)
-                # S6K=[0, 10, 20, 30, 40]
-            )
+
             ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=plot_species,
                             start=0, stop=150, steps=151,
                             subplot_titles=plot_titles,

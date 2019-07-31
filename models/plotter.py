@@ -87,7 +87,7 @@ class _Plotter:
             assert reduced is not None
             return reduced
 
-    def _savefig(self, fname):
+    def _savefig(self, fname, dire=None):
         if not os.path.isdir(self.plot_dir):
             os.makedirs(self.plot_dir)
 
@@ -164,7 +164,6 @@ class TimeSeries(_Plotter):
         data = self.mod.simulate(self.start, self.stop, self.steps)
         fig = plt.figure(figsize=self.figsize)
         gs = GridSpec(self._num_rows, self.ncols, wspace=self.wspace, hspace=self.hspace)
-        print(data.colnames)
         for k, v in self.plot_selection.items():
             ax = fig.add_subplot(gs[k])
             for i in v:

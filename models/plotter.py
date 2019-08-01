@@ -9,24 +9,28 @@ import tellurium as te
 from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-
+seaborn.set_context(context='talk', font_scale=1)
 class _Plotter:
 
     def __init__(self, ant_str, plot_selection, subplot_titles={}, inputs={}, savefig=False,
                  plot_dir=os.path.abspath(''), ncols=3, wspace=0.25, hspace=0.3,
-                 parallel=False, use_cached=False, figsize=(12, 7), **kwargs):
+                 parallel=False, use_cached=False, figsize=(12, 7), legend_fontsize=12,
+                 legend_loc='best', subplots_adjust={}, **kwargs):
         self.ant_str = ant_str
         self.plot_selection = plot_selection
         self.subplot_titles = subplot_titles
         self.inputs = inputs
         self.savefig = savefig
         self.plot_dir = plot_dir
+        self.legend_fontsize = legend_fontsize
+        self.legend_loc = legend_loc
         self.ncols = ncols
         self.wspace = wspace
         self.hspace = hspace
         self.parallel = parallel
         self.use_cached = use_cached
         self.figsize = figsize
+        self.subplots_adjust = subplots_adjust
         self.kwargs = kwargs
 
         if not self.savefig:
@@ -168,7 +172,7 @@ class TimeSeries(_Plotter):
             ax = fig.add_subplot(gs[k])
             for i in v:
                 plt.plot(data['time'], data[f'[{i}]'], label=i)
-            plt.legend(loc='upper right', fontsize=10)
+            plt.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
             plt.title(self.subplot_titles[k])
             seaborn.despine(fig, top=True, right=True)
 
@@ -176,6 +180,7 @@ class TimeSeries(_Plotter):
         zipped = [i for i in zip(self.indep_vars_keys, indep_vars)]
         plot_suptitle = self._recursive_fname(zipped)
         plt.suptitle(plot_suptitle)
+        plt.subplots_adjust(**self.subplots_adjust)
         if self.savefig:
             fname = self._savefig(plot_suptitle)
         else:

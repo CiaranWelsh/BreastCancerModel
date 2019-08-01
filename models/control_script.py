@@ -40,13 +40,19 @@ if PLOT_CONDITIONS:
     # Run all configured validation plots if True. Saves simulations to a folder. Otherwise, write plots to
     #  disposable SCRATCH dir. When False, existing png files are deleted prior to simulation to prevent
     #  build up of simulation files.
-    VALIDATION_PLOTS = False
+    VALIDATION_PLOTS = True
     # When doing not validation plots, this flag turn on deleting existing png files
     DELETE_EXISTING_FILES = False
     # Build animation from parameter scan using ffmpeg
     ANIMATION = False
     # how big to plot the figure
-    FIGSIZE = (20, 15)
+    FIGSIZE = (15, 20)
+    NCOL = 3
+    FONTSIZE = 14
+    LEGEND_LOC = 'upper right'
+    SUBPLOTS_ADJUST = dict(
+        top=0.95
+    )
 
     # INPUTS for Scratch simulations only
     x = np.linspace(0.01, 3, 300)
@@ -172,9 +178,10 @@ if __name__ == '__main__':
             ['TSC2', 'pTSC2'],
             ['RhebGDP', 'RhebGTP'],
             ['ppPras40'],
-            ['mTORC1cyt', 'mTORC1_Pras40cyt', 'mTORC1lys', 'pmTORC1'],
-            ['RAG_GDP', 'RAG_GTP'],
+            ['mTORC1cyt', 'mTORC1lys'],
+            ['pmTORC1', 'mTORC1_Pras40cyt'],
             ['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
+            ['RAG_GDP', 'RAG_GTP'],
             ['FourEBP1', 'pFourEBP1'],
             ['S6K', 'pS6K'],
             ['AMPK', 'pAMPKi', 'pAMPK'],
@@ -201,9 +208,10 @@ if __name__ == '__main__':
             'TSC2',
             'Rheb',
             'Pras40',
-            'mTORC1cyt',
+            'mTORC1 Location',
+            'mTORC1 Activation',
+            'mTORC1 Inhibition',
             'RAG',
-            'mTORC1i',
             'FourEBP1',
             'S6K',
             'AMPK',
@@ -228,7 +236,7 @@ if __name__ == '__main__':
             from itertools import combinations
 
             # make all two way inputs
-            all_inputs = ['AA', 'Insulin', 'EGF', 'Wortmannin', 'Rapamycin', 'AZD', 'MK2206']
+            all_inputs = ['AA', 'Insulin', 'EGF', 'Wortmannin', 'Rapamycin', 'AZD', 'MK2206', 'PMA']
             two_way_combs = [{f'{i}With{j}': {i: [0, 1], j: [0, 1]}} for i, j in combinations(all_inputs, 2)]
             three_way_combs = [{f'{i}With{j}With{k}': {i: [0, 1], j: [0, 1], k: [0, 1]}} for i, j, k in
                                combinations(all_inputs, 3)]
@@ -258,9 +266,12 @@ if __name__ == '__main__':
                                 start=0, stop=150, steps=151,
                                 figsize=FIGSIZE,
                                 subplot_titles=plot_titles,
-                                inputs=v, hspace=0.55, ncols=4, savefig=True,
-                                plot_dir=directory
-                                )
+                                inputs=v, hspace=0.55, ncols=NCOL, savefig=True,
+                                plot_dir=directory,
+                                legend_fontsize=FONTSIZE,
+                                legend_loc=LEGEND_LOC,
+                                subplots_adjust=SUBPLOTS_ADJUST,
+                )
 
         else:
 
@@ -268,8 +279,13 @@ if __name__ == '__main__':
                             start=0, stop=150, steps=151,
                             subplot_titles=plot_titles,
                             figsize=FIGSIZE,
-                            inputs=inputs, hspace=0.55, ncols=4, savefig=True,
-                            plot_dir=SCRATCH_DIR, use_cached=False, parallel=False
+                            legend_loc=LEGEND_LOC,
+                            inputs=inputs, hspace=0.75,
+                            ncols=NCOL, savefig=True,
+                            plot_dir=SCRATCH_DIR, use_cached=False, parallel=False,
+                            legend_fontsize=FONTSIZE,
+                            subplots_adjust=SUBPLOTS_ADJUST,
+
                             )
             if ANIMATION:
                 ts.animate(os.path.join(SCRATCH_DIR, 'InsulinOnkmTORCActScan'),

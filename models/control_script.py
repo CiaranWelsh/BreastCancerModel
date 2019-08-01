@@ -7,8 +7,12 @@ import matplotlib
 import site
 
 site.addsitedir('..')
-from simple_akt_model import *
-from model_strings import *
+try:
+    from simple_akt_model import *
+    from model_strings import *
+except ModuleNotFoundError:
+    from .simple_akt_model import *
+    from .model_strings import *
 
 from models.plotter import TimeSeries, DoseResponse
 
@@ -38,7 +42,7 @@ if PLOT_CONDITIONS:
     #  build up of simulation files.
     VALIDATION_PLOTS = False
     # When doing not validation plots, this flag turn on deleting existing png files
-    DELETE_EXISTING_FILES = True
+    DELETE_EXISTING_FILES = False
     # Build animation from parameter scan using ffmpeg
     ANIMATION = False
     # how big to plot the figure
@@ -48,13 +52,16 @@ if PLOT_CONDITIONS:
     x = np.linspace(0.01, 3, 300)
     x = [round(i, 2) for i in x]
     inputs = OrderedDict(
-        Insulin=[0, 1],
-        EGF=[0, 1],
-        AA=[0, 1],
-        Wortmannin=[0, 1],
-        Rapamycin=[0, 1],
-        AZD=[0, 1],
-        MK2206=[0, 1],
+        PMA=[0, 1]
+        # Insulin=[0, 1],
+        # EGF=[0],
+        # AA=[1],
+        # Wortmannin=[0, 1],
+        # Akt=[0, 10]
+        # Wortmannin=[0, 1],
+        # Rapamycin=[0, 1],
+        # AZD=[0, 1],
+        # MK2206=[0, 1],
         # TSC2=[0, 10],
         # kRhebIn=x
         # TSC2=x
@@ -156,61 +163,66 @@ if __name__ == '__main__':
             8: 'ppPras40'
         }
 
-        plot_species = {
-            0: ['IRS1', 'IRS1a', 'pIRS1'],
-            1: ['PI3K', 'pPI3K'],
-            2: ['PIP2', 'PIP3'],
-            3: ['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
-            4: ['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
-            5: ['TSC2', 'pTSC2'],
-            6: ['RhebGDP', 'RhebGTP'],
-            7: ['ppPras40'],
-            8: ['mTORC1cyt', 'mTORC1_Pras40cyt', 'mTORC1lys', 'pmTORC1'],
-            9: ['RAG_GDP', 'RAG_GTP'],
-            10: ['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
-            11: ['FourEBP1', 'pFourEBP1'],
-            12: ['S6K', 'pS6K'],
-            13: ['AMPK', 'pAMPKi', 'pAMPK'],
-            14: ['CaMKK2a', 'CaMKK2', 'Ca2'],
-            15: ['LKB1', 'LKB1a'],
-            16: ['PLCeps', 'pPLCeps'],
-            17: ['IP3', 'DAG', 'IpR', 'IpRa'],
-            18: ['RTK', 'pRTK', 'pRTKa'],
-            19: ['Sos', 'pSos'],
-            20: ['Raf', 'pRaf'],
-            21: ['Mek', 'pMek', 'Meki'],
-            22: ['Erk', 'pErk'],
-            23: ['RasGDP', 'RasGTP'],
-            24: ['DUSPmRNA', 'DUSP']
-
-        }
-        plot_titles = {
-            0: 'IRS1',
-            1: 'PI3K',
-            2: 'PIP',
-            3: 'PDK1',
-            4: 'Akt',
-            5: 'TSC2',
-            6: 'Rheb',
-            7: 'Pras40',
-            8: 'mTORC1cyt',
-            9: 'RAG',
-            10: 'mTORC1i',
-            11: 'FourEBP1',
-            12: 'S6K',
-            13: 'AMPK',
-            14: 'CaMKK2',
-            15: 'LKB1',
-            16: 'PLCeps',
-            17: 'IP3',
-            18: 'RTK',
-            19: 'Sos',
-            20: 'Raf',
-            21: 'Mek',
-            22: 'Erk',
-            23: 'Ras',
-            24: 'DUSP',
-        }
+        plot_species = [
+            ['IRS1', 'IRS1a', 'pIRS1'],
+            ['PI3K', 'pPI3K', 'PI3Ki'],
+            ['PIP2', 'PIP3'],
+            ['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
+            ['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
+            ['TSC2', 'pTSC2'],
+            ['RhebGDP', 'RhebGTP'],
+            ['ppPras40'],
+            ['mTORC1cyt', 'mTORC1_Pras40cyt', 'mTORC1lys', 'pmTORC1'],
+            ['RAG_GDP', 'RAG_GTP'],
+            ['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
+            ['FourEBP1', 'pFourEBP1'],
+            ['S6K', 'pS6K'],
+            ['AMPK', 'pAMPKi', 'pAMPK'],
+            ['CaMKK2a', 'CaMKK2', 'Ca2'],
+            ['LKB1', 'LKB1a'],
+            ['PLCeps', 'pPLCeps'],
+            ['IP3', 'DAG', 'IpR', 'IpRa'],
+            ['PKC', 'PKCa'],
+            ['RTK', 'pRTK', 'pRTKa'],
+            ['Sos', 'pSos'],
+            ['Raf', 'pRaf'],
+            ['Mek', 'pMek', 'Meki'],
+            ['Erk', 'pErk'],
+            ['RasGDP', 'RasGTP'],
+            ['DUSPmRNA', 'DUSP'],
+            # ['AMP', 'ADP', 'ATP'],
+        ]
+        plot_titles = [
+            'IRS1',
+            'PI3K',
+            'PIP',
+            'PDK1',
+            'Akt',
+            'TSC2',
+            'Rheb',
+            'Pras40',
+            'mTORC1cyt',
+            'RAG',
+            'mTORC1i',
+            'FourEBP1',
+            'S6K',
+            'AMPK',
+            'CaMKK2',
+            'LKB1',
+            'PLCeps',
+            'IP3',
+            'PKC',
+            'RTK',
+            'Sos',
+            'Raf',
+            'Mek',
+            'Erk',
+            'Ras',
+            'DUSP',
+            # 'ATP',
+        ]
+        plot_species = {i: plot_species[i] for i in range(len(plot_species))}
+        plot_titles = {i: plot_titles[i] for i in range(len(plot_titles))}
 
         if VALIDATION_PLOTS:
             from itertools import combinations
@@ -223,8 +235,18 @@ if __name__ == '__main__':
             inputs = OrderedDict(
                 InsulinWithTSC2KO=OrderedDict(
                     Insulin=[0, 1],
+                    AA=[1],
                     TSC2=[0, 10]
                 ),
+                # CombinationPlots=OrderedDict(
+                #     Insulin=[0, 1],
+                #     EGF=[0, 1],
+                #     AA=[0, 1],
+                #     Wortmannin=[0, 1],
+                #     Rapamycin=[0, 1],
+                #     AZD=[0, 1],
+                #     MK2206=[0, 1],
+                # )
             )
             [inputs.update(i) for i in two_way_combs]
             [inputs.update(i) for i in three_way_combs]
@@ -236,7 +258,7 @@ if __name__ == '__main__':
                                 start=0, stop=150, steps=151,
                                 figsize=FIGSIZE,
                                 subplot_titles=plot_titles,
-                                inputs=v, hspace=0.55, ncols=5, savefig=True,
+                                inputs=v, hspace=0.55, ncols=4, savefig=True,
                                 plot_dir=directory
                                 )
 
@@ -246,7 +268,7 @@ if __name__ == '__main__':
                             start=0, stop=150, steps=151,
                             subplot_titles=plot_titles,
                             figsize=FIGSIZE,
-                            inputs=inputs, hspace=0.55, ncols=5, savefig=True,
+                            inputs=inputs, hspace=0.55, ncols=4, savefig=True,
                             plot_dir=SCRATCH_DIR, use_cached=False, parallel=False
                             )
             if ANIMATION:

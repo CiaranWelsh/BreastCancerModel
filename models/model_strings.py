@@ -223,6 +223,7 @@ model ComplexPI3KModel
     var S6K in Cell;
     var pS6K in Cell;
     var AMPK in Cell;
+    var PKC in Cell;
     var pAMPKi in Cell;
     var pAMPK in Cell;
     var CaMKK2a in Cell;
@@ -249,6 +250,9 @@ model ComplexPI3KModel
     var Ca2 in Cell;
     var DUSPmRNA in Cell;
     var DUSP in Cell;
+    var AMP in Cell;
+    var ATP in Cell;
+    var ADP in Cell;
     const Insulin;
     const AA;
     const Rapamycin;
@@ -256,6 +260,7 @@ model ComplexPI3KModel
     const AZD;
     const EGF;
     const Wortmannin;
+    const PMA;
 
 
     kIRS1In                 = 1;                
@@ -266,8 +271,8 @@ model ComplexPI3KModel
     kIRS1Dephos             = 0.1;                    
     kPI3KPhosByIRS          = 0.1;
     kPI3KDephos             = 0.1;
-    kPI3KPhosByRas          = 0.1;
-    kPI3KBindWort           = 0.1;
+    kPI3KPhosByRas          = 0.01;
+    kPI3KBindWort           = 100;
     kPI3KUnbindWort         = 0.1;
     kPIPPhos                = 0.1;                    
     kPIPDephos              = 0.1;                    
@@ -306,23 +311,31 @@ model ComplexPI3KModel
     kAMPKInhibPhosByS6K     = 0.1;                            
     kAMPKDephos             = 0.1;                    
     kAMPKActByCaMKK2        = 0.1;
-    kAMPKInactByCaMKK2      = 0.1;
     kAMPKActByLKB1          = 0.1;
-    kAMPKInactByLKB1        = 0.1;                 
+    kAMPKInact              = 0.1;      
     kCaMKK2Act              = 0.1;                    
-    kCaMKK2Inact            = 0.1;                        
+    kCaMKK2Inact            = 0.1;      
+    kAMPPhos                = 0.1;
+    kADPDephos              = 0.1;
+    kADPPhos                = 0.1;
+    kATPDephos              = 0.1;      
+    kPKCAct                 = 0.1;
+    kPKCActByPMA            = 0.2;
+    kPKCInact               = 0.1 ;                 
     kLKB1Act                = 0.1;                    
     kLKB1Inact              = 0.1;                    
     kTKRBindEGF             = 0.1;                    
     kTKRUnbindEGF           = 0.1;                        
     kTKRBindSOS             = 0.1;                    
     kTKRUnbindSOS           = 0.1;                        
-    kSOSPhos                = 0.1;                    
+    kSOSPhos                = 1;                    
     kSOSDephos              = 0.1;                    
-    kRasLoad                = 0.1;                    
+    kRasLoadByRTK           = 0.1;                    
+    kRasLoadByPKC           = 0.1;                    
     kRasUnload              = 0.1;                    
     kRafPhos                = 0.1;                    
     kRafDephos              = 0.1;                    
+    kRafDephosByAkt         = 0.1;                    
     kMekPhos                = 0.1;                    
     kMekDephos              = 0.1;                    
     kErkPhos                = 0.01;                    
@@ -337,7 +350,7 @@ model ComplexPI3KModel
     kIP3UnbindIpR           = 0.1;                        
     kCa2In                  = 0.1;                
     kCa2Out                 = 0.1;                
-    kDUSPmRNAIn             = 0.0
+    kDUSPmRNAIn             = 0.001
     kDUSPmRNAOut            = 0.1
     kDUSPIn                 = 0.1
     kDUSPOut                = 0.01
@@ -349,6 +362,7 @@ model ComplexPI3KModel
     AZD                     = 0;    
     EGF                     = 0;    
     Wortmannin              = 0;
+    PMA                     = 0;
     
     IRS1                    = 10.001;                        
     IRS1a                   = 0;                        
@@ -392,7 +406,9 @@ model ComplexPI3KModel
     pAMPKi                  = 0;                        
     pAMPK                   = 0;                        
     CaMKK2a                 = 0;                        
-    CaMKK2                  = 10.001;                        
+    CaMKK2                  = 10.001;        
+    PKC                     = 10.001;
+    PKCa                    = 0;                   
     LKB1a                   = 0;                        
     LKB1                    = 10.001;                        
     RTK                     = 10.001;                    
@@ -416,6 +432,9 @@ model ComplexPI3KModel
     Ca2                     = 0;           
     DUSPmRNA                = 0;
     DUSP                    = 0;         
+    AMP                     = 0;
+    ADP                     = 0;
+    ATP                     = 10;
     
     R1In    : => IRS1                                   ; Cell * kIRS1In;
     R2Out   : IRS1 =>                                   ; Cell * kIRS1Out*IRS1;
@@ -427,7 +446,6 @@ model ComplexPI3KModel
     R2bi    : pPI3K => PI3K                             ; Cell * kPI3KDephos*pPI3K;
     R2if    : PI3K + Wortmannin => PI3Ki                ; Cell * kPI3KBindWort*PI3K*Wortmannin;
     R2ib    : PI3Ki => PI3K + Wortmannin                ; Cell * kPI3KUnbindWort*PI3Ki;
-    
     R2fii   : PI3K  => pPI3K                            ; Cell * kPI3KPhosByRas*PI3K*RasGTP;
     R3f     : PIP2 => PIP3                              ; Cell * kPIPPhos*PIP2*pPI3K;
     R3b     : PIP3 => PIP2                              ; Cell * kPIPDephos*PIP3*PTEN;
@@ -466,41 +484,50 @@ model ComplexPI3KModel
     R16fii  : AMPK => pAMPKi                            ; Cell * kAMPKInhibPhosByS6K*AMPK*pS6K;
     R16b    : pAMPKi => AMPK                            ; Cell * kAMPKDephos*pAMPKi;
     R17fi   : AMPK => pAMPK                             ; Cell * kAMPKActByCaMKK2*AMPK*CaMKK2a;
-    R17bi   : pAMPK => AMPK                             ; Cell * kAMPKInactByCaMKK2*pAMPK;
-    R17fii  : AMPK => pAMPK                             ; Cell * kAMPKActByLKB1*AMPK*AA;
-    R17bii  : pAMPK => AMPK                             ; Cell * kAMPKInactByLKB1*pAMPK;
+    R17fii  : AMPK => pAMPK                             ; Cell * kAMPKActByLKB1*AMPK*LKB1a;
+    R17bi   : pAMPK => AMPK                             ; Cell * kAMPKInact*pAMPK;
     R18f    : CaMKK2 => CaMKK2a                         ; Cell * kCaMKK2Act*CaMKK2*Ca2;
-    R18b    : CaMKK2a => CaMKK2                         ; Cell * kCaMKK2Inact*CaMKK2a;
-    R19f    : LKB1 => LKB1a                             ; Cell * kLKB1Act*LKB1*AA;
-    R19b    : LKB1a => LKB1                             ; Cell * kLKB1Inact*LKB1a;
-    R20f    : RTK => pRTK                               ; Cell * kTKRBindEGF*RTK*EGF;
-    R20b    : pRTK => RTK                               ; Cell * kTKRUnbindEGF*pRTK;
-    R21f    : pRTK + Sos => pRTKa                       ; Cell * kTKRBindSOS*pRTK*Sos;
-    R21b    : pRTKa => pRTK + Sos                       ; Cell * kTKRUnbindSOS*pRTKa;
-    R22f    : Sos => pSos                               ; Cell * kSOSPhos*Sos*pErk;
-    R22b    : pSos => Sos                               ; Cell * kSOSDephos*pSos;
-    R23f    : RasGDP => RasGTP                          ; Cell * kRasLoad*RasGDP*pRTKa;
-    R23b    : RasGTP => RasGDP                          ; Cell * kRasUnload*RasGTP;
-    R24f    : Raf + RasGTP => pRaf + RasGDP             ; Cell * kRafPhos*Raf*RasGTP;
-    R24b    : pRaf => Raf                               ; Cell * kRafDephos*pRaf;
-    R25f    : Mek => pMek                               ; Cell * kMekPhos*Mek*pRaf;
-    R25b    : pMek => Mek                               ; Cell * kMekDephos*pMek;
-    R26f    : Erk => pErk                               ; Cell * kErkPhos*Erk*pMek;
-    R26b    : pErk => Erk                               ; Cell * kErkDephos*pErk*DUSP;
-    R27f    : Mek => Meki                               ; Cell * kMekBindAzd*Mek*AZD;
-    R27b    : Meki => Mek                               ; Cell * kMekUnbindAzd*Meki;
-    R28In   : => DUSPmRNA                               ; Cell * kDUSPmRNAIn*pErk;
-    R28OUT  : DUSPmRNA =>                               ; Cell * kDUSPmRNAOut*DUSPmRNA;
-    R29In   : => DUSP                                   ; Cell * kDUSPIn*DUSPmRNA;
-    R29OUT  : DUSP =>                                   ; Cell * kDUSPOut*DUSP;
-    R30f    : PLCeps => pPLCeps                         ; Cell * kPLCPhos*PLCeps*RasGTP;
-    R30b    : pPLCeps => PLCeps                         ; Cell * kPLCDephos*pPLCeps;
-    R31f    : PIP2 => IP3 + DAG                         ; Cell * kPIP2Break*PIP2*pPLCeps;
-    R31b    : IP3 + DAG => PIP2                         ; Cell * kPIP2form*IP3*DAG;
-    R32f    : IP3 + IpR => IpRa                         ; Cell * kIP3BindIpR*IP3*IpR;
-    R32b    : IpRa => IP3 + IpR                         ; Cell * kIP3UnbindIpR*IpRa;
-    R33f    : => Ca2                                    ; Cell * kCa2In*IpRa;
-    R33b    : Ca2 =>                                    ; Cell * kCa2Out*Ca2;
+    R18b    : CaMKK2a => CaMKK2                         ; Cell * kCaMKK2Inact*CaMKK2a;    
+    R19f    : PKC => PKCa                               ; Cell * kPKCAct*PKC*DAG; 
+    R19s    : PKC => PKCa                               ; Cell * kPKCActByPMA*PKC*PMA; 
+    R19b    : PKCa => PKC                               ; Cell * kPKCInact*PKCa; 
+    R20fi   : LKB1 => LKB1a                             ; Cell * kLKB1Act*LKB1*AMP;
+    R20fii  : LKB1 => LKB1a                             ; Cell * kLKB1Act*LKB1*ADP;
+    R20b    : LKB1a => LKB1                             ; Cell * kLKB1Inact*LKB1a*AA;
+    // R21f1   : AMP => ADP                                ; Cell * kAMPPhos*AMP*AA;
+    // R21b1   : ADP => AMP                                ; Cell * kADPDephos*ADP;
+    // R21f2   : ADP => ATP                                ; Cell * kADPPhos*ADP*AA;
+    // R21b2   : ATP => ADP                                ; Cell * kATPDephos*ATP;    
+    R22f    : RTK => pRTK                               ; Cell * kTKRBindEGF*RTK*EGF;
+    R22b    : pRTK => RTK                               ; Cell * kTKRUnbindEGF*pRTK;
+    R23f    : pRTK + Sos => pRTKa                       ; Cell * kTKRBindSOS*pRTK*Sos;
+    R23b    : pRTKa => pRTK + Sos                       ; Cell * kTKRUnbindSOS*pRTKa;
+    R24f    : Sos => pSos                               ; Cell * kSOSPhos*Sos*pErk;
+    R24b    : pSos => Sos                               ; Cell * kSOSDephos*pSos;
+    R25fi   : RasGDP => RasGTP                          ; Cell * kRasLoadByRTK*RasGDP*pRTKa;
+    R25fii  : RasGDP => RasGTP                          ; Cell * kRasLoadByPKC*RasGDP*PKCa;
+    R25b    : RasGTP => RasGDP                          ; Cell * kRasUnload*RasGTP;
+    R26f    : Raf + RasGTP => pRaf + RasGDP             ; Cell * kRafPhos*Raf*RasGTP;
+    R26b    : pRaf => Raf                               ; Cell * kRafDephos*pRaf;
+    R26b    : pRaf => Raf                               ; Cell * kRafDephosByAkt*pRaf*pAkt;
+    R27f    : Mek => pMek                               ; Cell * kMekPhos*Mek*pRaf;
+    R27b    : pMek => Mek                               ; Cell * kMekDephos*pMek;
+    R28f    : Erk => pErk                               ; Cell * kErkPhos*Erk*pMek;
+    R28b    : pErk => Erk                               ; Cell * kErkDephos*pErk*DUSP;
+    R29f    : Mek => Meki                               ; Cell * kMekBindAzd*Mek*AZD;
+    R29b    : Meki => Mek                               ; Cell * kMekUnbindAzd*Meki;
+    R30In   : => DUSPmRNA                               ; Cell * kDUSPmRNAIn*pErk;
+    R30OUT  : DUSPmRNA =>                               ; Cell * kDUSPmRNAOut*DUSPmRNA;
+    R31In   : => DUSP                                   ; Cell * kDUSPIn*DUSPmRNA;
+    R31OUT  : DUSP =>                                   ; Cell * kDUSPOut*DUSP;
+    R32f    : PLCeps + RasGTP => pPLCeps + RasGDP       ; Cell * kPLCPhos*PLCeps*RasGTP;
+    R32b    : pPLCeps => PLCeps                         ; Cell * kPLCDephos*pPLCeps;
+    R33f    : PIP2 => IP3 + DAG                         ; Cell * kPIP2Break*PIP2*pPLCeps;
+    R33b    : IP3 + DAG => PIP2                         ; Cell * kPIP2form*IP3*DAG;
+    R34f    : IP3 + IpR => IpRa                         ; Cell * kIP3BindIpR*IP3*IpR;
+    R34b    : IpRa => IP3 + IpR                         ; Cell * kIP3UnbindIpR*IpRa;
+    R35f    : => Ca2                                    ; Cell * kCa2In*IpRa;
+    R35b    : Ca2 =>                                    ; Cell * kCa2Out*Ca2;
 end
 
 """

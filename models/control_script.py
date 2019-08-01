@@ -237,7 +237,7 @@ if __name__ == '__main__':
 
             # make all two way inputs
             all_inputs = ['AA', 'Insulin', 'EGF', 'Wortmannin', 'Rapamycin', 'AZD', 'MK2206', 'PMA']
-            two_way_combs = [{f'{i}With{j}': {i: [0, 1], j: [0, 1]}} for i, j in combinations(all_inputs, 2)]
+            # two_way_combs = [{f'{i}With{j}': {i: [0, 1], j: [0, 1]}} for i, j in combinations(all_inputs, 2)]
             three_way_combs = [{f'{i}With{j}With{k}': {i: [0, 1], j: [0, 1], k: [0, 1]}} for i, j, k in
                                combinations(all_inputs, 3)]
             inputs = OrderedDict(

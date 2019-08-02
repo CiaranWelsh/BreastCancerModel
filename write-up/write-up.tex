@@ -1,0 +1,48 @@
+\documentclass[11pt]{beamer}
+
+%%%%%%%% tema e cor %%%%%%%%
+\mode<presentation> {
+\usetheme{Madrid}
+%\usecolortheme{albatross}
+}
+
+\input{config.tex}
+
+%%%%%%%% titulo e subtitulo %%%%%%%%
+\title[Apresentação Parcial]{Translation Enhancer Improves the Ribosome Liberation from Translation Initiation} 
+
+%%%%%%%% nome dos autores %%%%%%%%
+\author[Silva, L. O.]{
+Liliana Oliveira da Silva, Renata da Encarnação Onety, Bruno Nathan Luís Martins} 
+
+\begin{document}
+\input{files/pre-slides.tex}
+
+%%%%%%%% slides %%%%%%%%
+\section{Intro}
+
+
+%%%%%%%% agradecimentos %%%%%%%%
+\begin{frame}{Agradecimentos}
+    \large{Agradeço a fulano, ciclano e beltrano que apoiaram o desenvolvimento dessa pesquisa.}
+\end{frame}
+%------------------------------------------------
+
+
+%------------------------------------------------
+%------------------------------------------------
+%%%%%%%% referencias %%%%%%%%
+\nocite{*}
+\begin{frame}[allowframebreaks]{Referências}
+\bibliographystyle{unsrt}
+\bibliography{references.bib}
+\end{frame}
+
+
+%%%%%%%% repete primeiro slide %%%%%%%%
+\begin{frame}
+\titlepage 
+\end{frame}
+
+
+\end{document}

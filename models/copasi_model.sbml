@@ -619,6 +619,7 @@
       <parameter id="kMekUnbindAzd" value="0.1" constant="true"/>
       <parameter id="kPLCPhos" value="0.1" constant="true"/>
       <parameter id="kPLCDephos" value="0.1" constant="true"/>
+      <parameter id="kPLCPhosBasal" value="0.005" constant="true"/>
       <parameter id="kPIP2Break" value="0.001" constant="true"/>
       <parameter id="kPIP2form" value="0.1" constant="true"/>
       <parameter id="kIP3BindIpR" value="0.1" constant="true"/>
@@ -2184,18 +2185,19 @@
       <reaction id="R32f" reversible="false" fast="false">
         <listOfReactants>
           <speciesReference species="PLCeps" stoichiometry="1" constant="true"/>
-          <speciesReference species="RasGTP" stoichiometry="1" constant="true"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference species="pPLCeps" stoichiometry="1" constant="true"/>
-          <speciesReference species="RasGDP" stoichiometry="1" constant="true"/>
         </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="RasGTP"/>
+        </listOfModifiers>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kPLCPhos </ci>
+              <ci> kPLCPhosBasal </ci>
               <ci> PLCeps </ci>
               <ci> RasGTP </ci>
             </apply>

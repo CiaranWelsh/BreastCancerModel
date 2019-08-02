@@ -344,6 +344,7 @@ model ComplexPI3KModel
     kMekUnbindAzd           = 0.1;                        
     kPLCPhos                = 0.1;                    
     kPLCDephos              = 0.1;                    
+    kPLCPhosBasal           = 0.005;                    
     kPIP2Break              = 0.001;                    
     kPIP2form               = 0.1;                    
     kIP3BindIpR             = 0.1;                    
@@ -521,6 +522,7 @@ model ComplexPI3KModel
     R31In   : => DUSP                                   ; Cell * kDUSPIn*DUSPmRNA;
     R31OUT  : DUSP =>                                   ; Cell * kDUSPOut*DUSP;
     R32f    : PLCeps + RasGTP => pPLCeps + RasGDP       ; Cell * kPLCPhos*PLCeps*RasGTP;
+    R32f    : PLCeps => pPLCeps                         ; Cell * kPLCPhosBasal*PLCeps*RasGTP;
     R32b    : pPLCeps => PLCeps                         ; Cell * kPLCDephos*pPLCeps;
     R33f    : PIP2 => IP3 + DAG                         ; Cell * kPIP2Break*PIP2*pPLCeps;
     R33b    : IP3 + DAG => PIP2                         ; Cell * kPIP2form*IP3*DAG;

@@ -53,6 +53,7 @@ if PLOT_CONDITIONS:
     SUBPLOTS_ADJUST = dict(
         top=0.95
     )
+    USE_CACHED = True
 
     # INPUTS for Scratch simulations only
     x = np.linspace(0.01, 3, 300)
@@ -241,7 +242,7 @@ if __name__ == '__main__':
             three_way_combs = [{f'{i}With{j}With{k}': {i: [0, 1], j: [0, 1], k: [0, 1]}} for i, j, k in
                                combinations(all_inputs, 3)]
             inputs = OrderedDict(
-                InsulinWithTSC2KO=OrderedDict(
+                AAWithInsulinAndTSC2KO=OrderedDict(
                     Insulin=[0, 1],
                     AA=[1],
                     TSC2=[0, 10]
@@ -256,7 +257,7 @@ if __name__ == '__main__':
                 #     MK2206=[0, 1],
                 # )
             )
-            [inputs.update(i) for i in two_way_combs]
+            # [inputs.update(i) for i in two_way_combs]
             [inputs.update(i) for i in three_way_combs]
             for k, v in inputs.items():
                 directory = os.path.join(VALIDATIONS_DIR, k)
@@ -271,6 +272,7 @@ if __name__ == '__main__':
                                 legend_fontsize=FONTSIZE,
                                 legend_loc=LEGEND_LOC,
                                 subplots_adjust=SUBPLOTS_ADJUST,
+                                use_cached=USE_CACHED,
                 )
 
         else:
@@ -285,7 +287,7 @@ if __name__ == '__main__':
                             plot_dir=SCRATCH_DIR, use_cached=False, parallel=False,
                             legend_fontsize=FONTSIZE,
                             subplots_adjust=SUBPLOTS_ADJUST,
-
+                            use_cached=USE_CACHED,
                             )
             if ANIMATION:
                 ts.animate(os.path.join(SCRATCH_DIR, 'InsulinOnkmTORCActScan'),

@@ -78,7 +78,10 @@
 
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{caption}
 \usepackage{subcaption}
+\usepackage[export]{adjustbox}
+\usepackage{float}
 
 %----------------------------------------------------------------------------------------
 %	TITLE PAGE
@@ -86,7 +89,7 @@
 
 \title[ExtendedModel]{Extended model of PI3K, Erk MAPK, PKC and AMPK signalling systems} % The short title appears at the bottom of every slide, the full title is only on the title page
 
-\author{Ciaran WelsH} % Your name
+\author{Ciaran Welsh} % Your name
 \institute[Newcastle University] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
 Newcastle University \\ % Your institution for the title page
@@ -117,42 +120,41 @@ Newcastle University \\ % Your institution for the title page
 \frametitle{Network}
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{../networks/extended_network.png}
+    \includegraphics[width=\textwidth]{../Networks/extended_network.png}
 \end{figure}
 \end{frame}
 
 %------------------------------------------------
 \section{Insulin Simulations} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
-\subsection{Insulin and Amino Acids} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+
+%------------------------------------------------
+\subsection{+/- Amino acids} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
 \begin{frame}
-\frametitle{Amino acids without insulin}
+\frametitle{+/- Amino acids }
 \begin{figure}
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulin/AA_0_Insulin_0-0.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulinWithRapamycin/AA_0_Insulin_0_Rapamycin_0-0.png}
     \end{minipage}
-    \rulesep
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulin/AA_1_Insulin_0-2.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulinWithRapamycin/AA_1_Insulin_0_Rapamycin_0-4.png}
     \end{minipage}
 \end{figure}
 \end{frame}
 
-
 %------------------------------------------------
-\subsection{Amino acids plus insulin} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+\subsection{Amino acids +/- insulin} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
 \begin{frame}
 \frametitle{Amino acids with insulin}
 \begin{figure}
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulin/AA_1_Insulin_0-2.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulinWithRapamycin/AA_1_Insulin_0_Rapamycin_0-4.png}
     \end{minipage}
-    \rulesep
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulin/AA_1_Insulin_1-3.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithInsulinWithRapamycin/AA_1_Insulin_1_Rapamycin_0-6.png}
     \end{minipage}
 \end{figure}
 \end{frame}
@@ -229,34 +231,35 @@ Newcastle University \\ % Your institution for the title page
 
 %------------------------------------------------
 \section{EGF Stimulation} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+\subsection{+/- EGF Stimulation} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
 \begin{frame}
-\frametitle{EGF stimulation in presence of amino acids}
+\frametitle{+/- EGF stimulation (in presence of amino acids)}
 \begin{figure}
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGF/AA_1_EGF_0-2.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGFWithRapamycin/AA_1_EGF_0_Rapamycin_0-4.png}
     \end{minipage}
     \rulesep
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGF/AA_1_EGF_1-3.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGFWithRapamycin/AA_1_EGF_1_Rapamycin_0-6.png}
     \end{minipage}
 \end{figure}
 \end{frame}
 
 %------------------------------------------------
-\subsection{Mek Inhibition}
+\subsection{+/- Mek Inhibition}
 \begin{frame}
 \frametitle{EGF stimulation and Mek inhibition}
 \begin{figure}
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGFWithAZD/}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGFWithAZD/AA_1_EGF_1_AZD_0-6.png}
     \end{minipage}
     \rulesep
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGF/AA_1_EGF_1-3.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithEGFWithAZD/AA_0_EGF_1_AZD_1-3.png}
     \end{minipage}
 \end{figure}
 \end{frame}
@@ -268,19 +271,19 @@ Newcastle University \\ % Your institution for the title page
 \begin{figure}
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithPMA/AA_1_PMA_0-2.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithAZDWithPMA/AA_0_AZD_0_PMA_0-0.png}
     \end{minipage}
     \rulesep
     \begin{minipage}{0.45\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithPMA/AA_1_PMA_1-3.png}
+        \includegraphics[width=\textwidth]{../simulations/ExtendedPI3KModel/validations/AAWithAZDWithPMA/AA_0_AZD_0_PMA_1-1.png}
     \end{minipage}
 \end{figure}
 \end{frame}
 
 \section{Observations}
-    \begin{frame}
-        \frametitle{ \cite{Miyazaki2017}}
+\begin{frame}
+    \frametitle{ \cite{Miyazaki2017}}
     \begin{itemize}
         \item PMA causes S6K phos, Erk1/2 phos and RSK phos. Rapamycin inhibits S6K phos by PMA, but not RSK or Erk. mTORC activity is slightly inhibited by mek inhibitor
         \item Rheb overexpression leads to over acivation of S6K
@@ -288,23 +291,23 @@ Newcastle University \\ % Your institution for the title page
     \end{itemize}
     \end{frame}
 
-    \begin{frame}
-        \frametitle{ \cite{Harrington2004}}
+\begin{frame}
+    \frametitle{ \cite{Harrington2004}}
     \begin{itemize}
         \item Insulin, IGF1 and EGF all stimulate Akt phos at Ser473 after 10 minutes of stimulation
         \item However, in TSC2 complex knockdown the response to Insulin and IGF1 but not Erk are abrogated.
         \item IRS1 is regulated at the transcriptional level by its own system, as indicated by loss of this ability in TSC2 negative cells. This mechanism is not currently built into the model.
     \end{itemize}
-    \end{frame}
+\end{frame}
 
-
-
-
-\section{Things to include in the future}
-    \cite{Roux2007}
-    \begin{itemize}
-        \item Erk activates RSK
-    \end{itemize}
+%
+%
+%
+%\section{Things to include in the future}
+%    \cite{Roux2007}
+%    \begin{itemize}
+%        \item Erk activates RSK
+%    \end{itemize}
 
 %%------------------------------------------------
 %

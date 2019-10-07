@@ -51,133 +51,6 @@ end
 
 """
 
-pi3k_system = f"""
-
-{functions}
-
-model ModelWithMTOR()
-    compartment       Cell = 1;
-    var IRS1          in Cell;
-    var IRS1a        in Cell;
-    var pIRS1         in Cell; 
-    var Akt           in Cell;
-    var pAkt          in Cell;
-    var TSC2          in Cell;
-    var pTSC2         in Cell;
-    var RhebGDP       in Cell;
-    var RhebGTP       in Cell;
-    var Pras40        in Cell;
-    var mTORC1_Pras40_Lys in Cell;
-    var mTORC1_Pras40_Cyt in Cell;
-    var pmTORC1        in Cell;
-    var pmTORC1       in Cell;
-    var mTORC1_i      in Cell;
-    var mTORC1_ii     in Cell;
-    var mTORC1_iii     in Cell;
-    var S6K           in Cell;
-    var pS6K          in Cell;
-    var FourEBP1      in Cell;
-    var pFourEBP1     in Cell;
-    const Rapamycin;    
-    const Insulin; 
-
-    kIRS1In             = 1;
-    kIRS1Out            = 0.1;
-    kIRS1Act_km         = 1;
-    kIRS1Act_kcat       = 10;
-    kIRS1Act_h          = 2;
-    kIRS1Act            = 0.1;
-    kIRS1Inact          = 0.1;
-    kIRS1Phos           = 0.5;
-    kIRS1Dephos         = 0.1;
-    kAktPhos            = 0.1;
-    kAktDephos          = 0.1;
-    kTSC2Phos           = 0.1;
-    kTSC2Dephos         = 0.1;
-    kmTORC1ToLys        = 0.1;
-    kmTORC1ToCyt        = 0.1;
-    kmTORC1Act          = 0.001;
-    kmTORC1Dephos       = 1;
-    kmTORC1BindRapa     = 2.0;
-    kmTORC1UnbindRapa   = 0.1;
-    kS6KPhos_km         = 100;
-    kS6KPhos_kcat       = 2;
-    kS6KDephos          = 0.1;
-    k4Phos_km           = 5;
-    k4EBP1Phos_kcat     = 5;
-    k4EBP1Dephos        = 0.1;
-    kRhebLoad           = 0.1;
-    kRhebUnload         = 5;
-    kRhebIn             = 10; 
-    kRhebOut            = 0.1; 
-    kmTORC1BindPras40   = 0.1;
-    kPras40Dephos       = 0.1;
-
-    Rapamycin           = 0;
-    Insulin             = 0;
-    AA                  = 1;
-    IRS1 = 10.000001549282924;
-    IRS1a = 0                                                  
-    pIRS1 = 0                                                   
-    Akt = 10.005001550057566;
-    pAkt = 0                                                    
-    TSC2 = 10.005001550057566;
-    pTSC2 = 0.0;
-    RhebGDP = 90.91323534809237;
-    RhebGTP = 9.086780144736869;
-    Pras40 = 8.659321556325276e-09;
-    mTORC1_Pras40_Lys = 5.012500772248403;
-    mTORC1_Pras40_Cyt = 5.012500772248403;
-    pmTORC1 = 0                                                 
-    mTORC1_i = 0                                                
-    mTORC1_ii = 0                                               
-    mTORC1_iii = 0                                              
-    S6K = 10.005001534306187;
-    pS6K = 0                           
-    FourEBP1 = 10                           
-    pFourEBP1 = 0                         
-    ppPras40 =   0                        
-    Rapamycin = 0.0;
-
-    // observables
-    // MM(km, Vmax, S)
-    // MMWithKcat(km, kcat, S, E)
-    // Hill(km, kcat, L, S, h) or Hill(km, kcat, E, S, h)
-    R1In    : => IRS1                                               ; Cell * kIRS1In;
-    R2Out   : IRS1 =>                                               ; Cell * kIRS1Out*IRS1;
-    R1f     : IRS1 => IRS1a                                        ; Cell * kIRS1Act*IRS1*Insulin;//Hill(kIRS1Act_km, kIRS1Act_kcat, Insulin, IRS1, kIRS1Act_h);
-    R1b     : IRS1a => IRS1                                        ; Cell * kIRS1Inact*IRS1a;
-    R1i     : IRS1a => pIRS1                                       ; Cell * kIRS1Phos*IRS1a*pS6K;
-    R1o     : pIRS1 =>                                              ; Cell * kIRS1Dephos*pIRS1;
-    R2f     : Akt => pAkt                                           ; Cell * kAktPhos*Akt*IRS1a;
-    R2b     : pAkt => Akt                                           ; Cell * kAktDephos*pAkt;
-    R3f     : TSC2 => pTSC2                                         ; Cell * kTSC2Phos*TSC2*pAkt;
-    R3b     : pTSC2 => TSC2                                         ; Cell * kTSC2Dephos*pTSC2;
-
-    R4Out   : RhebGDP =>                                            ; Cell * kRhebOut*RhebGDP;
-    R4In    : => RhebGTP                                            ; Cell * kRhebIn;
-    R4Out2  : RhebGTP =>                                            ; Cell * kRhebOut*RhebGTP; 
-
-    R4f     : RhebGDP => RhebGTP                                    ; Cell * kRhebLoad*RhebGDP*AA;
-    R4b     : RhebGTP => RhebGDP                                    ; Cell * kRhebUnload*RhebGTP*TSC2;
-    R5f     : mTORC1_Pras40_Cyt => mTORC1_Pras40_Lys                ; Cell * kmTORC1ToLys*mTORC1_Pras40_Cyt*AA;
-    R5b     : mTORC1_Pras40_Lys => mTORC1_Pras40_Cyt                ; Cell * kmTORC1ToCyt*mTORC1_Pras40_Lys;
-    R6f     : mTORC1_Pras40_Lys + RhebGTP => pmTORC1 + ppPras40 + RhebGDP ; Cell * kmTORC1Act*pAkt*RhebGTP*mTORC1_Pras40_Lys;
-    R6b     : pmTORC1 + Pras40 => mTORC1_Pras40_Lys                  ; Cell * kmTORC1BindPras40*pmTORC1*Pras40;
-    R6c     : ppPras40 => Pras40                                    ; Cell * kPras40Dephos*ppPras40;
-    R7if    : mTORC1_Pras40_Cyt + Rapamycin => mTORC1_i             ; Cell * kmTORC1BindRapa*mTORC1_Pras40_Cyt*Rapamycin;
-    R7ib    : mTORC1_i => mTORC1_Pras40_Cyt + Rapamycin             ; Cell * kmTORC1UnbindRapa*mTORC1_i;
-    R8iif   : mTORC1_Pras40_Lys + Rapamycin => mTORC1_ii            ; Cell * kmTORC1BindRapa*mTORC1_Pras40_Lys*Rapamycin;
-    R8iib   : mTORC1_ii => mTORC1_Pras40_Lys + Rapamycin            ; Cell * kmTORC1UnbindRapa*mTORC1_ii;
-    R9iiif  : pmTORC1 + Rapamycin => mTORC1_iii                      ; Cell * kmTORC1BindRapa*pmTORC1*Rapamycin;
-    R9iiib  : mTORC1_iii => pmTORC1 + Rapamycin                      ; Cell * kmTORC1UnbindRapa*mTORC1_iii;
-    R10f     : S6K => pS6K                                          ; Cell * MMWithKcat(kS6KPhos_km, kS6KPhos_kcat, S6K, pmTORC1);
-    R10b     : pS6K => S6K                                          ; Cell * kS6KDephos*pS6K;
-    R11f     : FourEBP1 => pFourEBP1                                ; Cell * MMWithKcat(k4Phos_km, k4EBP1Phos_kcat, FourEBP1, pmTORC1); 
-    R11b     : pFourEBP1 => FourEBP1                                ; Cell * k4EBP1Dephos*pFourEBP1;
-end
-"""
-
 
 
 
@@ -207,9 +80,7 @@ model ComplexPI3KModel
     var pTSC2 in Cell;
     var RhebGDP in Cell;
     var RhebGTP in Cell;
-    var ppPras40 in Cell;
     var mTORC1cyt in Cell;
-    var mTORC1_Pras40cyt in Cell;
     var mTORC1cyt in Cell;
     var mTORC1lys in Cell;
     var RAG_GDP in Cell;
@@ -217,7 +88,6 @@ model ComplexPI3KModel
     var mTORC1i in Cell;
     var mTORC1ii in Cell;
     var mTORC1iii in Cell;
-    var mTORC1iv in Cell;
     var FourEBP1 in Cell;
     var pFourEBP1 in Cell;
     var S6K in Cell;
@@ -272,7 +142,7 @@ model ComplexPI3KModel
     kPI3KPhosByIRS          = 0.1;
     kPI3KDephos             = 0.1;
     kPI3KPhosByRas          = 0.01;
-    kPI3KBindWort           = 100;
+    kPI3KBindWort           = 10;
     kPI3KUnbindWort         = 0.1;
     kPIPPhos                = 0.1;                    
     kPIPDephos              = 0.1;                    
@@ -282,27 +152,19 @@ model ComplexPI3KModel
     kAktUnbindPIP3          = 0.1;                        
     kAktPhos                = 0.1;                    
     kAktDephos              = 0.1;                    
-    kAktBindMK              = 0.1;                    
+    kAktBindMK              = 10;                    
     kTSC2Phos               = 0.1;                    
     kTSC2Dephos             = 0.1;                    
-    kRhebPhos               = 0.1;                    
-    kRhebDephos             = 0.1;                    
-    kmTORC1BindPras40       = 0.1;                            
-    kmTORC1UnbindPras40     = 0.1;                            
+    kRhebLoad               = 1;                    
+    kRhebUnload             = 5;                    
     kmTORC1CytToLys         = 0.1;                        
     kmTORC1LysToCyt         = 0.1;                        
     kRAGPhos                = 0.1;                    
     kRAGDephos              = 0.1;                    
-    kmTORC1Phos             = 0.1;                    
+    kmTORC1Phos             = 0.01;                    
     kmTORC1Dephos           = 0.1;                        
-    kmTORC1BindRapa         = 0.1;                        
-    kmTORC1UnbindRapa       = 0.1;                            
-    kmTORC1BindRapa         = 0.1;                        
-    kmTORC1UnbindRapa       = 0.1;                            
-    kmTORC1BindRapa         = 0.1;                        
-    kmTORC1UnbindRapa       = 0.1;                            
-    kmTORC1BindRapa         = 0.1;                        
-    kmTORC1UnbindRapa       = 0.1;                            
+    kmTORC1BindRapa         = 10;                        
+    kmTORC1UnbindRapa       = 0.1;                                                       
     k4EBP1Phos              = 0.1;                    
     k4EBP1Dephos            = 0.1;                        
     kS6KPhos                = 0.1;                    
@@ -324,7 +186,7 @@ model ComplexPI3KModel
     kPKCInact               = 0.1 ;                 
     kLKB1Act                = 0.1;                    
     kLKB1Inact              = 0.1;                    
-    kTKRBindEGF             = 0.1;                    
+    kTKRBindEGF             = 1;                    
     kTKRUnbindEGF           = 0.1;                        
     kTKRBindSOS             = 0.1;                    
     kTKRUnbindSOS           = 0.1;                        
@@ -340,7 +202,7 @@ model ComplexPI3KModel
     kMekDephos              = 0.1;                    
     kErkPhos                = 0.01;                    
     kErkDephos              = 0.1;                    
-    kMekBindAzd             = 0.1;                    
+    kMekBindAzd             = 10;                    
     kMekUnbindAzd           = 0.1;                        
     kPLCPhos                = 0.1;                    
     kPLCDephos              = 0.1;                    
@@ -387,17 +249,13 @@ model ComplexPI3KModel
     RhebGTP                 = 0;    
     RasGDP                  = 10.002;
     RasGTP                  = 0;                  
-    ppPras40                = 0;                            
-    mTORC1cyt               = 0;                            
-    mTORC1_Pras40cyt        = 10.001;                                    
-    mTORC1cyt               = 0;                            
+    mTORC1cyt               = 10.001;                            
     mTORC1lys               = 0;                            
     RAG_GDP                 = 10.001;                        
     RAG_GTP                 = 0;                        
     mTORC1i                 = 0;                        
     mTORC1ii                = 0;                            
     mTORC1iii               = 0;                            
-    mTORC1iv                = 0;    
     pmTORC1                 = 0;                        
     FourEBP1                = 10.001;                            
     pFourEBP1               = 0;                            
@@ -439,9 +297,9 @@ model ComplexPI3KModel
     
     R1In    : => IRS1                                   ; Cell * kIRS1In;
     R2Out   : IRS1 =>                                   ; Cell * kIRS1Out*IRS1;
-    R1f     : IRS1 => IRS1a                            ; Cell * kIRS1Act*IRS1*Insulin;
-    R1b     : IRS1a => IRS1                            ; Cell * kIRS1Inact*IRS1a;
-    R1i     : IRS1a => pIRS1                           ; Cell * kIRS1Phos*IRS1a*pS6K;
+    R1f     : IRS1 => IRS1a                             ; Cell * kIRS1Act*IRS1*Insulin;
+    R1b     : IRS1a => IRS1                             ; Cell * kIRS1Inact*IRS1a;
+    R1i     : IRS1a => pIRS1                            ; Cell * kIRS1Phos*IRS1a*pS6K;
     R1Out2  : pIRS1 =>                                  ; Cell * kIRS1Dephos*pIRS1;
     R2fi    : PI3K  => pPI3K                            ; Cell * kPI3KPhosByIRS*PI3K*IRS1a;
     R2bi    : pPI3K => PI3K                             ; Cell * kPI3KDephos*pPI3K;
@@ -459,10 +317,8 @@ model ComplexPI3KModel
     R6i     : Akt + MK2206 => Akti                      ; Cell * kAktBindMK*Akt*MK2206;
     R7f     : TSC2 => pTSC2                             ; Cell * kTSC2Phos*TSC2*pAkt;
     R7b     : pTSC2 => TSC2                             ; Cell * kTSC2Dephos*pTSC2;
-    R8f     : RhebGDP => RhebGTP                        ; Cell * kRhebPhos*RhebGDP*AA;
-    R8b     : RhebGTP => RhebGDP                        ; Cell * kRhebDephos*RhebGTP*TSC2;
-    R9f     : ppPras40 + mTORC1cyt  => mTORC1_Pras40cyt ; Cell * kmTORC1BindPras40*ppPras40*mTORC1cyt; 
-    R9b     : mTORC1_Pras40cyt => ppPras40 + mTORC1cyt  ; Cell * kmTORC1UnbindPras40*mTORC1_Pras40cyt*pAkt;
+    R8f     : RhebGDP => RhebGTP                        ; Cell * kRhebLoad*RhebGDP*AA;
+    R8b     : RhebGTP => RhebGDP                        ; Cell * kRhebUnload*RhebGTP*TSC2;
     R10f    : mTORC1cyt + RAG_GTP => mTORC1lys + RAG_GDP; Cell * kmTORC1CytToLys*mTORC1cyt*RAG_GTP;
     R10b    : mTORC1lys => mTORC1cyt                    ; Cell * kmTORC1LysToCyt*mTORC1lys;
     R11f    : RAG_GDP => RAG_GTP                        ; Cell * kRAGPhos*RAG_GDP*AA;
@@ -475,8 +331,6 @@ model ComplexPI3KModel
     R13bii   : mTORC1ii => mTORC1lys + Rapamycin        ; Cell * kmTORC1UnbindRapa*mTORC1ii;
     R13fiii   : pmTORC1 + Rapamycin => mTORC1iii        ; Cell * kmTORC1BindRapa*pmTORC1*Rapamycin;
     R13biii   : mTORC1iii => pmTORC1 + Rapamycin       ; Cell * kmTORC1UnbindRapa*mTORC1iii;
-    R13fiv  : mTORC1_Pras40cyt + Rapamycin => mTORC1iv  ; Cell * kmTORC1BindRapa*mTORC1_Pras40cyt*Rapamycin;
-    R13biv  : mTORC1iv => mTORC1_Pras40cyt + Rapamycin  ; Cell * kmTORC1UnbindRapa*mTORC1iv;
     R14f    : FourEBP1 => pFourEBP1                     ; Cell * k4EBP1Phos*FourEBP1*pmTORC1;
     R14b    : pFourEBP1 => FourEBP1                     ; Cell * k4EBP1Dephos*pFourEBP1;
     R15f    : S6K => pS6K                               ; Cell * kS6KPhos*S6K*pmTORC1;

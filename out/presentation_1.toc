@@ -1,0 +1,13 @@
+\beamer@sectionintoc {1}{Network}{3}{0}{1}
+\beamer@sectionintoc {2}{Insulin Simulations}{4}{0}{2}
+\beamer@subsectionintoc {2}{1}{+/- Amino acids}{4}{0}{2}
+\beamer@subsectionintoc {2}{2}{Amino acids +/- insulin}{5}{0}{2}
+\beamer@subsectionintoc {2}{3}{PI3K inhibition}{6}{0}{2}
+\beamer@subsectionintoc {2}{4}{Akt Inhibition}{7}{0}{2}
+\beamer@subsectionintoc {2}{5}{mTORC1 Inhibition}{8}{0}{2}
+\beamer@subsectionintoc {2}{6}{TSC2 Knockdown}{9}{0}{2}
+\beamer@sectionintoc {3}{EGF Stimulation}{10}{0}{3}
+\beamer@subsectionintoc {3}{1}{+/- EGF Stimulation}{10}{0}{3}
+\beamer@subsectionintoc {3}{2}{+/- Mek Inhibition}{11}{0}{3}
+\beamer@sectionintoc {4}{PMA Stimulation}{12}{0}{4}
+\beamer@sectionintoc {5}{Observations}{13}{0}{5}

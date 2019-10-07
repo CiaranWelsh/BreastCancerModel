@@ -10,6 +10,8 @@ from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 
 seaborn.set_context(context='talk', font_scale=1)
+
+
 class _Plotter:
 
     def __init__(self, ant_str, plot_selection, subplot_titles={}, inputs={}, savefig=False,
@@ -46,7 +48,6 @@ class _Plotter:
         self.count = -1
 
         self.mod = te.loada(self.ant_str)
-
         for i, specie_list in self.plot_selection.items():
             for j in specie_list:
                 if not hasattr(self.mod, j):
@@ -60,15 +61,11 @@ class _Plotter:
         if self._remainder > 0:
             self._num_rows += 1
 
-        if not self.use_cached:
-            if self.parallel:
-                self.simulate_parallel()
-            else:
-                self.simulate()
-        else:
-            import re
-            self.files_ = glob.glob(os.path.join(self.plot_dir, '*.png'))
-            self.files_.sort(key=lambda var: [int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
+        self.simulate()
+        # if self.use_cached:
+        #     import re
+        #     self.files_ = glob.glob(os.path.join(self.plot_dir, '*.png'))
+        #     self.files_.sort(key=lambda var: [int(x) if x.isdigit() else x for x in re.findall(r'[^0-9]|[0-9]+', var)])
 
     def simulate(self):
         raise NotImplementedError('Please implement the simulate method')
@@ -158,31 +155,43 @@ class TimeSeries(_Plotter):
                     raise ValueError('model does not have an attribute called {}'.format(self.indep_vars_keys[j]))
                 setattr(self.mod, self.indep_vars_keys[j], self.indep_vars_values[i][j])
             file = self.do1simulation(self.indep_vars_values[i])
-            file = self.do1simulation(self.indep_vars_values[i])
             subprocess.Popen(self.do1simulation, self.indep_vars_values[i])
 
             # files.append(self.do1simulation(self.indep_vars_values[i]))
         self.files_ = files
 
     def do1simulation(self, indep_vars):
-        data = self.mod.simulate(self.start, self.stop, self.steps)
-        fig = plt.figure(figsize=self.figsize)
-        gs = GridSpec(self._num_rows, self.ncols, wspace=self.wspace, hspace=self.hspace)
-        for k, v in self.plot_selection.items():
-            ax = fig.add_subplot(gs[k])
-            for i in v:
-                plt.plot(data['time'], data[f'[{i}]'], label=i)
-            plt.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
-            plt.title(self.subplot_titles[k])
-            seaborn.despine(fig, top=True, right=True)
-
         # take care of title
         zipped = [i for i in zip(self.indep_vars_keys, indep_vars)]
         plot_suptitle = self._recursive_fname(zipped)
+        fname = os.path.join(self.plot_dir, f'{plot_suptitle}-{str(self.count).zfill(self.num_zeros_needed)}.png')
+        if self.use_cached:
+            if os.path.isfile(fname):
+                print('Skipping "{}"'.format(fname))
+                return fname
+
+        data = self.mod.simulate(self.start, self.stop, self.steps)
+        fig = plt.figure(figsize=self.figsize)
+        gs = GridSpec(self._num_rows, self.ncols, wspace=self.wspace, hspace=self.hspace)
+        count = 0
+        for k, v in self.plot_selection.items():
+
+            ax = fig.add_subplot(gs[count])
+            for i in v:
+                plt.plot(data['time'], data[f'[{i}]'], label=i)
+            plt.legend(loc=self.legend_loc, fontsize=self.legend_fontsize)
+            plt.title(k)
+            seaborn.despine(fig, top=True, right=True)
+            count += 1
+
         plt.suptitle(plot_suptitle)
         plt.subplots_adjust(**self.subplots_adjust)
         if self.savefig:
-            fname = self._savefig(plot_suptitle)
+            if not os.path.isdir(self.plot_dir):
+                os.makedirs(self.plot_dir)
+            plt.savefig(fname, dpi=300, bbox_inches='tight')
+            print('saved to {}'.format(fname))
+
         else:
             plt.show()
         return fname

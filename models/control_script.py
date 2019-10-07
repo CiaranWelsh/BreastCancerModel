@@ -6,6 +6,7 @@ import pycotools3 as py3
 import matplotlib
 import site
 
+
 site.addsitedir('..')
 try:
     from simple_akt_model import *
@@ -14,6 +15,8 @@ except ModuleNotFoundError:
     from .simple_akt_model import *
     from .model_strings import *
 
+# site.addsitedir('/home/ncw135/Documents/QualitativeModelFitting')
+# from qualitative_model_fitting import manual_interface
 from models.plotter import TimeSeries, DoseResponse
 
 matplotlib.use('Qt5Agg')
@@ -25,6 +28,7 @@ SIMULATIONS_DIR = os.path.join(WORKING_DIR, 'simulations')
 PLOT_BASE_DIR = os.path.join(SIMULATIONS_DIR, 'ExtendedPI3KModel')
 VALIDATIONS_DIR = os.path.join(PLOT_BASE_DIR, 'validations')
 SCRATCH_DIR = os.path.join(PLOT_BASE_DIR, 'ScratchPad')
+STORIES_DIR = os.path.join(PLOT_BASE_DIR, 'Stories')
 
 # Build new model using antimony if True, otherwise look for an existing model in the correct place (error if not exist)
 BUILD_NEW = True
@@ -34,15 +38,22 @@ ACTIVE_ANTIMONY = expanded_pi3k_model
 
 ####### Task simulation options
 # Plot the model simulations using dictionaries to supply conditions (parameter scan)
-PLOT_CONDITIONS = True
+PLOT_CONDITIONS = False
+
+# use qualitative_model_fitting
+QMF = False
 
 if PLOT_CONDITIONS:
     # Run all configured validation plots if True. Saves simulations to a folder. Otherwise, write plots to
     #  disposable SCRATCH dir. When False, existing png files are deleted prior to simulation to prevent
     #  build up of simulation files.
-    VALIDATION_PLOTS = True
+    VALIDATION_PLOTS = False
     # When doing not validation plots, this flag turn on deleting existing png files
     DELETE_EXISTING_FILES = False
+
+    # plot stories for presentation
+    PLOT_STORIES = False
+
     # Build animation from parameter scan using ffmpeg
     ANIMATION = False
     # how big to plot the figure
@@ -53,23 +64,23 @@ if PLOT_CONDITIONS:
     SUBPLOTS_ADJUST = dict(
         top=0.95
     )
-    USE_CACHED = True
+    USE_CACHED = False
 
     # INPUTS for Scratch simulations only
     x = np.linspace(0.01, 3, 300)
     x = [round(i, 2) for i in x]
     inputs = OrderedDict(
-        PMA=[0, 1]
-        # Insulin=[0, 1],
-        # EGF=[0],
-        # AA=[1],
+        # PMA=[0, 1]
+        Insulin=[1],
+        # EGF=[0, 1],
+        AA=[1],
         # Wortmannin=[0, 1],
         # Akt=[0, 10]
         # Wortmannin=[0, 1],
         # Rapamycin=[0, 1],
         # AZD=[0, 1],
         # MK2206=[0, 1],
-        # TSC2=[0, 10],
+        TSC2=[0, 10, 20],
         # kRhebIn=x
         # TSC2=x
         # kmTORC1Phos_kcat=[0.001, 0.01, 0.1, 1, 10],
@@ -170,36 +181,36 @@ if __name__ == '__main__':
             8: 'ppPras40'
         }
 
-        plot_species = [
-            ['IRS1', 'IRS1a', 'pIRS1'],
-            ['PI3K', 'pPI3K', 'PI3Ki'],
-            ['PIP2', 'PIP3'],
-            ['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
-            ['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
-            ['TSC2', 'pTSC2'],
-            ['RhebGDP', 'RhebGTP'],
-            ['ppPras40'],
-            ['mTORC1cyt', 'mTORC1lys'],
-            ['pmTORC1', 'mTORC1_Pras40cyt'],
-            ['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
-            ['RAG_GDP', 'RAG_GTP'],
-            ['FourEBP1', 'pFourEBP1'],
-            ['S6K', 'pS6K'],
-            ['AMPK', 'pAMPKi', 'pAMPK'],
-            ['CaMKK2a', 'CaMKK2', 'Ca2'],
-            ['LKB1', 'LKB1a'],
-            ['PLCeps', 'pPLCeps'],
-            ['IP3', 'DAG', 'IpR', 'IpRa'],
-            ['PKC', 'PKCa'],
-            ['RTK', 'pRTK', 'pRTKa'],
-            ['Sos', 'pSos'],
-            ['Raf', 'pRaf'],
-            ['Mek', 'pMek', 'Meki'],
-            ['Erk', 'pErk'],
-            ['RasGDP', 'RasGTP'],
-            ['DUSPmRNA', 'DUSP'],
+        plot_species = OrderedDict(
+            IRS1=['IRS1', 'IRS1a', 'pIRS1'],
+            PI3K=['PI3K', 'pPI3K', 'PI3Ki'],
+            PIP2=['PIP2', 'PIP3'],
+            PDK1=['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
+            Akt=['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
+            TSC2=['TSC2', 'pTSC2'],
+            RhebGDP=['RhebGDP', 'RhebGTP'],
+            ppPras40=['ppPras40'],
+            mTORC1cyt=['mTORC1cyt', 'mTORC1lys'],
+            pmTORC1=['pmTORC1', 'mTORC1_Pras40cyt'],
+            mTORC1i=['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
+            RAG_GDP=['RAG_GDP', 'RAG_GTP'],
+            FourEBP1=['FourEBP1', 'pFourEBP1'],
+            S6K=['S6K', 'pS6K'],
+            AMPK=['AMPK', 'pAMPKi', 'pAMPK'],
+            CaMKK2a=['CaMKK2a', 'CaMKK2', 'Ca2'],
+            LKB1=['LKB1', 'LKB1a'],
+            PLCeps=['PLCeps', 'pPLCeps'],
+            IP3=['IP3', 'DAG', 'IpR', 'IpRa'],
+            PKC=['PKC', 'PKCa'],
+            RTK=['RTK', 'pRTK', 'pRTKa'],
+            Sos=['Sos', 'pSos'],
+            Raf=['Raf', 'pRaf'],
+            Mek=['Mek', 'pMek', 'Meki'],
+            Erk=['Erk', 'pErk'],
+            RasGDP=['RasGDP', 'RasGTP'],
+            DUSPmRNA=['DUSPmRNA', 'DUSP'],
             # ['AMP', 'ADP', 'ATP'],
-        ]
+        )
         plot_titles = [
             'IRS1',
             'PI3K',
@@ -230,8 +241,8 @@ if __name__ == '__main__':
             'DUSP',
             # 'ATP',
         ]
-        plot_species = {i: plot_species[i] for i in range(len(plot_species))}
-        plot_titles = {i: plot_titles[i] for i in range(len(plot_titles))}
+        # plot_species = {i: plot_species[i] for i in range(len(plot_species))}
+        # plot_titles = {i: plot_titles[i] for i in range(len(plot_titles))}
 
         if VALIDATION_PLOTS:
             from itertools import combinations
@@ -245,8 +256,13 @@ if __name__ == '__main__':
                 AAWithInsulinAndTSC2KO=OrderedDict(
                     Insulin=[0, 1],
                     AA=[1],
-                    TSC2=[0, 10]
+                    TSC2=[0, 10, 20]
                 ),
+                AAWithEGFAndTSCKO=OrderedDict(
+                    AA=[1],
+                    EGF=[0, 1],
+                    TSC2=[0, 10, 20]
+                )
                 # CombinationPlots=OrderedDict(
                 #     Insulin=[0, 1],
                 #     EGF=[0, 1],
@@ -259,6 +275,7 @@ if __name__ == '__main__':
             )
             # [inputs.update(i) for i in two_way_combs]
             [inputs.update(i) for i in three_way_combs]
+
             for k, v in inputs.items():
                 directory = os.path.join(VALIDATIONS_DIR, k)
                 if not os.path.isdir(directory):
@@ -266,14 +283,182 @@ if __name__ == '__main__':
                 ts = TimeSeries(ACTIVE_ANTIMONY, plot_selection=plot_species,
                                 start=0, stop=150, steps=151,
                                 figsize=FIGSIZE,
-                                subplot_titles=plot_titles,
                                 inputs=v, hspace=0.55, ncols=NCOL, savefig=True,
                                 plot_dir=directory,
                                 legend_fontsize=FONTSIZE,
                                 legend_loc=LEGEND_LOC,
                                 subplots_adjust=SUBPLOTS_ADJUST,
                                 use_cached=USE_CACHED,
+                                )
+
+        elif PLOT_STORIES:
+            plot_selection = OrderedDict(
+                IRS1=['IRS1', 'IRS1a', 'pIRS1'],
+                PI3K=['PI3K', 'pPI3K', 'PI3Ki'],
+                PIP2=['PIP2', 'PIP3'],
+                PDK1=['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
+                Akt=['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
+                TSC2=['TSC2', 'pTSC2'],
+                RhebGDP=['RhebGDP', 'RhebGTP'],
+                ppPras40=['ppPras40'],
+                mTORC1cyt=['mTORC1cyt', 'mTORC1lys'],
+                pmTORC1=['pmTORC1', 'mTORC1_Pras40cyt'],
+                mTORC1i=['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
+                RAG_GDP=['RAG_GDP', 'RAG_GTP'],
+                FourEBP1=['FourEBP1', 'pFourEBP1'],
+                S6K=['S6K', 'pS6K'],
+                AMPK=['AMPK', 'pAMPKi', 'pAMPK'],
+                CaMKK2a=['CaMKK2a', 'CaMKK2', 'Ca2'],
+                LKB1=['LKB1', 'LKB1a'],
+                PLCeps=['PLCeps', 'pPLCeps'],
+                IP3=['IP3', 'DAG', 'IpR', 'IpRa'],
+                PKC=['PKC', 'PKCa'],
+                RTK=['RTK', 'pRTK', 'pRTKa'],
+                Sos=['Sos', 'pSos'],
+                Raf=['Raf', 'pRaf'],
+                Mek=['Mek', 'pMek', 'Meki'],
+                Erk=['Erk', 'pErk'],
+                RasGDP=['RasGDP', 'RasGTP'],
+                DUSPmRNA=['DUSPmRNA', 'DUSP']
+            )
+            mapk_plot_selection = OrderedDict(
+                RTK=['RTK', 'pRTK', 'pRTKa'],
+                Sos=['Sos', 'pSos'],
+                Raf=['Raf', 'pRaf'],
+                Mek=['Mek', 'pMek', 'Meki'],
+                Erk=['Erk', 'pErk'],
+                RasGDP=['RasGDP', 'RasGTP'],
+                DUSPmRNA=['DUSPmRNA', 'DUSP']
+            )
+            # mTORC1 activation
+            insulin_plot_selection = OrderedDict(
+                IRS1=['IRS1', 'IRS1a', 'pIRS1'],
+                PI3K=['PI3K', 'pPI3K', 'PI3Ki'],
+                PIP2=['PIP2', 'PIP3'],
+                PDK1=['PDK1', 'PDK1_PIP3', 'Akt_PIP3'],
+                Akt=['Akt', 'Akt_PIP3', 'pAkt', 'Akti'],
+                TSC2=['TSC2', 'pTSC2'],
+                RhebGDP=['RhebGDP', 'RhebGTP'],
+                ppPras40=['ppPras40'],
+                mTORC1loc=['mTORC1cyt', 'mTORC1lys'],
+                pmTORC1=['pmTORC1', 'mTORC1_Pras40cyt'],
+                mTORC1i=['mTORC1i', 'mTORC1ii', 'mTORC1iii', 'mTORC1iv'],
+                RAG_GDP=['RAG_GDP', 'RAG_GTP'],
+                FourEBP1=['FourEBP1', 'pFourEBP1'],
+                S6K=['S6K', 'pS6K'],
+            )
+
+            dct = OrderedDict(
+                InsulinStimulation=OrderedDict(
+                    inputs=OrderedDict(
+                        Insulin=[0, 1],
+                        AA=[0, 1],
+                    ),
+                    plot_selection=insulin_plot_selection,
+                    figsize=(12, 12),
+                    ncols=3,
+                    hspace=0.5,
+                    subplots_adjust=dict(top=0.9),
+                ),
+                InsulinStimulationAndPI3KInhibition=OrderedDict(
+                    inputs=OrderedDict(
+                        Insulin=[1],
+                        AA=[1],
+                        Wortmannin=[0, 1]
+                    ),
+                    figsize=(12, 12),
+                    ncols=3,
+                    hspace=0.5,
+                    plot_selection=insulin_plot_selection,
+                    subplots_adjust=dict(top=0.9)
+                ),
+                InsulinStimulationAndAktInhibition=OrderedDict(
+                    inputs=OrderedDict(
+                        Insulin=[1],
+                        AA=[1],
+                        MK2206=[0, 1]
+                    ),
+                    figsize=(12, 12),
+                    ncols=3,
+                    hspace=0.5,
+                    subplots_adjust=dict(top=0.9),
+                    plot_selection=insulin_plot_selection,
+
+                ),
+                InsulinStimulationAndmTORC1Inhibition=OrderedDict(
+                    inputs=OrderedDict(
+                        Insulin=[1],
+                        AA=[1],
+                        Rapamycin=[0, 1]
+                    ),
+                    figsize=(12, 12),
+                    ncols=3,
+                    hspace=0.5,
+                    subplots_adjust=dict(top=0.9),
+                    plot_selection = insulin_plot_selection,
+                ),
+                InsulinStimulationAndTSC2Manipulation=OrderedDict(
+                    inputs=OrderedDict(
+                        Insulin=[1],
+                        AA=[1],
+                        TSC2=[0, 10, 20]
+                    ),
+                    figsize=(12, 12),
+                    ncols=3,
+                    hspace=0.5,
+                    subplots_adjust=dict(top=0.9),
+                    plot_selection=insulin_plot_selection,
+                ),
+                EGFStimulation=OrderedDict(
+                    inputs=OrderedDict(
+                        EGF=[0, 1]
+                    ),
+                    plot_selection=mapk_plot_selection,
+                    hspace=0.5,
+                ),
+                EGFStimulatioAndAZD=OrderedDict(
+                    inputs=OrderedDict(
+                        EGF=[1],
+                        AZD=[0, 1]
+                    ),
+                    plot_selection=mapk_plot_selection,
+                    hspace=0.5,
+                ),
+                EGFStimulationPI3KOutput=OrderedDict(
+                    inputs=OrderedDict(
+                        EGF=[0, 1]
+                    ),
+                    plot_selection=insulin_plot_selection,
+                    figsize=(12, 12),
+                    ncols=3,
+                    hspace=0.5,
+                    subplots_adjust=dict(top=0.9),
+                ),
+                EGFStimulatioAndAZDPI3KOutput=OrderedDict(
+                    inputs=OrderedDict(
+                        EGF=[1],
+                        AZD=[0, 1]
+                    ),
+                    plot_selection=insulin_plot_selection,
+                    hspace=0.5,
+                    figsize=(12, 12),
+                    ncols=3,
+                    subplots_adjust=dict(top=0.9)
                 )
+            )
+
+            for k, v in dct.items():
+                plot_dir = os.path.join(STORIES_DIR, k)
+                if not os.path.isdir(plot_dir):
+                    os.makedirs(plot_dir)
+                ts = TimeSeries(ACTIVE_ANTIMONY,
+                                start=0, stop=150, steps=151,
+                                savefig=True,
+                                plot_dir=plot_dir,
+                                use_cache=True,
+                                **v,
+                                )
+
 
         else:
 
@@ -284,10 +469,11 @@ if __name__ == '__main__':
                             legend_loc=LEGEND_LOC,
                             inputs=inputs, hspace=0.75,
                             ncols=NCOL, savefig=True,
-                            plot_dir=SCRATCH_DIR, use_cached=False, parallel=False,
+                            plot_dir=SCRATCH_DIR,
+                            use_cached=USE_CACHED,
+                            parallel=False,
                             legend_fontsize=FONTSIZE,
                             subplots_adjust=SUBPLOTS_ADJUST,
-                            use_cached=USE_CACHED,
                             )
             if ANIMATION:
                 ts.animate(os.path.join(SCRATCH_DIR, 'InsulinOnkmTORCActScan'),
@@ -385,3 +571,25 @@ if __name__ == '__main__':
             pe = py3.tasks.ParameterEstimation(config)
             mod = pe.models.copasi_model.model
             # mod = pe.models['model'].model
+
+    if QMF:
+        #todo implement interface that makes it possible to compare accross conditions.
+        all_inputs = ['AA', 'Insulin', 'EGF', 'Wortmannin', 'Rapamycin', 'AZD', 'MK2206', 'PMA']
+        all_inputs = {i: 0 for i in all_inputs}
+        inputs = OrderedDict(
+            InsulinOnly=OrderedDict(
+                inputs=all_inputs.update({'Insulin': 1}),
+                obs=[
+                    'pmTORC1@t=10 > pmTORC1@t=20',
+                ],
+            )
+        )
+        results = manual_interface(ACTIVE_ANTIMONY, inputs, start=0, end=100, steps=101)
+        print(results)
+        # print(ACTIVE_ANTIMONY)
+
+
+
+
+
+

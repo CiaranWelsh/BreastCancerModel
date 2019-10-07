@@ -553,7 +553,7 @@
       <parameter id="kPI3KPhosByIRS" value="0.1" constant="true"/>
       <parameter id="kPI3KDephos" value="0.1" constant="true"/>
       <parameter id="kPI3KPhosByRas" value="0.01" constant="true"/>
-      <parameter id="kPI3KBindWort" value="100" constant="true"/>
+      <parameter id="kPI3KBindWort" value="10" constant="true"/>
       <parameter id="kPI3KUnbindWort" value="0.1" constant="true"/>
       <parameter id="kPIPPhos" value="0.1" constant="true"/>
       <parameter id="kPIPDephos" value="0.1" constant="true"/>
@@ -563,20 +563,20 @@
       <parameter id="kAktUnbindPIP3" value="0.1" constant="true"/>
       <parameter id="kAktPhos" value="0.1" constant="true"/>
       <parameter id="kAktDephos" value="0.1" constant="true"/>
-      <parameter id="kAktBindMK" value="0.1" constant="true"/>
+      <parameter id="kAktBindMK" value="10" constant="true"/>
       <parameter id="kTSC2Phos" value="0.1" constant="true"/>
       <parameter id="kTSC2Dephos" value="0.1" constant="true"/>
-      <parameter id="kRhebPhos" value="0.1" constant="true"/>
-      <parameter id="kRhebDephos" value="0.1" constant="true"/>
+      <parameter id="kRhebLoad" value="1" constant="true"/>
+      <parameter id="kRhebUnload" value="5" constant="true"/>
       <parameter id="kmTORC1BindPras40" value="0.1" constant="true"/>
       <parameter id="kmTORC1UnbindPras40" value="0.1" constant="true"/>
       <parameter id="kmTORC1CytToLys" value="0.1" constant="true"/>
       <parameter id="kmTORC1LysToCyt" value="0.1" constant="true"/>
       <parameter id="kRAGPhos" value="0.1" constant="true"/>
       <parameter id="kRAGDephos" value="0.1" constant="true"/>
-      <parameter id="kmTORC1Phos" value="0.1" constant="true"/>
+      <parameter id="kmTORC1Phos" value="0.01" constant="true"/>
       <parameter id="kmTORC1Dephos" value="0.1" constant="true"/>
-      <parameter id="kmTORC1BindRapa" value="0.1" constant="true"/>
+      <parameter id="kmTORC1BindRapa" value="10" constant="true"/>
       <parameter id="kmTORC1UnbindRapa" value="0.1" constant="true"/>
       <parameter id="k4EBP1Phos" value="0.1" constant="true"/>
       <parameter id="k4EBP1Dephos" value="0.1" constant="true"/>
@@ -599,7 +599,7 @@
       <parameter id="kPKCInact" value="0.1" constant="true"/>
       <parameter id="kLKB1Act" value="0.1" constant="true"/>
       <parameter id="kLKB1Inact" value="0.1" constant="true"/>
-      <parameter id="kTKRBindEGF" value="0.1" constant="true"/>
+      <parameter id="kTKRBindEGF" value="1" constant="true"/>
       <parameter id="kTKRUnbindEGF" value="0.1" constant="true"/>
       <parameter id="kTKRBindSOS" value="0.1" constant="true"/>
       <parameter id="kTKRUnbindSOS" value="0.1" constant="true"/>
@@ -615,7 +615,7 @@
       <parameter id="kMekDephos" value="0.1" constant="true"/>
       <parameter id="kErkPhos" value="0.01" constant="true"/>
       <parameter id="kErkDephos" value="0.1" constant="true"/>
-      <parameter id="kMekBindAzd" value="0.1" constant="true"/>
+      <parameter id="kMekBindAzd" value="10" constant="true"/>
       <parameter id="kMekUnbindAzd" value="0.1" constant="true"/>
       <parameter id="kPLCPhos" value="0.1" constant="true"/>
       <parameter id="kPLCDephos" value="0.1" constant="true"/>
@@ -1067,7 +1067,7 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kRhebPhos </ci>
+              <ci> kRhebLoad </ci>
               <ci> RhebGDP </ci>
               <ci> AA </ci>
             </apply>
@@ -1089,7 +1089,7 @@
             <apply>
               <times/>
               <ci> Cell </ci>
-              <ci> kRhebDephos </ci>
+              <ci> kRhebUnload </ci>
               <ci> RhebGTP </ci>
               <ci> TSC2 </ci>
             </apply>
